@@ -2,42 +2,17 @@
 	<div>
 		<div class="container">
 			<div class="handle-box">
-				<el-select v-model="query.address" placeholder="地址" class="handle-select mr10">
-					<el-option key="1" label="广东省" value="广东省"></el-option>
-					<el-option key="2" label="湖南省" value="湖南省"></el-option>
-				</el-select>
-				<el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
+				<el-input v-model="query.name" placeholder="模板名称" class="handle-input mr10"></el-input>
 				<el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
 				<el-button type="primary" :icon="Plus">新增</el-button>
 			</div>
 			<el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
 				<el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-				<el-table-column prop="name" label="姓名"></el-table-column>
+				<el-table-column prop="name" label="名称"></el-table-column>
 				<el-table-column label="发送短信数量">
 					<template #default="scope">{{ scope.row.money }}</template>
 				</el-table-column>
-				<el-table-column label="头像(查看大图)" align="center">
-					<template #default="scope">
-						<el-image
-							class="table-td-thumb"
-							:src="scope.row.thumb"
-							:z-index="10"
-							:preview-src-list="[scope.row.thumb]"
-							preview-teleported
-						>
-						</el-image>
-					</template>
-				</el-table-column>
 				<el-table-column prop="address" label="地址"></el-table-column>
-				<el-table-column label="状态" align="center">
-					<template #default="scope">
-						<el-tag
-							:type="scope.row.state === '在线' ? 'success' : scope.row.state === '离线' ? 'danger' : ''"
-						>
-							{{ scope.row.state }}
-						</el-tag>
-					</template>
-				</el-table-column>
 
 				<el-table-column prop="date" label="注册时间"></el-table-column>
 				<el-table-column label="操作" width="220" align="center">
@@ -87,7 +62,7 @@
 import { ref, reactive } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Delete, Edit, Search, Plus } from '@element-plus/icons-vue';
-import { fetchData } from '../api/index';
+import { fetchData2 } from '../api/index';
 
 interface TableItem {
 	id: number;
@@ -108,7 +83,7 @@ const tableData = ref<TableItem[]>([]);
 const pageTotal = ref(0);
 // 获取表格数据
 const getData = () => {
-	fetchData().then(res => {
+	fetchData2().then(res => {
 		tableData.value = res.data.list;
 		pageTotal.value = res.data.pageTotal || 50;
 	});

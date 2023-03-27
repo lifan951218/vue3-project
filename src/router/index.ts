@@ -16,7 +16,7 @@ const routes: RouteRecordRaw[] = [
                 path: '/dashboard',
                 name: 'dashboard',
                 meta: {
-                    title: '系统首页',
+                    title: '管理首页',
                     permiss: '1',
                 },
                 component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
@@ -29,6 +29,15 @@ const routes: RouteRecordRaw[] = [
                     permiss: '2',
                 },
                 component: () => import(/* webpackChunkName: "table" */ '../views/table.vue'),
+            },
+            {
+                path: '/table2',
+                name: 'basetable',
+                meta: {
+                    title: '表格',
+                    permiss: '2',
+                },
+                component: () => import(/* webpackChunkName: "table" */ '../views/table2.vue'),
             },
             {
                 path: '/charts',
@@ -109,6 +118,15 @@ const routes: RouteRecordRaw[] = [
                     permiss: '8',
                 },
                 component: () => import(/* webpackChunkName: "editor" */ '../views/editor.vue'),
+            },
+            {
+                path: '/editor2',
+                name: 'editor2',
+                meta: {
+                    title: '富文本编辑器2',
+                    permiss: '8',
+                },
+                component: () => import(/* webpackChunkName: "editor" */ '../views/editor2.vue'),
             },
             {
                 path: '/markdown',

@@ -16,23 +16,21 @@
 					</div>
 					<div class="user-info-list">
 						上次登录地点：
-						<span>东莞</span>
+						<span>上海</span>
 					</div>
 				</el-card>
 				<el-card shadow="hover" style="height: 252px">
 					<template #header>
 						<div class="clearfix">
-							<span>语言详情</span>
+							<span>短信回复详情</span>
 						</div>
 					</template>
-					Vue
+					已回复
 					<el-progress :percentage="79.4" color="#42b983"></el-progress>
-					TypeScript
+					已读未回复
 					<el-progress :percentage="14" color="#f1e05a"></el-progress>
-					CSS
-					<el-progress :percentage="5.6"></el-progress>
-					HTML
-					<el-progress :percentage="1" color="#f56c6c"></el-progress>
+					未读
+					<el-progress :percentage="6.6"></el-progress>
 				</el-card>
 			</el-col>
 			<el-col :span="16">
@@ -42,8 +40,8 @@
 							<div class="grid-content grid-con-1">
 								<el-icon class="grid-con-icon"><User /></el-icon>
 								<div class="grid-cont-right">
-									<div class="grid-num">1234</div>
-									<div>用户访问量</div>
+									<div class="grid-num">124</div>
+									<div>联系人数量</div>
 								</div>
 							</div>
 						</el-card>
@@ -53,8 +51,8 @@
 							<div class="grid-content grid-con-2">
 								<el-icon class="grid-con-icon"><ChatDotRound /></el-icon>
 								<div class="grid-cont-right">
-									<div class="grid-num">321</div>
-									<div>系统消息</div>
+									<div class="grid-num">3210</div>
+									<div>短信消息</div>
 								</div>
 							</div>
 						</el-card>
@@ -64,54 +62,25 @@
 							<div class="grid-content grid-con-3">
 								<el-icon class="grid-con-icon"><Goods /></el-icon>
 								<div class="grid-cont-right">
-									<div class="grid-num">5000</div>
-									<div>商品数量</div>
+									<div class="grid-num">50</div>
+									<div>短信模板数量</div>
 								</div>
 							</div>
 						</el-card>
 					</el-col>
 				</el-row>
-				<el-card shadow="hover" style="height: 403px">
-					<template #header>
-						<div class="clearfix">
-							<span>待办事项</span>
-							<el-button style="float: right; padding: 3px 0" text>添加</el-button>
-						</div>
-					</template>
-
-					<el-table :show-header="false" :data="todoList" style="width: 100%">
-						<el-table-column width="40">
-							<template #default="scope">
-								<el-checkbox v-model="scope.row.status"></el-checkbox>
-							</template>
-						</el-table-column>
-						<el-table-column>
-							<template #default="scope">
-								<div
-									class="todo-item"
-									:class="{
-										'todo-item-del': scope.row.status
-									}"
-								>
-									{{ scope.row.title }}
-								</div>
-							</template>
-						</el-table-column>
-					</el-table>
-				</el-card>
+        <el-card shadow="hover">
+          <schart ref="bar" class="schart" canvasId="bar" :options="options" style="height: 364px;"></schart>
+        </el-card>
 			</el-col>
 		</el-row>
 		<el-row :gutter="20">
-			<el-col :span="12">
-				<el-card shadow="hover">
-					<schart ref="bar" class="schart" canvasId="bar" :options="options"></schart>
-				</el-card>
-			</el-col>
-			<el-col :span="12">
-				<el-card shadow="hover">
-					<schart ref="line" class="schart" canvasId="line" :options="options2"></schart>
-				</el-card>
-			</el-col>
+      <el-col :span="24">
+        <el-card shadow="hover">
+          <schart ref="line" class="schart" canvasId="line" :options="options2"></schart>
+        </el-card>
+      </el-col>
+
 		</el-row>
 	</div>
 </template>
@@ -127,21 +96,21 @@ const role: string = name === 'admin' ? '超级管理员' : '普通用户';
 const options = {
 	type: 'bar',
 	title: {
-		text: '最近一周各品类销售图'
+		text: '最近一周短信回复情况'
 	},
 	xRorate: 25,
 	labels: ['周一', '周二', '周三', '周四', '周五'],
 	datasets: [
 		{
-			label: '家电',
+			label: '已回复',
 			data: [234, 278, 270, 190, 230]
 		},
 		{
-			label: '百货',
+			label: '已读未回复',
 			data: [164, 178, 190, 135, 160]
 		},
 		{
-			label: '食品',
+			label: '未读',
 			data: [144, 198, 150, 235, 120]
 		}
 	]
@@ -149,21 +118,17 @@ const options = {
 const options2 = {
 	type: 'line',
 	title: {
-		text: '最近几个月各品类销售趋势图'
+		text: '最近几个月短信发送情况'
 	},
 	labels: ['6月', '7月', '8月', '9月', '10月'],
 	datasets: [
 		{
-			label: '家电',
+			label: '简单发送',
 			data: [234, 278, 270, 190, 230]
 		},
 		{
-			label: '百货',
+			label: '短信群发',
 			data: [164, 178, 150, 135, 160]
-		},
-		{
-			label: '食品',
-			data: [74, 118, 200, 235, 90]
 		}
 	]
 };
@@ -282,7 +247,7 @@ const todoList = reactive([
 }
 
 .mgb20 {
-	margin-bottom: 20px;
+	margin-bottom: 40px;
 }
 
 .todo-item {

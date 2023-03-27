@@ -6,3 +6,10 @@ export const fetchData = () => {
         method: 'get'
     });
 };
+
+export const fetchData2 = () => {
+    return request({
+        url: './table2.json',
+        method: 'get'
+    });
+};
