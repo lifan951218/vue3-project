@@ -71,7 +71,7 @@ const items = [
     subs: [
       {
         index: '/editor',
-        title: '简单发送',
+        title: '快速发送',
         permiss: '2',
       },
       {
@@ -190,7 +190,7 @@ const items = [
                 subs: [
                     {
                         index: '/editor',
-                        title: '富文本编辑器',
+                        title: '短信发送',
                         permiss: '8',
                     },
                     {

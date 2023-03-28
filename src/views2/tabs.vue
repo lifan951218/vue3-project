@@ -11,7 +11,7 @@
 					<el-table-column prop="date" width="180"></el-table-column>
 					<el-table-column width="200">
 						<template #default="scope">
-							<el-button size="small" @click="handleEdit(scope.$index)">回复</el-button>
+							<el-button size="small" @click="handleRead(scope.$index)">回复</el-button>
 							<el-button size="small" @click="handleRead(scope.$index)">标为已读</el-button>
 						</template>
 					</el-table-column>
@@ -61,35 +61,12 @@
 				</template>
 			</el-tab-pane>
 		</el-tabs>
-    <el-dialog title="回复" v-model="editVisible" width="30%">
-      <el-form label-width="70px">
-        <el-form-item label="回复内容">
-        <el-input v-model="form.address"></el-input>
-      </el-form-item>
-      </el-form>
-      <template #footer>
-				<span class="dialog-footer">
-					<el-button @click="editVisible = false">取 消</el-button>
-					<el-button type="primary" @click="saveEdit">发送</el-button>
-				</span>
-      </template>
-    </el-dialog>
 	</div>
 </template>
 
 <script setup lang="ts" name="tabs">
 import { ref, reactive } from 'vue';
 
-const editVisible = ref(false);
-let form = reactive({
-  name: '',
-  address: ''
-});
-let idx: number = -1;
-const handleEdit = (index: number, row: any) => {
-  idx = index;
-  editVisible.value = true;
-};
 const message = ref('first');
 const state = reactive({
 	unread: [

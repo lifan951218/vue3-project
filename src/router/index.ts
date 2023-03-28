@@ -26,16 +26,16 @@ const routes: RouteRecordRaw[] = [
                 name: 'basetable',
                 meta: {
                     title: '表格',
-                    permiss: '2',
+                    permiss: '9',
                 },
                 component: () => import(/* webpackChunkName: "table" */ '../views/table.vue'),
             },
             {
                 path: '/table2',
-                name: 'basetable',
+                name: 'basetable2',
                 meta: {
                     title: '表格',
-                    permiss: '2',
+                    permiss: '9',
                 },
                 component: () => import(/* webpackChunkName: "table" */ '../views/table2.vue'),
             },
@@ -61,7 +61,7 @@ const routes: RouteRecordRaw[] = [
                 path: '/tabs',
                 name: 'tabs',
                 meta: {
-                    title: 'tab标签',
+                    title: '回复管理',
                     permiss: '3',
                 },
                 component: () => import(/* webpackChunkName: "tabs" */ '../views/tabs.vue'),
@@ -114,7 +114,7 @@ const routes: RouteRecordRaw[] = [
                 path: '/editor',
                 name: 'editor',
                 meta: {
-                    title: '富文本编辑器',
+                    title: '短信发送',
                     permiss: '8',
                 },
                 component: () => import(/* webpackChunkName: "editor" */ '../views/editor.vue'),
@@ -123,7 +123,7 @@ const routes: RouteRecordRaw[] = [
                 path: '/editor2',
                 name: 'editor2',
                 meta: {
-                    title: '富文本编辑器2',
+                    title: '短信群发2',
                     permiss: '8',
                 },
                 component: () => import(/* webpackChunkName: "editor" */ '../views/editor2.vue'),
@@ -181,7 +181,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | vue-manage-system`;
+    document.title = `${to.meta.title} | 短信业务管理`;
     const role = localStorage.getItem('ms_username');
     const permiss = usePermissStore();
     if (!role && to.path !== '/login') {
