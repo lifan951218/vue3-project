@@ -1,0 +1,25 @@
+// @/styles/element/index.scss
+//$--color-primary: #f7f7f7;
+//$--color-success: #00a854;
+//$--color-warning: #f7ba2a;
+//$--color-danger: #f56c6c;
+
+//@import "element-plus/packages/theme-chalk/src/index";
+
+@forward "element-plus/theme-chalk/src/common/var.scss" with ($colors: (
+        "primary": ("base": #E34D59),
+        "success": ("base": #E7E7E7),
+        "warning": ("base": #e6a23c),
+        "danger": ("base": #485D59),
+        "error": ("base": #E34D59),
+        "info": ("base": #E7E7E7),
+    )
+);
+
+//@use "element-plus/theme-chalk/src/index.scss" as *;
+//
+//@use "element-plus/theme-chalk/src/index.scss";
+//:root {
+//  --el-color-primary: #00948C;
+//}
+
