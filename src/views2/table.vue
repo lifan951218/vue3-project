@@ -13,22 +13,10 @@
 			<el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
 				<el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
 				<el-table-column prop="name" label="姓名"></el-table-column>
-				<el-table-column prop="phone" label="手机号"></el-table-column>
+        <el-table-column prop="phone" label="手机号"></el-table-column>
 				<el-table-column label="发送短信数量">
 					<template #default="scope">{{ scope.row.money }}</template>
 				</el-table-column>
-<!--				<el-table-column label="头像(查看大图)" align="center">
-					<template #default="scope">
-						<el-image
-							class="table-td-thumb"
-							:src="scope.row.thumb"
-							:z-index="10"
-							:preview-src-list="[scope.row.thumb]"
-							preview-teleported
-						>
-						</el-image>
-					</template>
-				</el-table-column>-->
 				<el-table-column prop="address" label="地址"></el-table-column>
 				<el-table-column label="状态" align="center">
 					<template #default="scope">
@@ -65,14 +53,15 @@
 		</div>
 
 		<!-- 编辑弹出框 -->
-		<el-dialog title="编辑" v-model="editVisible" width="30%">
+		<el-dialog title="新增" v-model="editVisible" width="30%">
 			<el-form label-width="70px">
 				<el-form-item label="用户名">
 					<el-input v-model="form.name"></el-input>
 				</el-form-item>
-				<el-form-item label="手机号">
-					<el-input v-model="form.phone"></el-input>
-				</el-form-item><el-form-item label="地址">
+        <el-form-item label="手机号">
+          <el-input v-model="form.address"></el-input>
+        </el-form-item>
+				<el-form-item label="地址">
 					<el-input v-model="form.address"></el-input>
 				</el-form-item>
 			</el-form>
@@ -146,14 +135,12 @@ const handleDelete = (index: number) => {
 const editVisible = ref(false);
 let form = reactive({
 	name: '',
-	address: '',
-  phone: ''
+	address: ''
 });
 let idx: number = -1;
 const handleEdit = (index: number, row: any) => {
 	idx = index;
 	form.name = row.name;
-	form.phone = row.phone;
 	form.address = row.address;
 	editVisible.value = true;
 };

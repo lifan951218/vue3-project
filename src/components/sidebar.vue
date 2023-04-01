@@ -56,12 +56,88 @@ import { useSidebarStore } from '../store/sidebar';
 import { useRoute } from 'vue-router';
 
 const items = [
+  {
+    icon: 'Odometer',
+    index: '/dashboard',
+    title: '管理首页',
+    permiss: '1',
+  },
+
+  {
+    icon: 'Calendar',
+    index: '1',
+    title: '短信发送',
+    permiss: '2',
+    subs: [
+      {
+        index: '/editor',
+        title: '快速发送',
+        permiss: '2',
+      },
+      {
+        index: '/editor2',
+        title: '短信群发',
+        permiss: '2',
+      }
+    ],
+  },
+  {
+    icon: 'DocumentCopy',
+    index: '/tabs',
+    title: '联系人管理',
+    permiss: '3',
+    subs: [
+      {
+        index: '/table',
+        title: '联系人列表',
+        permiss: '2',
+      },
+      {
+        index: '/import',
+        title: '导入Excel',
+        permiss: '2',
+      },
+      {
+        index: '/export',
+        title: '导出Excel',
+        permiss: '2',
+      }
+    ],
+  },
+  {
+    icon: 'Edit',
+    index: '/tabs',
+    title: '回复管理',
+    permiss: '4'
+  },
+  {
+    icon: 'Setting',
+    index: '/table2',
+    title: '模板管理',
+    permiss: '10',
+  },
+  {
+    icon: 'PieChart',
+    index: '/charts',
+    title: '统计分析',
+    permiss: '11',
+  },
+  {
+    icon: 'Warning',
+    index: '/permission',
+    title: '权限管理',
+    permiss: '13',
+  }
+];
+
+/*const items = [
     {
         icon: 'Odometer',
         index: '/dashboard',
-        title: '系统首页',
+        title: '管理首页',
         permiss: '1',
     },
+
     {
         icon: 'Calendar',
         index: '1',
@@ -114,7 +190,7 @@ const items = [
                 subs: [
                     {
                         index: '/editor',
-                        title: '富文本编辑器',
+                        title: '短信发送',
                         permiss: '8',
                     },
                     {
@@ -150,7 +226,7 @@ const items = [
         title: '支持作者',
         permiss: '14',
     },
-];
+];*/
 
 const route = useRoute();
 const onRoutes = computed(() => {
