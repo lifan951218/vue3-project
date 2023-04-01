@@ -59,24 +59,24 @@ const items = [
   {
     icon: 'Odometer',
     index: '/dashboard',
-    title: '管理首页',
+    title: '首页',
     permiss: '1',
   },
 
   {
     icon: 'Calendar',
     index: '1',
-    title: '短信发送',
+    title: '产品质量检测',
     permiss: '2',
     subs: [
       {
         index: '/editor',
-        title: '快速发送',
+        title: '实时检测',
         permiss: '2',
       },
       {
         index: '/editor2',
-        title: '短信群发',
+        title: '分类查询',
         permiss: '2',
       }
     ],
@@ -84,49 +84,61 @@ const items = [
   {
     icon: 'DocumentCopy',
     index: '/tabs',
-    title: '联系人管理',
+    title: '数据分析工具',
     permiss: '3',
     subs: [
       {
-        index: '/table',
-        title: '联系人列表',
-        permiss: '2',
-      },
-      {
-        index: '/import',
-        title: '导入Excel',
-        permiss: '2',
-      },
-      {
         index: '/export',
-        title: '导出Excel',
+        title: '报告生成器',
+        permiss: '2',
+      },
+      {
+        index: '/charts',
+        title: '可视化工具',
         permiss: '2',
       }
+      // {
+      //   index: '/export',
+      //   title: '导出Excel',
+      //   permiss: '2',
+      // }
     ],
   },
   {
     icon: 'Edit',
     index: '/tabs',
-    title: '回复管理',
-    permiss: '4'
-  },
-  {
-    icon: 'Setting',
-    index: '/table2',
-    title: '模板管理',
-    permiss: '10',
-  },
-  {
-    icon: 'PieChart',
-    index: '/charts',
-    title: '统计分析',
-    permiss: '11',
+    title: '通知和提醒',
+    permiss: '4',
+    subs: [
+      {
+        index: '/form',
+        title: '异常检测通知',
+        permiss: '2',
+      },
+      {
+        index: '/important',
+        title: '重要信息',
+        permiss: '2',
+      }
+    ]
   },
   {
     icon: 'Warning',
     index: '/permission',
-    title: '权限管理',
+    title: '设置和账户管理',
     permiss: '13',
+    subs: [
+      {
+        index: '/permission',
+        title: '用户账户',
+        permiss: '2',
+      },
+      {
+        index: '/import',
+        title: '数据备份',
+        permiss: '2',
+      }
+    ],
   }
 ];
 

@@ -1,6 +1,6 @@
 <template>
 	<div class="tags" v-if="tags.show">
-		<ul>
+<!--		<ul>
 			<li
 				class="tags-li"
 				v-for="(item, index) in tags.list"
@@ -15,7 +15,7 @@
 			<el-dropdown @command="handleTags">
 				<el-button size="small" type="primary">
 					标签选项
-					<el-icon class="el-icon--right">
+					<el-icon class="el-icon&#45;&#45;right">
 						<arrow-down />
 					</el-icon>
 				</el-button>
@@ -26,7 +26,7 @@
 					</el-dropdown-menu>
 				</template>
 			</el-dropdown>
-		</div>
+		</div>-->
 	</div>
 </template>
 
@@ -98,7 +98,7 @@ const handleTags = (command: string) => {
 <style>
 .tags {
 	position: relative;
-	height: 30px;
+	height: 0px;
 	overflow: hidden;
 	background: #fff;
 	padding-right: 120px;

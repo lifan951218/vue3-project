@@ -1,0 +1,69 @@
+{
+    "list": [
+      {
+            "id": "pro-1232",
+            "waiguan": "合格",
+            "type": "食品",
+            "wuli": "合格",
+            "anquan": "合格",
+            "state": "合格",
+            "date": "2019-11-1"
+        },
+        {
+            "id": "pro-1233",
+            "waiguan": "合格",
+            "type": "饮料",
+            "wuli": "合格",
+            "anquan": "不合格",
+            "state": "不合格",
+            "date": "2019-11-1"
+        },
+        {
+            "id": "pro-1234",
+            "waiguan": "合格",
+            "type":  "食品",
+            "wuli": "不合格",
+            "anquan": "合格",
+            "state": "不合格",
+            "date": "2019-11-1"
+        },
+        {
+            "id": "pro-1235",
+            "waiguan": "合格",
+            "type": "饮料",
+            "wuli": "合格",
+            "anquan": "合格",
+            "state": "合格",
+            "date": "2019-11-1"
+        },
+        {
+            "id": "pro-1236",
+            "waiguan": "合格",
+            "type": "食品",
+            "wuli": "合格",
+            "anquan": "合格",
+            "state": "合格",
+            "date": "2019-11-1"
+        },
+        {
+            "id": "pro-1237",
+            "waiguan": "合格",
+            "type": "饮料",
+            "wuli": "不合格",
+            "anquan": "合格",
+            "state": "不合格",
+            "date": "2019-11-1"
+        },
+        {
+            "id": "pro-1238",
+            "waiguan": "不合格",
+            "type": "食品",
+            "wuli": "合格",
+            "anquan": "合格",
+            "state": "不合格",
+            "date": "2019-11-1"
+        }
+
+    ],
+    "pageTotal": 4
+}
