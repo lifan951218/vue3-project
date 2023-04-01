@@ -37,52 +37,63 @@ interface Tree {
 const data: Tree[] = [
 	{
 		id: '1',
-		label: '管理首页'
+		label: '首页'
 	},
 	{
 		id: '2',
-		label: '短信发送',
+		label: '产品质量检测',
 		children: [
 			{
 				id: '15',
-				label: '快速发送'
+				label: '实时检测'
 			},
 			{
 				id: '16',
-				label: '短信群发'
+				label: '分类查询'
 			}
 		]
 	},
 	{
 		id: '4',
-		label: '联系人管理',
+		label: '数据分析工具',
 		children: [
 			{
 				id: '5',
-				label: '联系人列表'
+				label: '报告生成器'
 			},
 			{
 				id: '6',
-				label: '导入Excel'
-			},
-			{
-				id: '7',
-				label: '导出Excel'
+				label: '可视化工具'
 			}
 		]
 	},
 	{
 		id: '10',
-		label: '回复管理'
+		label: '通知与提醒',
+    children: [
+      {
+        id: '5',
+        label: '异常检测通知'
+      },
+      {
+        id: '6',
+        label: '重要信息'
+      }
+    ]
 	},
 	{
 		id: '11',
-		label: '统计分析'
-	},
-
-	{
-		id: '13',
-		label: '权限管理'
+		label: '设置与账户管理',
+    children: [
+      {
+        id: '5',
+        label: '用户账户'
+      },
+      {
+        id: '6',
+        label: '数据备份'
+      }
+    ]
 	}
 ];
 

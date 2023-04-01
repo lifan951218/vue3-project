@@ -38,6 +38,14 @@ const routes: RouteRecordRaw[] = [
                     permiss: '9',
                 },
                 component: () => import(/* webpackChunkName: "table" */ '../views/table2.vue'),
+            },{
+                path: '/important',
+                name: 'important',
+                meta: {
+                    title: '表格',
+                    permiss: '9',
+                },
+                component: () => import(/* webpackChunkName: "table" */ '../views/important.vue'),
             },
             {
                 path: '/charts',
@@ -181,7 +189,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | 短信业务管理`;
+    document.title = `${to.meta.title} | 享开店门店产品质量在线监测系统`;
     const role = localStorage.getItem('ms_username');
     const permiss = usePermissStore();
     if (!role && to.path !== '/login') {

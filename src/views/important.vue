@@ -23,29 +23,29 @@
       </el-select>
     </div>
 <!--		<div class="mgb20" ref="editor"></div>-->
-		<el-button type="primary" @click="syncHTML">开始检测</el-button>
+		<el-button type="primary" @click="syncHTML">查询</el-button>
 	</div>
-  <div class="container" v-if="flag">
-    <h3 style="margin-bottom: 10px">检测结果</h3>
+  <div class="container">
+    <h3 style="margin-bottom: 10px">通知列表</h3>
     <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
       <el-table-column prop="id" label="ID" width="155" align="center"></el-table-column>
-      <el-table-column prop="waiguan" label="外观检测"></el-table-column>
-      <el-table-column prop="wuli" label="物理性能检测"></el-table-column>
-      <el-table-column prop="anquan" label="安全性检测"></el-table-column>
-      <el-table-column label="检测结果" align="center">
+      <el-table-column prop="type" label="通知类型"></el-table-column>
+      <el-table-column prop="pro_type" label="产品类型"></el-table-column>
+      <el-table-column prop="content" label="通知内容"></el-table-column>
+      <el-table-column label="是否处理" align="center">
         <template #default="scope">
           <el-tag
-              :type="scope.row.state === '在线' ? 'success' : scope.row.state === '离线' ? 'danger' : ''"
+              :type="scope.row.state === '已处理' ? 'success' : scope.row.state === '未处理' ? 'danger' : ''"
           >
             {{ scope.row.state }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="date" label="检测时间"></el-table-column>
+      <el-table-column prop="date" label="通知时间"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template #default="scope">
           <el-button type="primary" v-permiss="15">
-            重新检测
+            重新通知
           </el-button>
         </template>
       </el-table-column>
@@ -56,7 +56,7 @@
 <script setup lang="ts" name="editor">
 // import WangEditor from 'wangeditor';
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue';
-import {fetchData3} from "../api";
+import {fetchData5} from "../api";
 
 interface TableItem {
   id: number;
@@ -73,7 +73,7 @@ const value2 = ref("");
 const value3 = ref("");
 // 获取表格数据
 const getData = () => {
-  fetchData3().then(res => {
+  fetchData5().then(res => {
     tableData.value = res.data.list;
     pageTotal.value = res.data.pageTotal || 50;
   });

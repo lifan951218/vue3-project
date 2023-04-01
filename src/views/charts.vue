@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="schart-box">
 <!--			<div class="content-title">柱状图</div>-->
-			<schart class="schart" canvasId="bar" :options="options1"></schart>
+<!--			<schart class="schart" canvasId="bar" :options="options1"></schart>-->
 		</div>
 		<div class="schart-box">
 <!--			<div class="content-title">折线图</div>-->
@@ -21,79 +21,101 @@
 
 <script setup lang="ts" name="basecharts">
 import Schart from 'vue-schart';
+import {reactive} from "_vue@3.2.47@vue";
 
-const options1 = {
-  type: 'bar',
-  title: {
-    text: '最近一周短信回复情况'
-  },
-  xRorate: 25,
-  labels: ['周一', '周二', '周三', '周四', '周五'],
-  datasets: [
-    {
-      label: '已回复',
-      data: [234, 278, 270, 190, 230]
-    },
-    {
-      label: '已读未回复',
-      data: [164, 178, 190, 135, 160]
-    },
-    {
-      label: '未读',
-      data: [144, 198, 150, 235, 120]
-    }
-  ]
-};
 const options2 = {
   type: 'line',
   title: {
-    text: '最近几个月短信发送情况'
+    text: '过去7天产品检测合格率趋势'
   },
-  labels: ['6月', '7月', '8月', '9月', '10月'],
+  labels: [
+    '10-24',
+    '10-25',
+    '10-26',
+    '10-27',
+    '10-28',
+    '10-29',
+    '10-30'
+  ],
   datasets: [
     {
-      label: '快速发送',
-      data: [234, 278, 270, 190, 230]
+      label: '自有产品',
+      data: [
+        85.2,
+        85.3,
+        89.5,
+        95.6,
+        95.7,
+        95.8,
+        95.9
+      ]
     },
     {
-      label: '短信群发',
-      data: [164, 178, 150, 135, 160]
+      label: '外部产品',
+      data: [72.4,  72.5, 78.6, 82.7, 82.8, 82.9, 83.2]
     }
   ]
 };
+const todoList = reactive([
+  {
+    title: '今天要修复100个bug',
+    status: false
+  },
+  {
+    title: '今天要修复100个bug',
+    status: false
+  },
+  {
+    title: '今天要写100行代码加几个bug吧',
+    status: false
+  },
+  {
+    title: '今天要修复100个bug',
+    status: false
+  },
+  {
+    title: '今天要修复100个bug',
+    status: true
+  },
+  {
+    title: '今天要写100行代码加几个bug吧',
+    status: true
+  }
+]);
+
 const options3 = {
-	type: 'pie',
-	title: {
-		text: '短信回复情况饼状图'
-	},
-	legend: {
-		position: 'left'
-	},
-	bgColor: '#fbfbfb',
-	labels: ['已回复', '已读未回复', '未读'],
-	datasets: [
-		{
-			data: [334, 278, 141]
-		}
-	]
+  type: 'pie',
+  title: {
+    text: '已完成检测产品质量饼状图'
+  },
+  legend: {
+    position: 'left'
+  },
+  bgColor: '#fbfbfb',
+  labels: ['合格', '待定', '不合格'],
+  datasets: [
+    {
+      data: [364, 58, 12]
+    }
+  ]
 };
 const options4 = {
-	type: 'ring',
-	title: {
-		text: '短信发送情况'
-	},
-	showValue: false,
-	legend: {
-		position: 'bottom',
-		bottom: 40
-	},
-	bgColor: '#fbfbfb',
-	labels: ['快速发送', '短信群发'],
-	datasets: [
-		{
-			data: [500, 1546]
-		}
-	]
+  type: 'ring',
+  title: {
+    text: '质量检测进度'
+  },
+  showValue: false,
+  legend: {
+    position: 'bottom',
+    bottom: 40
+  },
+  bgColor: '#fbfbfb',
+  labels: ['未完成', '已完成'],
+  datasets: [
+    {
+      data: [500, 1546]
+    }
+  ]
 };
 </script>
 

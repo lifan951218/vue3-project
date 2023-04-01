@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="content-title">支持拖拽</div>
+        <div class="content-title">异常检测通知</div>
         <div class="plugins-tips">
             Element Plus自带上传组件。 访问地址：
             <a href="https://element-plus.org/zh-CN/component/upload.html" target="_blank">Element Plus Upload</a>

@@ -2,7 +2,7 @@
 	<div>
 		<el-row :gutter="20">
 			<el-col :span="8">
-				<el-card shadow="hover" class="mgb20" style="height: 252px">
+				<el-card shadow="hover" class="mgb20" style="height: 302px">
 					<div class="user-info">
 						<el-avatar :size="120" :src="imgurl" />
 						<div class="user-info-cont">
@@ -19,59 +19,22 @@
 						<span>上海</span>
 					</div>
 				</el-card>
-				<el-card shadow="hover" style="height: 252px">
-					<template #header>
-						<div class="clearfix">
-							<span>短信回复详情</span>
-						</div>
-					</template>
-					已回复
-					<el-progress :percentage="79.4" color="#42b983"></el-progress>
-					已读未回复
-					<el-progress :percentage="14" color="#f1e05a"></el-progress>
-					未读
-					<el-progress :percentage="6.6"></el-progress>
-				</el-card>
 			</el-col>
 			<el-col :span="16">
 				<el-row :gutter="20" class="mgb20">
-					<el-col :span="8">
-						<el-card shadow="hover" :body-style="{ padding: '0px' }">
-							<div class="grid-content grid-con-1">
-								<el-icon class="grid-con-icon"><User /></el-icon>
-								<div class="grid-cont-right">
-									<div class="grid-num">124</div>
-									<div>联系人数量</div>
-								</div>
-							</div>
-						</el-card>
-					</el-col>
-					<el-col :span="8">
-						<el-card shadow="hover" :body-style="{ padding: '0px' }">
-							<div class="grid-content grid-con-2">
-								<el-icon class="grid-con-icon"><ChatDotRound /></el-icon>
-								<div class="grid-cont-right">
-									<div class="grid-num">3210</div>
-									<div>短信消息</div>
-								</div>
-							</div>
-						</el-card>
-					</el-col>
-					<el-col :span="8">
-						<el-card shadow="hover" :body-style="{ padding: '0px' }">
-							<div class="grid-content grid-con-3">
-								<el-icon class="grid-con-icon"><Goods /></el-icon>
-								<div class="grid-cont-right">
-									<div class="grid-num">50</div>
-									<div>短信模板数量</div>
-								</div>
-							</div>
-						</el-card>
-					</el-col>
+					<el-col :span="12">
+            <div class="schart-box">
+              <!--			<div class="content-title">饼状图</div>-->
+              <schart class="schart" canvasId="pie" :options="options3"></schart>
+            </div>
+          </el-col>
+          <el-col  :span="12">
+            <div class="schart-box">
+              <!--			<div class="content-title">环形图</div>-->
+              <schart class="schart" canvasId="ring" :options="options4"></schart>
+            </div>
+          </el-col>
 				</el-row>
-        <el-card shadow="hover">
-          <schart ref="bar" class="schart" canvasId="bar" :options="options" style="height: 364px;"></schart>
-        </el-card>
 			</el-col>
 		</el-row>
 		<el-row :gutter="20">
@@ -88,7 +51,7 @@
 <script setup lang="ts" name="dashboard">
 import Schart from 'vue-schart';
 import { reactive } from 'vue';
-import imgurl from '../assets/img/login-bg.jpg';
+import imgurl from '../assets/img/admin.jpg';
 
 const name = localStorage.getItem('ms_username');
 const role: string = name === 'admin' ? '超级管理员' : '普通用户';
@@ -118,17 +81,33 @@ const options = {
 const options2 = {
 	type: 'line',
 	title: {
-		text: '最近几个月短信发送情况'
+		text: '过去7天产品检测合格率趋势'
 	},
-	labels: ['6月', '7月', '8月', '9月', '10月'],
+	labels: [
+      '10-24',
+      '10-25',
+      '10-26',
+      '10-27',
+      '10-28',
+      '10-29',
+      '10-30'
+  ],
 	datasets: [
 		{
-			label: '快速发送',
-			data: [234, 278, 270, 190, 230]
+			label: '自有产品',
+			data: [
+          85.2,
+        85.3,
+        89.5,
+        95.6,
+        95.7,
+        95.8,
+        95.9
+      ]
 		},
 		{
-			label: '短信群发',
-			data: [164, 178, 150, 135, 160]
+			label: '外部产品',
+			data: [72.4,  72.5, 78.6, 82.7, 82.8, 82.9, 83.2]
 		}
 	]
 };
@@ -158,6 +137,41 @@ const todoList = reactive([
 		status: true
 	}
 ]);
+
+const options3 = {
+  type: 'pie',
+  title: {
+    text: '已完成检测产品质量饼状图'
+  },
+  legend: {
+    position: 'left'
+  },
+  bgColor: '#fbfbfb',
+  labels: ['合格', '待定', '不合格'],
+  datasets: [
+    {
+      data: [364, 58, 12]
+    }
+  ]
+};
+const options4 = {
+  type: 'ring',
+  title: {
+    text: '质量检测进度'
+  },
+  showValue: false,
+  legend: {
+    position: 'bottom',
+    bottom: 40
+  },
+  bgColor: '#fbfbfb',
+  labels: ['未完成', '已完成'],
+  datasets: [
+    {
+      data: [500, 1546]
+    }
+  ]
+};
 </script>
 
 <style scoped>
