@@ -189,7 +189,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | 享开店门店预约管理系统`;
+    document.title = `${to.meta.title} | 享开店门店盘点系统`;
     const role = localStorage.getItem('ms_username');
     const permiss = usePermissStore();
     if (!role && to.path !== '/login') {
