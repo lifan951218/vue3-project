@@ -3,38 +3,61 @@
         <div class="form-box">
             <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
 
-              <el-form-item label="所属部门" prop="region">
-                <el-select v-model="form.region" placeholder="请选择所属部门" multiple>
-                  <el-option key="联系人1" label="联系人1" value="联系人1"></el-option>
+              <el-form-item label="会员" prop="region">
+                <el-select v-model="form.region" placeholder="请选择会员" multiple>
+                  <el-option key="联系人1" label="会员1" value="联系人1"></el-option>
                   <el-option key="联系人2" label="联系人2" value="联系人2"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="商品" prop="region">
-                <el-select v-model="form.region" placeholder="请选择商品" multiple>
-                  <el-option key="类别1" label="类别1" value="联系人1"></el-option>
-                  <el-option key="类别2" label="类别2" value="联系人2"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="预警阈值" prop="region">
-                <el-input v-model="form.region"></el-input>
-              </el-form-item>
-              <el-form-item label="通知方式" prop="region">
-                <el-checkbox-group v-model="form.region">
-                  <el-checkbox label="短信通知" name="region"></el-checkbox>
-                  <el-checkbox label="邮件通知" name="region"></el-checkbox>
-                  <el-checkbox label="微信通知" name="region"></el-checkbox>
-                </el-checkbox-group>
-              </el-form-item>
+          <div><el-button type="primary" @click="flag=!flag">生成客户画像</el-button> </div>
             </el-form>
-          <div><el-button type="primary">确定</el-button> </div>
         </div>
     </div>
+  <div class="container">
+    <div>
+      <el-table :data="appointments" v-if="flag">
+
+        <el-table-column prop="name" label="会员名称">
+
+        </el-table-column>
+
+        <el-table-column prop="phone" label="手机号"></el-table-column>
+        <el-table-column prop="type" label="级别"></el-table-column>
+        <el-table-column prop="date" label="偏好产品"></el-table-column>
+        <el-table-column prop="service" label="未涉及产品"></el-table-column>
+        <el-table-column prop="service2" label="社交媒体偏好"></el-table-column>
+        <el-table-column prop="service3" label="已消费金额"></el-table-column>
+        <el-table-column prop="service4" label="喜好的消费渠道"></el-table-column>
+        <el-table-column prop="service5" label="购买频率"></el-table-column>
+
+
+      </el-table>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts" name="baseform">
 import { reactive, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
+
+const appointments = ref([
+  {
+    name: '会员1',
+    type: 'SVIP',
+    phone: '13000000000',
+    date: '商品1',
+    service: '商品10',
+    service2: '微信、微博',
+    service3: '3287 RMB',
+    service4: '京东',
+    service5: '高'
+  }
+]);
+
+const  flag = ref(false);
+
+
 
 const options = [
     {

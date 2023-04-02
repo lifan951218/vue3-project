@@ -1,7 +1,7 @@
 <template>
 	<div class="login-wrap">
 		<div class="ms-login">
-			<div class="ms-title">享开店门店盘点系统</div>
+			<div class="ms-title">享开店门店拓客系统</div>
 			<el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
 				<el-form-item prop="username">
 					<el-input v-model="param.username" placeholder="username">
@@ -89,7 +89,7 @@ tags.clearTags();
 	position: relative;
 	width: 100%;
 	height: 100%;
-	background-image: url(../assets/img/login-bg4.png);
+	background-image: url(../assets/img/login-bg5.png);
 	background-size: 100%;
 }
 .ms-title {

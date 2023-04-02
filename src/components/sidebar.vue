@@ -4,9 +4,9 @@
             class="sidebar-el-menu"
             :default-active="onRoutes"
             :collapse="sidebar.collapse"
-            background-color="#9b7350"
+            background-color="#5a3281"
             text-color="#bfcbd9"
-            active-text-color="#171c1f"
+            active-text-color="#18debd"
             unique-opened
             router
         >
@@ -59,93 +59,104 @@ const items = [
   {
     icon: 'Odometer',
     index: '1',
-    title: '盘点管理',
+    title: '数据分析',
     permiss: '1',
     subs: [
       {
         index: '/dashboard',
-        title: '盘点单列表',
+        title: '客流数据',
         permiss: '2',
       },
       {
-        index: '/dashboard2',
-        title: '盘点历史记录',
+        index: '/export',
+        title: '销售数据',
+        permiss: '2',
+      },
+      {
+        index: '/export2',
+        title: '库存数据',
         permiss: '2',
       }
     ],
   },
   {
     icon: 'Calendar',
-    index: '/editor',
-    title: '商品管理',
-    permiss: '2'
-  },
-  {
-    icon: 'Warning',
     index: '2',
-    title: '库存管理',
-    permiss: '13',
+    title: '营销策略',
+    permiss: '2',
     subs: [
       {
         index: '/markdown',
-        title: '库存列表',
+        title: '推荐活动',
         permiss: '2',
       },
       {
-        index: '/form',
-        title: '库存预警',
+        index: '/cuxiao',
+        title: '促销活动',
         permiss: '2',
       },
       {
         index: '/form2',
-        title: '库存报损',
+        title: '社交媒体推广',
         permiss: '2',
       }
     ]
   },
   {
-    icon: 'DocumentCopy',
-    index: '/tabs',
-    title: '供应商管理',
-    permiss: '3',
+    icon: 'Warning',
+    index: '2',
+    title: '客户管理',
+    permiss: '13',
+    subs: [
+      {
+        index: '/editor',
+        title: '会员管理',
+        permiss: '2',
+      },
+      {
+        index: '/form',
+        title: '客户画像',
+        permiss: '2',
+      },
+      {
+        index: '/form3',
+        title: '反馈管理',
+        permiss: '2',
+      }
+    ]
   },
   {
     icon: 'Warning',
     index: '6',
-    title: '报表统计',
+    title: '售后服务',
     permiss: '13',
     subs: [
       {
-        index: '/charts',
-        title: '盘点统计',
-        permiss: '2',
-      },
-      {
         index: '/donate',
-        title: '库存统计',
+        title: '售后清单',
         permiss: '2',
       },
       {
-        index: '/export',
-        title: '销售统计',
+        index: '/form4',
+        title: '售后反馈',
         permiss: '2',
       }
     ],
   },
   {
-    icon: 'Warning',
+    icon: 'Calendar',
     index: '7',
-    title: '设置',
+    title: '店内运营',
     permiss: '13',
     subs: [
       {
-        index: '/import',
-        title: '库存同步',
+        index: '/consumer2',
+        title: '员工管理',
         permiss: '2',
       },
       {
-        index: '/permission',
-        title: '权限管理',
+        index: '/device',
+        title: '设备管理',
         permiss: '2',
       }
     ],
@@ -176,7 +187,7 @@ const sidebar = useSidebarStore();
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
     width: 250px;
-  background-color: #9b7350;
+  background-color: #5a3281;
 }
 .sidebar > ul {
     height: 100%;

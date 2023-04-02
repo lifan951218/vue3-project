@@ -1,254 +1,74 @@
 <template>
-	<div class="container">
-
-    <div class="add-appointment">
-      <el-button type="primary" :icon="Plus" @click="addAppointment">新增盘点单</el-button>
+  <div class="container">
+    <div  id="main" style="height: 700px;width: 100%">
     </div>
-    <div class="add-appointment">
-      <h3>盘点单列表</h3>
-    </div>
-    <el-table :data="appointments">
-
-      <el-table-column prop="id" label="盘点单编号">
-
-      </el-table-column>
-      <el-table-column prop="name" label="名称">
-
-      </el-table-column>
-
-      <el-table-column prop="date" label="日期">
-
-      </el-table-column>
-
-      <el-table-column prop="personnel" label="盘点人员">
-
-      </el-table-column>
-
-      <el-table-column prop="item" label="商品">
-      </el-table-column>
-
-      <el-table-column label="操作">
-
-        <template #default="{row}">
-          <!-- 编辑盘点单 -->
-
-          <el-button type="text" @click="editAppointment(row)">编辑
-          </el-button>
-          <!-- 取消盘点单 -->
-          <el-button type="text" @click="cancelAppointment(row)">删除
-          </el-button>
-
-        </template>
-
-      </el-table-column>
-
-    </el-table>
-    <!-- 添加或编辑盘点单的表单 -->
-    <el-dialog v-model="dialogVisible" title="添加/编辑盘点单">
-      <el-form :model="formData" :rules="formRules">
-        <el-form-item label="盘点单名称" prop="name">
-          <el-input v-model="formData.name"></el-input>
-        </el-form-item>
-        <el-form-item label="日期" prop="date">
-          <el-date-picker v-model="formData.date"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="盘点人员" prop="name">
-          <el-input v-model="formData.personnel"></el-input>
-        </el-form-item>
-        <el-form-item label="商品" prop="name">
-          <el-input v-model="formData.item"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer">
-        <!-- 取消添加或编辑 -->
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <!-- 确认添加或编辑 -->
-        <el-button type="primary" @click="">确认</el-button>
-      </div>
-    </el-dialog>
-
-    <!-- 确认取消盘点单的对话框 -->
-    <el-dialog v-model="cancelDialogVisible" title="删除盘点单">
-      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此盘点单吗？</div>
-      <span slot="footer" class="dialog-footer">
-    <!-- 取消取消盘点单 -->
-    <el-button @click="cancelDialogVisible = false">取 消</el-button>
-        <!-- 确认取消盘点单 -->
-    <el-button type="primary" @click="">确 定</el-button>
-  </span>
-    </el-dialog>
-	</div>
+  </div>
 </template>
 
-<script setup lang="ts" name="dashboard">
-import {Plus} from "@element-plus/icons-vue";
-import {ref} from "vue";
-
-const appointments = ref([]); // 盘点单列表
-const services = ref([
-  '理发', '洗头','染发', '烫发'
-]); // 服务列表
-for (let i = 1; i <= 50; i++) {
-  const name = `盘点单${i}`;
-
-  const date = new Date(2022, 0, Math.floor(Math.random() * 31) + 1);
-  const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-  const time = `${Math.floor(Math.random() * 24)}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`;
-  const service = services.value[Math.floor(Math.random() * services.value.length)];
-  appointments.value.push({
-    "id": 100+i,
-    "name": name,
-    "date": formattedDate,
-    "personnel": '员工'+Math.floor(Math.random() * 24),
-    "item": '商品'+Math.floor(Math.random() * 24),
-    "service": service
-  });
-}
+<script setup>
+import * as echarts from 'echarts';
+import {onMounted} from "vue";
 
 
-const cancelDialogVisible = ref(false);
+onMounted(() => {
+  var chartDom = document.getElementById('main');
+  var myChart = echarts.init(chartDom);
+  var option;
+  option = {
+    title: {
+      text: '客流趋势',
+      subtext: '最近一月的客流趋势图',
+      x: 'center'
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross'
+      }
+    },
+    xAxis: {
+      type: 'category',
+      data: ['10-01', '10-02', '10-03', '10-04', '10-05', '10-06', '10-07', '10-08', '10-09', '10-10'
+      ,
+      '10-11', '10-12', '10-13', '10-14', '10-15', '10-16', '10-17', '10-18', '10-19', '10-20'
+      ,
+      '10-21', '10-22', '10-23', '10-24', '10-25', '10-26', '10-27', '10-28', '10-29', '10-30'
+      , '10-31']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        data: [120, 200, 150, 80, 70, 110, 130, 124, 120, 200, 150, 80, 70, 110, 130, 124,
+          120, 200, 150, 80, 70, 110, 130, 124, 120, 200, 150, 80, 70, 110, 130, 124, ],
+        type: 'bar'
+      }
+    ]
+  };
 
-const formData = ref({}); // 添加或编辑盘点单的表单数据
-const formRules = ref({
-  name: [
-    { required: true, message: '姓名不能为空', trigger: 'blur' },
-  ],
-  date: [
-    { required: true, message: '日期不能为空', trigger: 'blur' },
-  ],
-  time: [
-    { required: true, message: '时间不能为空', trigger: 'blur' },
-  ],
-  service: [
-    { required: true, message: '服务不能为空', trigger: 'blur' },
-  ],
-}); // 添加或编辑盘点单的表单验证规则
-const dialogVisible = ref(false); // 是否显示添加或编辑盘点单的对话框
+  option && myChart.setOption(option);
 
-// 编辑盘点单
-function editAppointment(appointment: any) {
-  formData.value = { ...appointment };
-  dialogVisible.value = true;
-}
+});
 
-function addAppointment() {
-  dialogVisible.value = true;
-  formData.value = {};
-}
-
-// 取消盘点单
-function cancelAppointment(appointment: any) {
-  cancelDialogVisible.value = true;
-  formData.value = { ...appointment };
-}
 
 </script>
 
 <style scoped>
-.el-row {
-	margin-bottom: 20px;
+.schart-box {
+  display: inline-block;
+  margin: 20px;
 }
-
-.grid-content {
-	display: flex;
-	align-items: center;
-	height: 100px;
-}
-
-.add-appointment {
-  margin-bottom: 20px;
-}
-
-.grid-cont-right {
-	flex: 1;
-	text-align: center;
-	font-size: 14px;
-	color: #999;
-}
-
-.grid-num {
-	font-size: 30px;
-	font-weight: bold;
-}
-
-.grid-con-icon {
-	font-size: 50px;
-	width: 100px;
-	height: 100px;
-	text-align: center;
-	line-height: 100px;
-	color: #fff;
-}
-
-.grid-con-1 .grid-con-icon {
-	background: rgb(45, 140, 240);
-}
-
-.grid-con-1 .grid-num {
-	color: rgb(45, 140, 240);
-}
-
-.grid-con-2 .grid-con-icon {
-	background: rgb(100, 213, 114);
-}
-
-.grid-con-2 .grid-num {
-	color: rgb(100, 213, 114);
-}
-
-.grid-con-3 .grid-con-icon {
-	background: rgb(242, 94, 67);
-}
-
-.grid-con-3 .grid-num {
-	color: rgb(242, 94, 67);
-}
-
-.user-info {
-	display: flex;
-	align-items: center;
-	padding-bottom: 20px;
-	border-bottom: 2px solid #ccc;
-	margin-bottom: 20px;
-}
-
-.user-info-cont {
-	padding-left: 50px;
-	flex: 1;
-	font-size: 14px;
-	color: #999;
-}
-
-.user-info-cont div:first-child {
-	font-size: 30px;
-	color: #222;
-}
-
-.user-info-list {
-	font-size: 14px;
-	color: #999;
-	line-height: 25px;
-}
-
-.user-info-list span {
-	margin-left: 70px;
-}
-
-.mgb20 {
-	margin-bottom: 40px;
-}
-
-.todo-item {
-	font-size: 14px;
-}
-
-.todo-item-del {
-	text-decoration: line-through;
-	color: #999;
-}
-
 .schart {
-	width: 100%;
-	height: 300px;
+  width: 600px;
+  height: 400px;
+}
+.content-title {
+  clear: both;
+  font-weight: 400;
+  line-height: 50px;
+  margin: 10px 0;
+  font-size: 22px;
+  color: #1f2f3d;
 }
 </style>

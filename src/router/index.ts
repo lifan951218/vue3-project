@@ -81,6 +81,14 @@ const routes: RouteRecordRaw[] = [
                     permiss: '5',
                 },
                 component: () => import(/* webpackChunkName: "form" */ '../views/form2.vue'),
+            },{
+                path: '/form3',
+                name: 'baseform3',
+                meta: {
+                    title: '表单',
+                    permiss: '5',
+                },
+                component: () => import(/* webpackChunkName: "form" */ '../views/form3.vue'),
             },
             {
                 path: '/tabs',
@@ -143,6 +151,30 @@ const routes: RouteRecordRaw[] = [
                     permiss: '8',
                 },
                 component: () => import(/* webpackChunkName: "editor" */ '../views/consumer.vue'),
+            },{
+                path: '/consumer2',
+                name: 'consumer2',
+                meta: {
+                    title: '短信发送',
+                    permiss: '8',
+                },
+                component: () => import(/* webpackChunkName: "editor" */ '../views/consumer2.vue'),
+            },{
+                path: '/form4',
+                name: 'form4',
+                meta: {
+                    title: '短信发送',
+                    permiss: '8',
+                },
+                component: () => import(/* webpackChunkName: "editor" */ '../views/form4.vue'),
+            },{
+                path: '/device',
+                name: 'device',
+                meta: {
+                    title: '短信发送',
+                    permiss: '8',
+                },
+                component: () => import(/* webpackChunkName: "editor" */ '../views/device.vue'),
             },
             {
                 path: '/editor2',
@@ -161,6 +193,14 @@ const routes: RouteRecordRaw[] = [
                     permiss: '9',
                 },
                 component: () => import(/* webpackChunkName: "markdown" */ '../views/markdown.vue'),
+            },{
+                path: '/cuxiao',
+                name: 'cuxiao',
+                meta: {
+                    title: 'markdown编辑器',
+                    permiss: '9',
+                },
+                component: () => import(/* webpackChunkName: "markdown" */ '../views/cuxiao.vue'),
             },
             {
                 path: '/export',
@@ -170,6 +210,15 @@ const routes: RouteRecordRaw[] = [
                     permiss: '2',
                 },
                 component: () => import(/* webpackChunkName: "export" */ '../views/export.vue'),
+            },
+            {
+                path: '/export2',
+                name: 'export2',
+                meta: {
+                    title: '导出Excel',
+                    permiss: '2',
+                },
+                component: () => import(/* webpackChunkName: "export" */ '../views/export2.vue'),
             },
             {
                 path: '/import',
@@ -206,7 +255,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `享开店门店盘点系统`;
+    document.title = `享开店门店拓客系统`;
     const role = localStorage.getItem('ms_username');
     const permiss = usePermissStore();
     if (!role && to.path !== '/login') {

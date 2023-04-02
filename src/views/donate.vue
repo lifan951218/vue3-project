@@ -1,81 +1,234 @@
 <template>
   <div class="container">
-    <div  id="main" style="height: 700px;width: 100%">
+    <div class="add-appointment">
+      <h3>售后清单</h3>
     </div>
+    <el-table :data="appointments">
+
+      <el-table-column prop="id" label="售后服务编号"></el-table-column>
+      <el-table-column prop="name" label="售后服务名称"></el-table-column>
+      <el-table-column prop="type" label="类型"></el-table-column>
+      <el-table-column prop="state" label="处理状态"></el-table-column>
+
+      <el-table-column prop="date" label="最新处理时间">
+
+      </el-table-column>
+
+      <el-table-column label="操作">
+
+        <template #default="{row}">
+          <!-- 编辑售后服务 -->
+
+          <el-button type="primary" size="small" @click="editAppointment(row)">处理
+          </el-button>
+
+          <!-- 取消售后服务 -->
+
+          <el-button type="warning" size="small" @click="cancelAppointment(row)">标记为已解决
+          </el-button>
+
+        </template>
+
+      </el-table-column>
+
+    </el-table>
+    <!-- 添加或编辑售后服务的表单 -->
+    <el-dialog v-model="dialogVisible" title="售后处理">
+      <el-form :model="formData" :rules="formRules">
+        <el-form-item label="售后服务" prop="name">
+          <el-input v-model="formData.name"></el-input>
+        </el-form-item>
+        <el-form-item label="处理方案" prop="date">
+          <el-input v-model="formData.phone"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <!-- 取消添加或编辑 -->
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <!-- 确认添加或编辑 -->
+        <el-button type="primary" @click="">提交</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 确认取消售后服务的对话框 -->
+    <el-dialog v-model="cancelDialogVisible" title="标记为已解决售后服务">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要标记为已解决此售后服务吗？</div>
+      <span slot="footer" class="dialog-footer">
+    <!-- 取消标记为已解决售后服务 -->
+    <el-button @click="cancelDialogVisible = false">取 消</el-button>
+        <!-- 确认标记为已解决售后服务 -->
+    <el-button type="primary" @click="">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
-<script setup>
-import * as echarts from 'echarts';
-import {onMounted} from "vue";
+<script setup lang="ts" name="dashboard">
+import {Plus} from "@element-plus/icons-vue";
+import {ref} from "vue";
+
+const appointments = ref([]); // 售后服务列表
+const services = ref([
+  '退货服务', '维修服务', '换货服务'
+]);
+const states = ref([
+  '处理中', '处理完成', '未处理'
+]);
+for (let i = 1; i <= 50; i++) {
+  const service = services.value[Math.floor(Math.random() * services.value.length)];
+  const date = new Date(2022, 0, Math.floor(Math.random() * 31) + 1);
+  const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+
+  const state = states.value[Math.floor(Math.random() * states.value.length)];
+  appointments.value.push({
+    id: i,
+    name: `售后服务${i}`,
+    type: service,
+    date: formattedDate,
+    state: state,
+    phone: `138234578${i.toString().padStart(2, '0')}`,
+  });
+}
 
 
-onMounted(() => {
-  var chartDom = document.getElementById('main');
-  var myChart = echarts.init(chartDom);
-  var option;
-  option = {
-    legend: {
-      top: 'bottom'
-    },
-    title: {
-      text: '商品库存饼状图'
-    },
-    toolbox: {
-      show: true,
-      feature: {
-        mark: { show: true },
-        dataView: { show: true, readOnly: false },
-        restore: { show: true },
-        saveAsImage: { show: true }
-      }
-    },
-    series: [
-      {
-        name: 'Nightingale Chart',
-        type: 'pie',
-        radius: [50, 250],
-        center: ['50%', '50%'],
-        roseType: 'area',
-        itemStyle: {
-          borderRadius: 8
-        },
-        data: [
-          { value: 40, name: '商品 1' },
-          { value: 38, name: '商品 2' },
-          { value: 32, name: '商品 3' },
-          { value: 30, name: '商品 4' },
-          { value: 28, name: '商品 5' },
-          { value: 26, name: '商品 6' },
-          { value: 22, name: '商品 7' },
-          { value: 18, name: '商品 8' }
-        ]
-      }
-    ]
-  };
 
-  option && myChart.setOption(option);
+const cancelDialogVisible = ref(false);
 
-});
+const formData = ref({}); // 添加或编辑售后服务的表单数据
+const formRules = ref({
+  name: [
+    { required: true, message: '售后服务不能为空', trigger: 'blur' },
+  ],
+  date: [
+    { required: true, message: '手机号码不能为空', trigger: 'blur' },
+  ]
+}); // 添加或编辑售后服务的表单验证规则
+const dialogVisible = ref(false); // 是否显示添加或编辑售后服务的对话框
 
+// 编辑售后服务
+function editAppointment(appointment: any) {
+  formData.value = { ...appointment };
+  dialogVisible.value = true;
+}
+
+function addAppointment() {
+  dialogVisible.value = true;
+  formData.value = {};
+}
+
+// 标记为已解决售后服务
+function cancelAppointment(appointment: any) {
+  cancelDialogVisible.value = true;
+  formData.value = { ...appointment };
+}
 
 </script>
 
 <style scoped>
-.schart-box {
-  display: inline-block;
-  margin: 20px;
+.el-row {
+  margin-bottom: 20px;
 }
+
+.grid-content {
+  display: flex;
+  align-items: center;
+  height: 100px;
+}
+
+.add-appointment {
+  margin-bottom: 20px;
+}
+
+.grid-cont-right {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+}
+
+.grid-num {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.grid-con-icon {
+  font-size: 50px;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+  color: #fff;
+}
+
+.grid-con-1 .grid-con-icon {
+  background: rgb(45, 140, 240);
+}
+
+.grid-con-1 .grid-num {
+  color: rgb(45, 140, 240);
+}
+
+.grid-con-2 .grid-con-icon {
+  background: rgb(100, 213, 114);
+}
+
+.grid-con-2 .grid-num {
+  color: rgb(100, 213, 114);
+}
+
+.grid-con-3 .grid-con-icon {
+  background: rgb(242, 94, 67);
+}
+
+.grid-con-3 .grid-num {
+  color: rgb(242, 94, 67);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.user-info-cont {
+  padding-left: 50px;
+  flex: 1;
+  font-size: 14px;
+  color: #999;
+}
+
+.user-info-cont div:first-child {
+  font-size: 30px;
+  color: #222;
+}
+
+.user-info-list {
+  font-size: 14px;
+  color: #999;
+  line-height: 25px;
+}
+
+.user-info-list span {
+  margin-left: 70px;
+}
+
+.mgb20 {
+  margin-bottom: 40px;
+}
+
+.todo-item {
+  font-size: 14px;
+}
+
+.todo-item-del {
+  text-decoration: line-through;
+  color: #999;
+}
+
 .schart {
-  width: 600px;
-  height: 400px;
-}
-.content-title {
-  clear: both;
-  font-weight: 400;
-  line-height: 50px;
-  margin: 10px 0;
-  font-size: 22px;
-  color: #1f2f3d;
+  width: 100%;
+  height: 300px;
 }
 </style>

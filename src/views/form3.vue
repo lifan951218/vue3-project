@@ -3,26 +3,26 @@
         <div class="form-box">
             <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
 
-              <el-form-item label="所属部门" prop="region">
-                <el-select v-model="form.region" placeholder="请选择社交媒体" multiple>
+              <el-form-item label="会员" prop="region">
+                <el-select v-model="form.region" placeholder="请选择会员" multiple>
                   <el-option key="联系人1" label="联系人1" value="联系人1"></el-option>
                   <el-option key="联系人2" label="联系人2" value="联系人2"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="库存名称" prop="region">
+              <el-form-item label="涉及商品" prop="region">
                 <el-select v-model="form.region" placeholder="请选择商品" multiple>
                   <el-option key="类别1" label="类别1" value="联系人1"></el-option>
                   <el-option key="类别2" label="类别2" value="联系人2"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="推广类型" prop="region">
+              <el-form-item label="反馈类型" prop="region">
                 <el-input v-model="form.region"></el-input>
               </el-form-item>
-              <el-form-item label="推广描述" prop="region">
+              <el-form-item label="反馈内容" prop="region">
                 <el-input v-model="form.region" type="textarea"></el-input>
               </el-form-item>
             </el-form>
-          <div><el-button type="primary">提交推广申请</el-button> </div>
+          <div><el-button type="primary">提交反馈</el-button> </div>
         </div>
     </div>
 </template>

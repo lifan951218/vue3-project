@@ -2,14 +2,14 @@
   <div class="container">
 
     <div class="add-appointment">
-      <el-button type="primary" :icon="Plus" @click="addAppointment">新增推荐活动</el-button>
+      <el-button type="primary" :icon="Plus" @click="addAppointment">新增促销活动</el-button>
     </div>
     <div class="add-appointment">
-      <h3>推荐活动列表</h3>
+      <h3>促销活动列表</h3>
     </div>
     <el-table :data="appointments">
 
-      <el-table-column prop="name" label="推荐活动名称">
+      <el-table-column prop="name" label="促销活动名称">
 
       </el-table-column>
 
@@ -29,12 +29,12 @@
       <el-table-column label="操作">
 
         <template #default="{row}">
-          <!-- 编辑推荐活动 -->
+          <!-- 编辑促销活动 -->
 
           <el-button type="text" @click="editAppointment(row)">编辑
           </el-button>
 
-          <!-- 取消推荐活动 -->
+          <!-- 取消促销活动 -->
 
           <el-button type="text" @click="cancelAppointment(row)">删除
           </el-button>
@@ -44,10 +44,10 @@
       </el-table-column>
 
     </el-table>
-    <!-- 添加或编辑推荐活动的表单 -->
-    <el-dialog v-model="dialogVisible" title="添加/编辑推荐活动">
+    <!-- 添加或编辑促销活动的表单 -->
+    <el-dialog v-model="dialogVisible" title="添加/编辑促销活动">
       <el-form :model="formData" :rules="formRules">
-        <el-form-item label="推荐活动名称" prop="name">
+        <el-form-item label="促销活动名称" prop="name">
           <el-input v-model="formData.name"></el-input>
         </el-form-item><el-form-item label="主办人" prop="name">
           <el-input v-model="formData.type"></el-input>
@@ -69,13 +69,13 @@
       </div>
     </el-dialog>
 
-    <!-- 确认取消推荐活动的对话框 -->
-    <el-dialog v-model="cancelDialogVisible" title="删除推荐活动">
-      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此推荐活动吗？</div>
+    <!-- 确认取消促销活动的对话框 -->
+    <el-dialog v-model="cancelDialogVisible" title="删除促销活动">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此促销活动吗？</div>
       <span slot="footer" class="dialog-footer">
-    <!-- 取消取消推荐活动 -->
+    <!-- 取消取消促销活动 -->
     <el-button @click="cancelDialogVisible = false">取 消</el-button>
-        <!-- 确认取消推荐活动 -->
+        <!-- 确认取消促销活动 -->
     <el-button type="primary" @click="">确 定</el-button>
   </span>
     </el-dialog>
@@ -86,7 +86,7 @@
 import {Plus} from "@element-plus/icons-vue";
 import {ref} from "vue";
 
-const appointments = ref([]); // 推荐活动列表
+const appointments = ref([]); // 促销活动列表
 const services = ref([
   '部门1', '部门2', '部门3', '部门4', '部门5', '部门6'
 ]); // 所属部门列表
@@ -94,7 +94,7 @@ const types = ref([
   '员工1', '员工2', '员工3', '员工4', '员工5', '员工6', '员工7', '员工8', '员工9', '员工10'
 ]); // 所属部门列表
 for (let i = 1; i <= 50; i++) {
-  const name = `推荐活动${i}`;
+  const name = `促销活动${i}`;
 
   const date = new Date(2022, 0, Math.floor(Math.random() * 31) + 1);
   const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
@@ -111,7 +111,7 @@ for (let i = 1; i <= 50; i++) {
 
 const cancelDialogVisible = ref(false);
 
-const formData = ref({}); // 添加或编辑推荐活动的表单数据
+const formData = ref({}); // 添加或编辑促销活动的表单数据
 const formRules = ref({
   name: [
     { required: true, message: '姓名不能为空', trigger: 'blur' },
@@ -122,10 +122,10 @@ const formRules = ref({
   service: [
     { required: true, message: '所属部门不能为空', trigger: 'blur' },
   ],
-}); // 添加或编辑推荐活动的表单验证规则
-const dialogVisible = ref(false); // 是否显示添加或编辑推荐活动的对话框
+}); // 添加或编辑促销活动的表单验证规则
+const dialogVisible = ref(false); // 是否显示添加或编辑促销活动的对话框
 
-// 编辑推荐活动
+// 编辑促销活动
 function editAppointment(appointment: any) {
   formData.value = { ...appointment };
   dialogVisible.value = true;
@@ -136,7 +136,7 @@ function addAppointment() {
   formData.value = {};
 }
 
-// 取消推荐活动
+// 取消促销活动
 function cancelAppointment(appointment: any) {
   cancelDialogVisible.value = true;
   formData.value = { ...appointment };

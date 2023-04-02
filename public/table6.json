@@ -3,35 +3,35 @@
       {
             "id": "worker-1232",
             "type": "工作人员1",
-            "pro_type": "理发部",
+            "pro_type": "部门1",
             "content": "普通员工",
             "state": "在线"
       },
       {
             "id": "worker-1233",
             "type": "工作人员2",
-            "pro_type": "保洁部",
+            "pro_type": "部门1",
             "content": "普通员工",
             "state": "在线"
       },
       {
             "id": "worker-1234",
             "type": "工作人员3",
-            "pro_type": "理发部",
+            "pro_type": "部门2",
             "content": "普通员工",
             "state": "在线"
       },
       {
             "id": "worker-1235",
             "type": "工作人员4",
-            "pro_type": "理发部",
+            "pro_type": "部门4",
             "content": "普通员工",
             "state": "离线"
       },
       {
             "id": "worker-1236",
             "type": "工作人员5",
-            "pro_type": "保洁部",
+            "pro_type": "部门1",
             "content": "普通员工",
             "state": "在线"
       },

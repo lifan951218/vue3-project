@@ -2,41 +2,33 @@
   <div class="container">
 
     <div class="add-appointment">
-      <el-button type="primary" :icon="Plus" @click="addAppointment">新增推荐活动</el-button>
+      <el-button type="primary" :icon="Plus" @click="addAppointment">新增员工</el-button>
     </div>
     <div class="add-appointment">
-      <h3>推荐活动列表</h3>
+      <h3>员工列表</h3>
     </div>
     <el-table :data="appointments">
 
-      <el-table-column prop="name" label="推荐活动名称">
+      <el-table-column prop="id" label="员工编号"></el-table-column>
+      <el-table-column prop="name" label="员工名称"></el-table-column>
+      <el-table-column prop="phone" label="手机号"></el-table-column>
+      <el-table-column prop="dep" label="所属部门"></el-table-column>
 
-      </el-table-column>
-
-      <el-table-column prop="type" label="主办人">
-
-      </el-table-column>
-
-      <el-table-column prop="date" label="活动日期">
-
-      </el-table-column>
-
-
-      <el-table-column prop="service" label="所属部门">
+      <el-table-column prop="date" label="职级">
 
       </el-table-column>
 
       <el-table-column label="操作">
 
         <template #default="{row}">
-          <!-- 编辑推荐活动 -->
+          <!-- 编辑员工 -->
 
-          <el-button type="text" @click="editAppointment(row)">编辑
+          <el-button type="primary" size="small" @click="editAppointment(row)">编辑
           </el-button>
 
-          <!-- 取消推荐活动 -->
+          <!-- 取消员工 -->
 
-          <el-button type="text" @click="cancelAppointment(row)">删除
+          <el-button type="danger" size="small" @click="cancelAppointment(row)">删除
           </el-button>
 
         </template>
@@ -44,21 +36,20 @@
       </el-table-column>
 
     </el-table>
-    <!-- 添加或编辑推荐活动的表单 -->
-    <el-dialog v-model="dialogVisible" title="添加/编辑推荐活动">
+    <!-- 添加或编辑员工的表单 -->
+    <el-dialog v-model="dialogVisible" title="添加/编辑员工">
       <el-form :model="formData" :rules="formRules">
-        <el-form-item label="推荐活动名称" prop="name">
+        <el-form-item label="员工" prop="name">
           <el-input v-model="formData.name"></el-input>
-        </el-form-item><el-form-item label="主办人" prop="name">
-          <el-input v-model="formData.type"></el-input>
         </el-form-item>
-        <el-form-item label="活动时间" prop="date">
-          <el-date-picker v-model="formData.date"></el-date-picker>
+        <el-form-item label="手机号" prop="date">
+          <el-input v-model="formData.phone"></el-input>
         </el-form-item>
-        <el-form-item label="所属部门" prop="service">
-          <el-select v-model="formData.service">
-            <el-option v-for="service in services" :key="service" :label="service" :value="service"></el-option>
-          </el-select>
+        <el-form-item label="部门" prop="date">
+          <el-input v-model="formData.dep"></el-input>
+        </el-form-item>
+        <el-form-item label="级别" prop="date">
+          <el-input v-model="formData.date"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -69,13 +60,13 @@
       </div>
     </el-dialog>
 
-    <!-- 确认取消推荐活动的对话框 -->
-    <el-dialog v-model="cancelDialogVisible" title="删除推荐活动">
-      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此推荐活动吗？</div>
+    <!-- 确认取消员工的对话框 -->
+    <el-dialog v-model="cancelDialogVisible" title="删除员工">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此员工吗？</div>
       <span slot="footer" class="dialog-footer">
-    <!-- 取消取消推荐活动 -->
+    <!-- 取消删除员工 -->
     <el-button @click="cancelDialogVisible = false">取 消</el-button>
-        <!-- 确认取消推荐活动 -->
+        <!-- 确认删除员工 -->
     <el-button type="primary" @click="">确 定</el-button>
   </span>
     </el-dialog>
@@ -86,46 +77,41 @@
 import {Plus} from "@element-plus/icons-vue";
 import {ref} from "vue";
 
-const appointments = ref([]); // 推荐活动列表
+const appointments = ref([]); // 员工列表
 const services = ref([
-  '部门1', '部门2', '部门3', '部门4', '部门5', '部门6'
-]); // 所属部门列表
-const types = ref([
-  '员工1', '员工2', '员工3', '员工4', '员工5', '员工6', '员工7', '员工8', '员工9', '员工10'
-]); // 所属部门列表
+  '普通员工', '经理', '组长'
+]);
+const services2 = ref([
+  '部门1', '部门2', '部门3', '部门4', '部门5', '部门6', '部门7'
+]);
 for (let i = 1; i <= 50; i++) {
-  const name = `推荐活动${i}`;
-
-  const date = new Date(2022, 0, Math.floor(Math.random() * 31) + 1);
-  const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
   const service = services.value[Math.floor(Math.random() * services.value.length)];
-  const type = types.value[Math.floor(Math.random() * types.value.length)];
+  const service2 = services2.value[Math.floor(Math.random() * services2.value.length)];
   appointments.value.push({
-    "name": name,
-    "date": formattedDate,
-    "service": service,
-    "type": type
+    id: i,
+    name: `员工${i}`,
+    date: service,
+    dep: service2,
+    phone: `138234578${i.toString().padStart(2, '0')}`,
   });
 }
 
 
+
 const cancelDialogVisible = ref(false);
 
-const formData = ref({}); // 添加或编辑推荐活动的表单数据
+const formData = ref({}); // 添加或编辑员工的表单数据
 const formRules = ref({
   name: [
-    { required: true, message: '姓名不能为空', trigger: 'blur' },
+    { required: true, message: '员工不能为空', trigger: 'blur' },
   ],
   date: [
-    { required: true, message: '日期不能为空', trigger: 'blur' },
-  ],
-  service: [
-    { required: true, message: '所属部门不能为空', trigger: 'blur' },
-  ],
-}); // 添加或编辑推荐活动的表单验证规则
-const dialogVisible = ref(false); // 是否显示添加或编辑推荐活动的对话框
+    { required: true, message: '手机号码不能为空', trigger: 'blur' },
+  ]
+}); // 添加或编辑员工的表单验证规则
+const dialogVisible = ref(false); // 是否显示添加或编辑员工的对话框
 
-// 编辑推荐活动
+// 编辑员工
 function editAppointment(appointment: any) {
   formData.value = { ...appointment };
   dialogVisible.value = true;
@@ -136,7 +122,7 @@ function addAppointment() {
   formData.value = {};
 }
 
-// 取消推荐活动
+// 删除员工
 function cancelAppointment(appointment: any) {
   cancelDialogVisible.value = true;
   formData.value = { ...appointment };
