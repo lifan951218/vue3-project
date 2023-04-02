@@ -36,7 +36,7 @@
 
           <!-- 取消库存 -->
 
-          <el-button type="text" @click="cancelAppointment(row)">取消
+          <el-button type="text" @click="cancelAppointment(row)">删除
           </el-button>
 
         </template>
