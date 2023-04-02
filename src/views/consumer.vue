@@ -2,30 +2,29 @@
   <div class="container">
 
     <div class="add-appointment">
-      <el-button type="primary" :icon="Plus" @click="addAppointment">新增顾客</el-button>
+      <el-button type="primary" :icon="Plus" @click="addAppointment">新增商品</el-button>
     </div>
     <div class="add-appointment">
-      <h3>顾客列表</h3>
+      <h3>商品列表</h3>
     </div>
     <el-table :data="appointments">
 
-      <el-table-column prop="name" label="姓名">
+      <el-table-column prop="id" label="商品编号"></el-table-column>
+      <el-table-column prop="name" label="商品名称"></el-table-column>
 
-      </el-table-column>
-
-      <el-table-column prop="date" label="手机号码">
+      <el-table-column prop="date" label="所属部门">
 
       </el-table-column>
 
       <el-table-column label="操作">
 
         <template #default="{row}">
-          <!-- 编辑顾客 -->
+          <!-- 编辑商品 -->
 
           <el-button type="primary" size="small" @click="editAppointment(row)">编辑
           </el-button>
 
-          <!-- 取消顾客 -->
+          <!-- 取消商品 -->
 
           <el-button type="danger" size="small" @click="cancelAppointment(row)">删除
           </el-button>
@@ -35,13 +34,13 @@
       </el-table-column>
 
     </el-table>
-    <!-- 添加或编辑顾客的表单 -->
-    <el-dialog v-model="dialogVisible" title="添加/编辑顾客">
+    <!-- 添加或编辑商品的表单 -->
+    <el-dialog v-model="dialogVisible" title="添加/编辑商品">
       <el-form :model="formData" :rules="formRules">
-        <el-form-item label="姓名" prop="name">
+        <el-form-item label="商品" prop="name">
           <el-input v-model="formData.name"></el-input>
         </el-form-item>
-        <el-form-item label="手机号码" prop="date">
+        <el-form-item label="所属部门" prop="date">
           <el-input v-model="formData.date"></el-input>
         </el-form-item>
       </el-form>
@@ -53,13 +52,13 @@
       </div>
     </el-dialog>
 
-    <!-- 确认取消顾客的对话框 -->
-    <el-dialog v-model="cancelDialogVisible" title="删除顾客">
-      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此顾客吗？</div>
+    <!-- 确认取消商品的对话框 -->
+    <el-dialog v-model="cancelDialogVisible" title="删除商品">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此商品吗？</div>
       <span slot="footer" class="dialog-footer">
-    <!-- 取消删除顾客 -->
+    <!-- 取消删除商品 -->
     <el-button @click="cancelDialogVisible = false">取 消</el-button>
-        <!-- 确认删除顾客 -->
+        <!-- 确认删除商品 -->
     <el-button type="primary" @click="">确 定</el-button>
   </span>
     </el-dialog>
@@ -70,12 +69,13 @@
 import {Plus} from "@element-plus/icons-vue";
 import {ref} from "vue";
 
-const appointments = ref([]); // 顾客列表
+const appointments = ref([]); // 商品列表
 
 for (let i = 1; i <= 50; i++) {
   appointments.value.push({
-    name: `顾客${i}`,
-    date: `1380013800${i.toString().padStart(2, '0')}`,
+    id: i,
+    name: `商品${i}`,
+    date: `部门${i.toString().padStart(2, '0')}`,
   });
 }
 
@@ -83,18 +83,18 @@ for (let i = 1; i <= 50; i++) {
 
 const cancelDialogVisible = ref(false);
 
-const formData = ref({}); // 添加或编辑顾客的表单数据
+const formData = ref({}); // 添加或编辑商品的表单数据
 const formRules = ref({
   name: [
-    { required: true, message: '姓名不能为空', trigger: 'blur' },
+    { required: true, message: '商品不能为空', trigger: 'blur' },
   ],
   date: [
     { required: true, message: '手机号码不能为空', trigger: 'blur' },
   ]
-}); // 添加或编辑顾客的表单验证规则
-const dialogVisible = ref(false); // 是否显示添加或编辑顾客的对话框
+}); // 添加或编辑商品的表单验证规则
+const dialogVisible = ref(false); // 是否显示添加或编辑商品的对话框
 
-// 编辑顾客
+// 编辑商品
 function editAppointment(appointment: any) {
   formData.value = { ...appointment };
   dialogVisible.value = true;
@@ -105,7 +105,7 @@ function addAppointment() {
   formData.value = {};
 }
 
-// 删除顾客
+// 删除商品
 function cancelAppointment(appointment: any) {
   cancelDialogVisible.value = true;
   formData.value = { ...appointment };

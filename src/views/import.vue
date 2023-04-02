@@ -1,24 +1,31 @@
 <template>
     <div>
         <div class="container">
-            <div class="handle-box">
-                <el-upload
-                    action="#"
-                    :limit="1"
-                    accept=".xlsx, .xls"
-                    :show-file-list="false"
-                    :before-upload="beforeUpload"
-                    :http-request="handleMany"
-                >
-                    <el-button class="mr10" type="success">批量导入</el-button>
-                </el-upload>
-            </div>
-            <el-table :data="tableData" border class="table" header-cell-class-name="table-header">
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="名称"></el-table-column>
-                <el-table-column prop="sno" label="价格"></el-table-column>
-                <el-table-column prop="class" label="类型"></el-table-column>
-            </el-table>
+          <div style="margin-bottom: 20px">
+            请选择库存同步时间
+            <el-date-picker
+              v-model="date"
+              type="datetime"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
+              style="width: 100%;"
+            ></el-date-picker>
+          </div>
+          <div style="margin-bottom: 20px">
+            请选择同步库存类型
+            <el-select v-model="value2" placeholder="请选择">
+              <el-option
+                  v-for="item in users"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
+          <!--		<div class="mgb20" ref="editor"></div>-->
+          <el-button type="primary" @click="">开始同步</el-button>
         </div>
     </div>
 </template>

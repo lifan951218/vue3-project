@@ -4,9 +4,9 @@
             class="sidebar-el-menu"
             :default-active="onRoutes"
             :collapse="sidebar.collapse"
-            background-color="#3a5175"
+            background-color="#9b7350"
             text-color="#bfcbd9"
-            active-text-color="#20a0ff"
+            active-text-color="#171c1f"
             unique-opened
             router
         >
@@ -58,78 +58,76 @@ import { useRoute } from 'vue-router';
 const items = [
   {
     icon: 'Odometer',
-    index: '/dashboard',
-    title: '预约管理',
-    permiss: '1'
-  },
-
-  {
-    icon: 'Calendar',
     index: '1',
-    title: '顾客管理',
-    permiss: '2',
+    title: '盘点管理',
+    permiss: '1',
     subs: [
       {
-        index: '/editor',
-        title: '顾客档案',
+        index: '/dashboard',
+        title: '盘点单列表',
         permiss: '2',
       },
       {
-        index: '/editor2',
-        title: '预约记录及评价',
+        index: '/dashboard2',
+        title: '盘点历史记录',
         permiss: '2',
       }
     ],
   },
   {
-    icon: 'DocumentCopy',
-    index: '/tabs',
-    title: '服务管理',
-    permiss: '3',
+    icon: 'Calendar',
+    index: '/editor',
+    title: '商品管理',
+    permiss: '2'
   },
   {
-    icon: 'Edit',
-    index: '4',
-    title: '工作人员管理',
-    permiss: '4',
+    icon: 'Warning',
+    index: '2',
+    title: '库存管理',
+    permiss: '13',
     subs: [
       {
-        index: '/important',
-        title: '工作人员列表',
+        index: '/markdown',
+        title: '库存列表',
         permiss: '2',
       },
       {
         index: '/form',
-        title: '任务分配',
+        title: '库存预警',
+        permiss: '2',
+      },
+      {
+        index: '/form2',
+        title: '库存报损',
         permiss: '2',
       }
     ]
   },
   {
-    icon: 'Warning',
-    index: '/markdown',
-    title: '库存管理',
-    permiss: '13'
+    icon: 'DocumentCopy',
+    index: '/tabs',
+    title: '供应商管理',
+    permiss: '3',
   },
   {
     icon: 'Warning',
     index: '6',
-    title: '报告和统计',
+    title: '报表统计',
     permiss: '13',
     subs: [
       {
         index: '/charts',
-        title: '预约统计',
+        title: '盘点统计',
         permiss: '2',
       },
       {
         index: '/donate',
-        title: '收入统计',
+        title: '库存统计',
         permiss: '2',
       },
       {
         index: '/export',
-        title: '服务流行度统计',
+        title: '销售统计',
         permiss: '2',
       }
     ],
@@ -137,17 +135,17 @@ const items = [
   {
     icon: 'Warning',
     index: '7',
-    title: '设置与配置',
+    title: '设置',
     permiss: '13',
     subs: [
       {
-        index: '/permission',
-        title: '时间表设置',
+        index: '/import',
+        title: '库存同步',
         permiss: '2',
       },
       {
-        index: '/import',
-        title: '价格列表设置',
+        index: '/permission',
+        title: '权限管理',
         permiss: '2',
       }
     ],
@@ -174,9 +172,11 @@ const sidebar = useSidebarStore();
 }
 .sidebar::-webkit-scrollbar {
     width: 0;
+  /*background-color: #1f2f3d;*/
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
     width: 250px;
+  background-color: #9b7350;
 }
 .sidebar > ul {
     height: 100%;

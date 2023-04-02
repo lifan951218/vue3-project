@@ -22,7 +22,7 @@
       </el-table-column>
 
 
-      <el-table-column prop="service" label="所属服务">
+      <el-table-column prop="service" label="所属部门">
 
       </el-table-column>
 
@@ -36,7 +36,7 @@
 
           <!-- 取消库存 -->
 
-          <el-button type="text" @click="cancelAppointment(row)">取消
+          <el-button type="text" @click="cancelAppointment(row)">删除
           </el-button>
 
         </template>
@@ -55,7 +55,7 @@
         <el-form-item label="入库日期" prop="date">
           <el-date-picker v-model="formData.date"></el-date-picker>
         </el-form-item>
-        <el-form-item label="所属服务" prop="service">
+        <el-form-item label="所属部门" prop="service">
           <el-select v-model="formData.service">
             <el-option v-for="service in services" :key="service" :label="service" :value="service"></el-option>
           </el-select>
@@ -88,11 +88,11 @@ import {ref} from "vue";
 
 const appointments = ref([]); // 库存列表
 const services = ref([
-  '理发', '洗头','染发', '烫发'
-]); // 所属服务列表
+  '部门1', '部门2', '部门3', '部门4', '部门5', '部门6'
+]); // 所属部门列表
 const types = ref([
-  '洗发液', '剪刀','椅子', '镜子'
-]); // 所属服务列表
+  '商品2', '商品5','商品6', '商品7', '商品8', '商品9', '商品10', '商品11'
+]); // 所属部门列表
 for (let i = 1; i <= 50; i++) {
   const name = `库存${i}`;
 
@@ -120,7 +120,7 @@ const formRules = ref({
     { required: true, message: '日期不能为空', trigger: 'blur' },
   ],
   service: [
-    { required: true, message: '所属服务不能为空', trigger: 'blur' },
+    { required: true, message: '所属部门不能为空', trigger: 'blur' },
   ],
 }); // 添加或编辑库存的表单验证规则
 const dialogVisible = ref(false); // 是否显示添加或编辑库存的对话框

@@ -1,11 +1,22 @@
 <template>
 	<div class="container">
 
+      <div style="margin-bottom: 20px">
+        请选择盘点商品
+        <el-select v-model="value2" placeholder="请选择">
+          <el-option
+              v-for="item in users"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+        <el-button style="margin-left: 20px" type="primary" @click="">查询</el-button>
+      </div>
+      <!--		<div class="mgb20" ref="editor"></div>-->
+
     <div class="add-appointment">
-      <el-button type="primary" :icon="Plus" @click="addAppointment">新增盘点单</el-button>
-    </div>
-    <div class="add-appointment">
-      <h3>盘点单列表</h3>
+      <h3>盘点历史记录</h3>
     </div>
     <el-table :data="appointments">
 
@@ -27,15 +38,22 @@
       <el-table-column prop="item" label="商品">
       </el-table-column>
 
+      <el-table-column prop="state" label="状态">
+        <template #default="scope">
+          <el-tag
+              :type="scope.row.state === '盘点成功' ? 'success' : scope.row.state === '盘点失败' ? 'danger' : ''"
+          >
+            {{ scope.row.state }}
+          </el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column label="操作">
 
         <template #default="{row}">
           <!-- 编辑盘点单 -->
 
-          <el-button type="text" @click="editAppointment(row)">编辑
-          </el-button>
-          <!-- 取消盘点单 -->
-          <el-button type="text" @click="cancelAppointment(row)">删除
+          <el-button type="text" @click="editAppointment(row)" v-if="row.state==='盘点失败'">重新生成盘点单
           </el-button>
 
         </template>
@@ -86,7 +104,7 @@ import {ref} from "vue";
 
 const appointments = ref([]); // 盘点单列表
 const services = ref([
-  '理发', '洗头','染发', '烫发'
+   '盘点成功', '盘点失败'
 ]); // 服务列表
 for (let i = 1; i <= 50; i++) {
   const name = `盘点单${i}`;
@@ -94,14 +112,14 @@ for (let i = 1; i <= 50; i++) {
   const date = new Date(2022, 0, Math.floor(Math.random() * 31) + 1);
   const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
   const time = `${Math.floor(Math.random() * 24)}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`;
-  const service = services.value[Math.floor(Math.random() * services.value.length)];
+  const state = services.value[Math.floor(Math.random() * services.value.length)];
   appointments.value.push({
-    "id": 100+i,
+    "id": 10+i,
     "name": name,
     "date": formattedDate,
     "personnel": '员工'+Math.floor(Math.random() * 24),
     "item": '商品'+Math.floor(Math.random() * 24),
-    "service": service
+    "state": state
   });
 }
 

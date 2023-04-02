@@ -22,6 +22,15 @@ const routes: RouteRecordRaw[] = [
                 component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
             },
             {
+                path: '/dashboard2',
+                name: 'dashboard2',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard2.vue'),
+            },
+            {
                 path: '/table',
                 name: 'basetable',
                 meta: {
@@ -64,6 +73,14 @@ const routes: RouteRecordRaw[] = [
                     permiss: '5',
                 },
                 component: () => import(/* webpackChunkName: "form" */ '../views/form.vue'),
+            },{
+                path: '/form2',
+                name: 'baseform2',
+                meta: {
+                    title: '表单',
+                    permiss: '5',
+                },
+                component: () => import(/* webpackChunkName: "form" */ '../views/form2.vue'),
             },
             {
                 path: '/tabs',
@@ -189,7 +206,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | 享开店门店盘点系统`;
+    document.title = `享开店门店盘点系统`;
     const role = localStorage.getItem('ms_username');
     const permiss = usePermissStore();
     if (!role && to.path !== '/login') {

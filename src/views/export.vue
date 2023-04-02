@@ -1,110 +1,87 @@
 <template>
   <div class="container">
-    <div class="schart-box">
-      			<div class="content-title">柱状图</div>
-      			<schart class="schart" canvasId="bar" :options="options1"></schart>
+    <div  id="main" style="height: 700px;width: 100%">
     </div>
   </div>
 </template>
 
-<script setup lang="ts" name="basecharts">
-import Schart from 'vue-schart';
-import {reactive} from "_vue@3.2.47@vue";
+<script setup>
+import * as echarts from 'echarts';
+import {onMounted} from "vue";
 
-const serviceData = {
-  labels: ['服务A', '服务B', '服务C', '服务D', '服务E'],
-  datasets: [
-    {
-      data: [200, 300, 400, 500, 600],
-      backgroundColor: ['#2196f3', '#4caf50', '#ff9800', '#9c27b0', '#e91e63'],
+
+onMounted(() => {
+  var chartDom = document.getElementById('main');
+  var myChart = echarts.init(chartDom);
+  var option;
+  option = {
+    title: {
+      text: '销售趋势图'
     },
-  ],
-};
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data: ['商品1', '商品2', '商品3', '商品4', '商品5']
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: ['星期一', '星期二', '星期三', '星期四', '星期五,', '星期六', '星期日']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        name: '商品1',
+        type: 'line',
+        stack: 'Total',
+        data: [120, 132, 101, 134, 90, 230, 210]
+      },
+      {
+        name: '商品2',
+        type: 'line',
+        stack: 'Total',
+        data: [220, 182, 191, 234, 290, 330, 310]
+      },
+      {
+        name: '商品3',
+        type: 'line',
+        stack: 'Total',
+        data: [150, 232, 201, 154, 190, 330, 410]
+      },
+      {
+        name: '商品4',
+        type: 'line',
+        stack: 'Total',
+        data: [320, 332, 301, 334, 390, 330, 320]
+      },
+      {
+        name: '商品5',
+        type: 'line',
+        stack: 'Total',
+        data: [820, 932, 901, 934, 1290, 1330, 1320]
+      }
+    ]
+  };
 
-const options1 = {
-  type: 'bar',
-  title: {
-    text: '服务流行度对比统计'
-  },
-  xRorate: 25,
-  labels: ['理发', '洗头', '染发', '烫发'],
-  datasets: [
-    {
-      label: '',
-      data: [234, 278, 270, 190, 230]
-    }
-  ]
-};
+  option && myChart.setOption(option);
 
-const options2 = {
-  title: {
-    text: '最近一周短信回复情况'
-  },
-  xRorate: 25,
-  labels: ['周一', '周二', '周三', '周四', '周五'],
-  data: serviceData
-};
-const todoList = reactive([
-  {
-    title: '今天要修复100个bug',
-    status: false
-  },
-  {
-    title: '今天要修复100个bug',
-    status: false
-  },
-  {
-    title: '今天要写100行代码加几个bug吧',
-    status: false
-  },
-  {
-    title: '今天要修复100个bug',
-    status: false
-  },
-  {
-    title: '今天要修复100个bug',
-    status: true
-  },
-  {
-    title: '今天要写100行代码加几个bug吧',
-    status: true
-  }
-]);
+});
 
-const options3 = {
-  type: 'pie',
-  title: {
-    text: '已完成检测产品质量饼状图'
-  },
-  legend: {
-    position: 'left'
-  },
-  bgColor: '#fbfbfb',
-  labels: ['合格', '待定', '不合格'],
-  datasets: [
-    {
-      data: [364, 58, 12]
-    }
-  ]
-};
-const options4 = {
-  type: 'ring',
-  title: {
-    text: '质量检测进度'
-  },
-  showValue: false,
-  legend: {
-    position: 'bottom',
-    bottom: 40
-  },
-  bgColor: '#fbfbfb',
-  labels: ['未完成', '已完成'],
-  datasets: [
-    {
-      data: [500, 1546]
-    }
-  ]
-};
+
 </script>
 
 <style scoped>

@@ -9,24 +9,20 @@
                   <el-option key="联系人2" label="联系人2" value="联系人2"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="商品" prop="region">
+              <el-form-item label="库存名称" prop="region">
                 <el-select v-model="form.region" placeholder="请选择商品" multiple>
                   <el-option key="类别1" label="类别1" value="联系人1"></el-option>
                   <el-option key="类别2" label="类别2" value="联系人2"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="预警阈值" prop="region">
+              <el-form-item label="损坏类型" prop="region">
                 <el-input v-model="form.region"></el-input>
               </el-form-item>
-              <el-form-item label="通知方式" prop="region">
-                <el-checkbox-group v-model="form.region">
-                  <el-checkbox label="短信通知" name="region"></el-checkbox>
-                  <el-checkbox label="邮件通知" name="region"></el-checkbox>
-                  <el-checkbox label="微信通知" name="region"></el-checkbox>
-                </el-checkbox-group>
+              <el-form-item label="损坏描述" prop="region">
+                <el-input v-model="form.region" type="textarea"></el-input>
               </el-form-item>
             </el-form>
-          <div><el-button type="primary">确定</el-button> </div>
+          <div><el-button type="primary">确定报损</el-button> </div>
         </div>
     </div>
 </template>

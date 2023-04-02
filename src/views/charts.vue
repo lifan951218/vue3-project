@@ -1,136 +1,142 @@
 <template>
 	<div class="container">
-		<div class="schart-box">
-<!--			<div class="content-title">饼状图</div>-->
-			<schart class="schart" canvasId="pie" :options="options3"></schart>
-		</div>
-		<div class="schart-box">
-<!--			<div class="content-title">环形图</div>-->
-			<schart class="schart" canvasId="ring" :options="options4"></schart>
+		<div  id="main" style="height: 700px;width: 100%">
 		</div>
 	</div>
 </template>
 
-<script setup lang="ts" name="basecharts">
-import Schart from 'vue-schart';
-import {reactive} from "_vue@3.2.47@vue";
+<script setup>
+import * as echarts from 'echarts';
+import {onMounted} from "vue";
 
-const options1 = {
-  type: 'bar',
-  title: {
-    text: '最近一周短信回复情况'
-  },
-  xRorate: 25,
-  labels: ['周一', '周二', '周三', '周四', '周五'],
-  datasets: [
-    {
-      label: '已回复',
-      data: [234, 278, 270, 190, 230]
-    },
-    {
-      label: '已读未回复',
-      data: [164, 178, 190, 135, 160]
-    },
-    {
-      label: '未读',
-      data: [144, 198, 150, 235, 120]
-    }
-  ]
-};
-const options2 = {
-  type: 'line',
-  title: {
-    text: '过去7天产品检测合格率趋势'
-  },
-  labels: [
-    '10-24',
-    '10-25',
-    '10-26',
-    '10-27',
-    '10-28',
-    '10-29',
-    '10-30'
-  ],
-  datasets: [
-    {
-      label: '自有产品',
-      data: [
-        85.2,
-        85.3,
-        89.5,
-        95.6,
-        95.7,
-        95.8,
-        95.9
-      ]
-    },
-    {
-      label: '外部产品',
-      data: [72.4,  72.5, 78.6, 82.7, 82.8, 82.9, 83.2]
-    }
-  ]
-};
-const todoList = reactive([
-  {
-    title: '今天要修复100个bug',
-    status: false
-  },
-  {
-    title: '今天要修复100个bug',
-    status: false
-  },
-  {
-    title: '今天要写100行代码加几个bug吧',
-    status: false
-  },
-  {
-    title: '今天要修复100个bug',
-    status: false
-  },
-  {
-    title: '今天要修复100个bug',
-    status: true
-  },
-  {
-    title: '今天要写100行代码加几个bug吧',
-    status: true
-  }
-]);
 
-const options3 = {
-  type: 'pie',
-  title: {
-    text: '服务预约饼状图'
-  },
-  legend: {
-    position: 'left'
-  },
-  bgColor: '#fbfbfb',
-  labels: ['理发', '洗头','染发', '烫发'],
-  datasets: [
-    {
-      data: [1340, 1546, 340, 490]
-    }
-  ]
-};
-const options4 = {
-  type: 'ring',
-  title: {
-    text: '预约服务情况'
-  },
-  showValue: false,
-  legend: {
-    position: 'bottom',
-    bottom: 40
-  },
-  bgColor: '#fbfbfb',
-  labels: ['理发', '洗头','染发', '烫发'],
-  datasets: [
-    {
-      data: [1340, 1546, 340, 490]
-    }
-  ]
-};
+onMounted(() => {
+  var chartDom = document.getElementById('main');
+  var myChart = echarts.init(chartDom);
+  var option;
+  option = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    title: {
+      text: '最近一周商品盘点统计'
+    },
+    legend: {},
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value'
+      }
+    ],
+    series: [
+      {
+        name: '商品1',
+        type: 'bar',
+        emphasis: {
+          focus: 'series'
+        },
+        data: [320, 332, 301, 334, 390, 330, 320]
+      },
+      {
+        name: '商品2',
+        type: 'bar',
+        stack: 'Ad',
+        emphasis: {
+          focus: 'series'
+        },
+        data: [120, 132, 101, 134, 90, 230, 210]
+      },
+      {
+        name: '商品3',
+        type: 'bar',
+        stack: 'Ad',
+        emphasis: {
+          focus: 'series'
+        },
+        data: [220, 182, 191, 234, 290, 330, 310]
+      },
+      {
+        name: '商品4',
+        type: 'bar',
+        stack: 'Ad',
+        emphasis: {
+          focus: 'series'
+        },
+        data: [150, 232, 201, 154, 190, 330, 410]
+      },
+      {
+        name: '商品5',
+        type: 'bar',
+        data: [862, 1018, 964, 1026, 1679, 1600, 1570],
+        emphasis: {
+          focus: 'series'
+        },
+        markLine: {
+          lineStyle: {
+            type: 'dashed'
+          },
+          data: [[{ type: 'min' }, { type: 'max' }]]
+        }
+      },
+      {
+        name: '商品6',
+        type: 'bar',
+        barWidth: 5,
+        stack: 'Search Engine',
+        emphasis: {
+          focus: 'series'
+        },
+        data: [620, 732, 701, 734, 1090, 1130, 1120]
+      },
+      {
+        name: '商品7',
+        type: 'bar',
+        stack: 'Search Engine',
+        emphasis: {
+          focus: 'series'
+        },
+        data: [120, 132, 101, 134, 290, 230, 220]
+      },
+      {
+        name: '商品8',
+        type: 'bar',
+        stack: 'Search Engine',
+        emphasis: {
+          focus: 'series'
+        },
+        data: [60, 72, 71, 74, 190, 130, 110]
+      },
+      {
+        name: '商品9',
+        type: 'bar',
+        stack: 'Search Engine',
+        emphasis: {
+          focus: 'series'
+        },
+        data: [62, 82, 91, 84, 109, 110, 120]
+      }
+    ]
+  };
+
+  option && myChart.setOption(option);
+
+});
+
+
 </script>
 
 <style scoped>
