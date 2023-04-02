@@ -125,7 +125,7 @@ const routes: RouteRecordRaw[] = [
                     title: '短信发送',
                     permiss: '8',
                 },
-                component: () => import(/* webpackChunkName: "editor" */ '../views/editor.vue'),
+                component: () => import(/* webpackChunkName: "editor" */ '../views/consumer.vue'),
             },
             {
                 path: '/editor2',
@@ -189,7 +189,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | 享开店门店产品质量在线监测系统`;
+    document.title = `${to.meta.title} | 享开店门店预约管理系统`;
     const role = localStorage.getItem('ms_username');
     const permiss = usePermissStore();
     if (!role && to.path !== '/login') {

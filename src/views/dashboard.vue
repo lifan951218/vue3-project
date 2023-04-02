@@ -1,177 +1,147 @@
 <template>
-	<div>
-		<el-row :gutter="20">
-			<el-col :span="8">
-				<el-card shadow="hover" class="mgb20" style="height: 302px">
-					<div class="user-info">
-						<el-avatar :size="120" :src="imgurl" />
-						<div class="user-info-cont">
-							<div class="user-info-name">{{ name }}</div>
-							<div>{{ role }}</div>
-						</div>
-					</div>
-					<div class="user-info-list">
-						上次登录时间：
-						<span>2022-10-01</span>
-					</div>
-					<div class="user-info-list">
-						上次登录地点：
-						<span>上海</span>
-					</div>
-				</el-card>
-			</el-col>
-			<el-col :span="16">
-				<el-row :gutter="20" class="mgb20">
-					<el-col :span="12">
-            <div class="schart-box">
-              <!--			<div class="content-title">饼状图</div>-->
-              <schart class="schart" canvasId="pie" :options="options3"></schart>
-            </div>
-          </el-col>
-          <el-col  :span="12">
-            <div class="schart-box">
-              <!--			<div class="content-title">环形图</div>-->
-              <schart class="schart" canvasId="ring" :options="options4"></schart>
-            </div>
-          </el-col>
-				</el-row>
-			</el-col>
-		</el-row>
-		<el-row :gutter="20">
-      <el-col :span="24">
-        <el-card shadow="hover">
-          <schart ref="line" class="schart" canvasId="line" :options="options2"></schart>
-        </el-card>
-      </el-col>
+	<div class="container">
 
-		</el-row>
+    <div class="add-appointment">
+      <el-button type="primary" :icon="Plus" @click="addAppointment">新增预约</el-button>
+    </div>
+    <div class="add-appointment">
+      <h3>预约列表</h3>
+    </div>
+    <el-table :data="appointments">
+
+      <el-table-column prop="name" label="姓名">
+
+      </el-table-column>
+
+      <el-table-column prop="date" label="日期">
+
+      </el-table-column>
+
+      <el-table-column prop="time" label="时间">
+
+      </el-table-column>
+
+      <el-table-column prop="service" label="服务">
+
+      </el-table-column>
+
+      <el-table-column label="操作">
+
+        <template #default="{row}">
+          <!-- 编辑预约 -->
+
+          <el-button type="text" @click="editAppointment(row)">编辑
+          </el-button>
+
+          <!-- 取消预约 -->
+
+          <el-button type="text" @click="cancelAppointment(row)">取消
+          </el-button>
+
+        </template>
+
+      </el-table-column>
+
+    </el-table>
+    <!-- 添加或编辑预约的表单 -->
+    <el-dialog v-model="dialogVisible" title="添加/编辑预约">
+      <el-form :model="formData" :rules="formRules">
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="formData.name"></el-input>
+        </el-form-item>
+        <el-form-item label="日期" prop="date">
+          <el-date-picker v-model="formData.date"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="时间" prop="time">
+          <el-time-picker v-model="formData.time"></el-time-picker>
+        </el-form-item>
+        <el-form-item label="服务" prop="service">
+          <el-select v-model="formData.service">
+            <el-option v-for="service in services" :key="service" :label="service" :value="service"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <!-- 取消添加或编辑 -->
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <!-- 确认添加或编辑 -->
+        <el-button type="primary" @click="">确认</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 确认取消预约的对话框 -->
+    <el-dialog v-model="cancelDialogVisible" title="取消预约">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要取消此预约吗？</div>
+      <span slot="footer" class="dialog-footer">
+    <!-- 取消取消预约 -->
+    <el-button @click="cancelDialogVisible = false">取 消</el-button>
+        <!-- 确认取消预约 -->
+    <el-button type="primary" @click="">确 定</el-button>
+  </span>
+    </el-dialog>
 	</div>
 </template>
 
 <script setup lang="ts" name="dashboard">
-import Schart from 'vue-schart';
-import { reactive } from 'vue';
-import imgurl from '../assets/img/admin.jpg';
+import {Plus} from "@element-plus/icons-vue";
+import {ref} from "vue";
 
-const name = localStorage.getItem('ms_username');
-const role: string = name === 'admin' ? '超级管理员' : '普通用户';
+const appointments = ref([]); // 预约列表
+const services = ref([
+  '理发', '洗头','染发', '烫发'
+]); // 服务列表
+for (let i = 1; i <= 50; i++) {
+  const name = `客户${i}`;
 
-const options = {
-	type: 'bar',
-	title: {
-		text: '最近一周短信回复情况'
-	},
-	xRorate: 25,
-	labels: ['周一', '周二', '周三', '周四', '周五'],
-	datasets: [
-		{
-			label: '已回复',
-			data: [234, 278, 270, 190, 230]
-		},
-		{
-			label: '已读未回复',
-			data: [164, 178, 190, 135, 160]
-		},
-		{
-			label: '未读',
-			data: [144, 198, 150, 235, 120]
-		}
-	]
-};
-const options2 = {
-	type: 'line',
-	title: {
-		text: '过去7天产品检测合格率趋势'
-	},
-	labels: [
-      '10-24',
-      '10-25',
-      '10-26',
-      '10-27',
-      '10-28',
-      '10-29',
-      '10-30'
+  const date = new Date(2022, 0, Math.floor(Math.random() * 31) + 1);
+  const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+  const time = `${Math.floor(Math.random() * 24)}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}`;
+  const service = services.value[Math.floor(Math.random() * services.value.length)];
+  appointments.value.push({
+    "name": name,
+    "date": formattedDate,
+    "time": time,
+    "service": service
+  });
+}
+
+
+const cancelDialogVisible = ref(false);
+
+const formData = ref({}); // 添加或编辑预约的表单数据
+const formRules = ref({
+  name: [
+    { required: true, message: '姓名不能为空', trigger: 'blur' },
   ],
-	datasets: [
-		{
-			label: '自有产品',
-			data: [
-          85.2,
-        85.3,
-        89.5,
-        95.6,
-        95.7,
-        95.8,
-        95.9
-      ]
-		},
-		{
-			label: '外部产品',
-			data: [72.4,  72.5, 78.6, 82.7, 82.8, 82.9, 83.2]
-		}
-	]
-};
-const todoList = reactive([
-	{
-		title: '今天要修复100个bug',
-		status: false
-	},
-	{
-		title: '今天要修复100个bug',
-		status: false
-	},
-	{
-		title: '今天要写100行代码加几个bug吧',
-		status: false
-	},
-	{
-		title: '今天要修复100个bug',
-		status: false
-	},
-	{
-		title: '今天要修复100个bug',
-		status: true
-	},
-	{
-		title: '今天要写100行代码加几个bug吧',
-		status: true
-	}
-]);
+  date: [
+    { required: true, message: '日期不能为空', trigger: 'blur' },
+  ],
+  time: [
+    { required: true, message: '时间不能为空', trigger: 'blur' },
+  ],
+  service: [
+    { required: true, message: '服务不能为空', trigger: 'blur' },
+  ],
+}); // 添加或编辑预约的表单验证规则
+const dialogVisible = ref(false); // 是否显示添加或编辑预约的对话框
 
-const options3 = {
-  type: 'pie',
-  title: {
-    text: '已完成检测产品质量饼状图'
-  },
-  legend: {
-    position: 'left'
-  },
-  bgColor: '#fbfbfb',
-  labels: ['合格', '待定', '不合格'],
-  datasets: [
-    {
-      data: [364, 58, 12]
-    }
-  ]
-};
-const options4 = {
-  type: 'ring',
-  title: {
-    text: '质量检测进度'
-  },
-  showValue: false,
-  legend: {
-    position: 'bottom',
-    bottom: 40
-  },
-  bgColor: '#fbfbfb',
-  labels: ['未完成', '已完成'],
-  datasets: [
-    {
-      data: [500, 1546]
-    }
-  ]
-};
+// 编辑预约
+function editAppointment(appointment: any) {
+  formData.value = { ...appointment };
+  dialogVisible.value = true;
+}
+
+function addAppointment() {
+  dialogVisible.value = true;
+  formData.value = {};
+}
+
+// 取消预约
+function cancelAppointment(appointment: any) {
+  cancelDialogVisible.value = true;
+  formData.value = { ...appointment };
+}
+
 </script>
 
 <style scoped>
@@ -183,6 +153,10 @@ const options4 = {
 	display: flex;
 	align-items: center;
 	height: 100px;
+}
+
+.add-appointment {
+  margin-bottom: 20px;
 }
 
 .grid-cont-right {

@@ -1,129 +1,117 @@
 <template>
-	<div class="container">
-		<div class="mgb20">
-			<span class="label">角色：</span>
-			<el-select v-model="role" @change="handleChange">
-				<el-option label="超级管理员" value="admin"></el-option>
-				<el-option label="普通用户" value="user"></el-option>
-			</el-select>
-		</div>
-		<div class="mgb20 tree-wrapper">
-			<el-tree
-				ref="tree"
-				:data="data"
-				node-key="id"
-				default-expand-all
-				show-checkbox
-				:default-checked-keys="checkedKeys"
-			/>
-		</div>
-		<el-button type="primary" @click="onSubmit">保存权限</el-button>
-	</div>
+  <div class="container">
+    <div class="form-box">
+      <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
+        <el-form-item label="上班时间">
+          <el-col :span="11">
+            <el-form-item prop="date2">
+              <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%">
+              </el-time-picker>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="下班时间">
+          <el-col :span="11">
+            <el-form-item prop="date2">
+              <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%">
+              </el-time-picker>
+            </el-form-item>
+          </el-col>
+        </el-form-item>
+      </el-form>
+      <div><el-button type="primary">确定</el-button> </div>
+    </div>
+  </div>
 </template>
 
-<script setup lang="ts" name="permission">
-import { ref } from 'vue';
-import { ElTree } from 'element-plus';
-import { usePermissStore } from '../store/permiss';
+<script setup lang="ts" name="baseform">
+import { reactive, ref } from 'vue';
+import { ElMessage } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 
-const role = ref<string>('admin');
-
-interface Tree {
-	id: string;
-	label: string;
-	children?: Tree[];
-}
-
-const data: Tree[] = [
-	{
-		id: '1',
-		label: '首页'
-	},
-	{
-		id: '2',
-		label: '产品质量检测',
-		children: [
-			{
-				id: '15',
-				label: '实时检测'
-			},
-			{
-				id: '16',
-				label: '分类查询'
-			}
-		]
-	},
-	{
-		id: '4',
-		label: '数据分析工具',
-		children: [
-			{
-				id: '5',
-				label: '报告生成器'
-			},
-			{
-				id: '6',
-				label: '可视化工具'
-			}
-		]
-	},
-	{
-		id: '10',
-		label: '通知与提醒',
+const options = [
+  {
+    value: 'guangdong',
+    label: '广东省',
     children: [
       {
-        id: '5',
-        label: '异常检测通知'
+        value: 'guangzhou',
+        label: '广州市',
+        children: [
+          {
+            value: 'tianhe',
+            label: '天河区',
+          },
+          {
+            value: 'haizhu',
+            label: '海珠区',
+          },
+        ],
       },
       {
-        id: '6',
-        label: '重要信息'
-      }
-    ]
-	},
-	{
-		id: '11',
-		label: '设置与账户管理',
+        value: 'dongguan',
+        label: '上海市',
+        children: [
+          {
+            value: 'changan',
+            label: '长安镇',
+          },
+          {
+            value: 'humen',
+            label: '虎门镇',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    value: 'hunan',
+    label: '湖南省',
     children: [
       {
-        id: '5',
-        label: '用户账户'
+        value: 'changsha',
+        label: '长沙市',
+        children: [
+          {
+            value: 'yuelu',
+            label: '岳麓区',
+          },
+        ],
       },
-      {
-        id: '6',
-        label: '数据备份'
-      }
-    ]
-	}
+    ],
+  },
 ];
-
-const permiss = usePermissStore();
-
-// 获取当前权限
-const checkedKeys = ref<string[]>([]);
-const getPremission = () => {
-	// 请求接口返回权限
-	checkedKeys.value = permiss.defaultList[role.value];
+const rules: FormRules = {
+  name: [{ required: true, message: '请输入表单名称', trigger: 'blur' }],
 };
-getPremission();
-
-// 保存权限
-const tree = ref<InstanceType<typeof ElTree>>();
-const onSubmit = () => {
-	// 获取选中的权限
-	console.log(tree.value!.getCheckedKeys(false));
+const formRef = ref<FormInstance>();
+const form = reactive({
+  name: '',
+  region: '',
+  date1: '',
+  date2: '',
+  delivery: true,
+  type: ['联系人1'],
+  resource: '联系人2',
+  desc: '',
+  options: [],
+});
+// 提交
+const onSubmit = (formEl: FormInstance | undefined) => {
+  // 表单校验
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      console.log(form);
+      ElMessage.success('提交成功！');
+    } else {
+      return false;
+    }
+  });
 };
-
-const handleChange = (val: string[]) => {
-	tree.value!.setCheckedKeys(permiss.defaultList[role.value]);
+// 重置
+const onReset = (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  formEl.resetFields();
 };
 </script>
-
-<style scoped>
-.tree-wrapper {
-	max-width: 500px;
-}
-.label {
-	font-size: 14px;
-}
-</style>

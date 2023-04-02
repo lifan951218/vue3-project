@@ -59,24 +59,24 @@ const items = [
   {
     icon: 'Odometer',
     index: '/dashboard',
-    title: '首页',
-    permiss: '1',
+    title: '预约管理',
+    permiss: '1'
   },
 
   {
     icon: 'Calendar',
     index: '1',
-    title: '产品质量检测',
+    title: '顾客管理',
     permiss: '2',
     subs: [
       {
         index: '/editor',
-        title: '实时检测',
+        title: '顾客档案',
         permiss: '2',
       },
       {
         index: '/editor2',
-        title: '分类查询',
+        title: '预约记录及评价',
         permiss: '2',
       }
     ],
@@ -84,161 +84,76 @@ const items = [
   {
     icon: 'DocumentCopy',
     index: '/tabs',
-    title: '数据分析工具',
+    title: '服务管理',
     permiss: '3',
-    subs: [
-      {
-        index: '/export',
-        title: '报告生成器',
-        permiss: '2',
-      },
-      {
-        index: '/charts',
-        title: '可视化工具',
-        permiss: '2',
-      }
-      // {
-      //   index: '/export',
-      //   title: '导出Excel',
-      //   permiss: '2',
-      // }
-    ],
   },
   {
     icon: 'Edit',
-    index: '/tabs',
-    title: '通知和提醒',
+    index: '4',
+    title: '工作人员管理',
     permiss: '4',
     subs: [
       {
-        index: '/form',
-        title: '异常检测通知',
+        index: '/important',
+        title: '工作人员列表',
         permiss: '2',
       },
       {
-        index: '/important',
-        title: '重要信息',
+        index: '/form',
+        title: '任务分配',
         permiss: '2',
       }
     ]
   },
   {
     icon: 'Warning',
-    index: '/permission',
-    title: '设置和账户管理',
+    index: '/markdown',
+    title: '库存管理',
+    permiss: '13'
+  },
+  {
+    icon: 'Warning',
+    index: '6',
+    title: '报告和统计',
+    permiss: '13',
+    subs: [
+      {
+        index: '/charts',
+        title: '预约统计',
+        permiss: '2',
+      },
+      {
+        index: '/donate',
+        title: '收入统计',
+        permiss: '2',
+      },
+      {
+        index: '/export',
+        title: '服务流行度统计',
+        permiss: '2',
+      }
+    ],
+  },
+  {
+    icon: 'Warning',
+    index: '7',
+    title: '设置与配置',
     permiss: '13',
     subs: [
       {
         index: '/permission',
-        title: '用户账户',
+        title: '时间表设置',
         permiss: '2',
       },
       {
         index: '/import',
-        title: '数据备份',
+        title: '价格列表设置',
         permiss: '2',
       }
     ],
   }
 ];
 
-/*const items = [
-    {
-        icon: 'Odometer',
-        index: '/dashboard',
-        title: '管理首页',
-        permiss: '1',
-    },
-
-    {
-        icon: 'Calendar',
-        index: '1',
-        title: '表格相关',
-        permiss: '2',
-        subs: [
-            {
-                index: '/table',
-                title: '常用表格',
-                permiss: '2',
-            },
-            {
-                index: '/import',
-                title: '导入Excel',
-                permiss: '2',
-            },
-            {
-                index: '/export',
-                title: '导出Excel',
-                permiss: '2',
-            },
-        ],
-    },
-    {
-        icon: 'DocumentCopy',
-        index: '/tabs',
-        title: 'tab选项卡',
-        permiss: '3',
-    },
-    {
-        icon: 'Edit',
-        index: '3',
-        title: '表单相关',
-        permiss: '4',
-        subs: [
-            {
-                index: '/form',
-                title: '基本表单',
-                permiss: '5',
-            },
-            {
-                index: '/upload',
-                title: '文件上传',
-                permiss: '6',
-            },
-            {
-                index: '4',
-                title: '三级菜单',
-                permiss: '7',
-                subs: [
-                    {
-                        index: '/editor',
-                        title: '短信发送',
-                        permiss: '8',
-                    },
-                    {
-                        index: '/markdown',
-                        title: 'markdown编辑器',
-                        permiss: '9',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        icon: 'Setting',
-        index: '/icon',
-        title: '自定义图标',
-        permiss: '10',
-    },
-    {
-        icon: 'PieChart',
-        index: '/charts',
-        title: 'schart图表',
-        permiss: '11',
-    },
-    {
-        icon: 'Warning',
-        index: '/permission',
-        title: '权限管理',
-        permiss: '13',
-    },
-    {
-        icon: 'CoffeeCup',
-        index: '/donate',
-        title: '支持作者',
-        permiss: '14',
-    },
-];*/
 
 const route = useRoute();
 const onRoutes = computed(() => {

@@ -2,19 +2,20 @@
     <div class="container">
         <div class="form-box">
             <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
-                <el-form-item label="产品类别" prop="region">
-                    <el-select v-model="form.region" placeholder="请选择产品类别" multiple>
-                        <el-option key="类别1" label="类别1" value="联系人1"></el-option>
-                        <el-option key="类别2" label="类别2" value="联系人2"></el-option>
-                    </el-select>
-                </el-form-item>
-              <el-form-item label="通知人员" prop="region">
-                <el-select v-model="form.region" placeholder="请选择产品类别" multiple>
+
+              <el-form-item label="工作人员" prop="region">
+                <el-select v-model="form.region" placeholder="请选择工作人员" multiple>
                   <el-option key="联系人1" label="联系人1" value="联系人1"></el-option>
                   <el-option key="联系人2" label="联系人2" value="联系人2"></el-option>
                 </el-select>
               </el-form-item>
-                <el-form-item label="生效日期">
+              <el-form-item label="选择任务" prop="region">
+                <el-select v-model="form.region" placeholder="请选择任务" multiple>
+                  <el-option key="类别1" label="类别1" value="联系人1"></el-option>
+                  <el-option key="类别2" label="类别2" value="联系人2"></el-option>
+                </el-select>
+              </el-form-item>
+                <el-form-item label="开始时间">
                     <el-col :span="11">
                         <el-form-item prop="date1">
                             <el-date-picker
@@ -33,18 +34,8 @@
                         </el-form-item>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="重复通知" prop="delivery">
-                    <el-switch v-model="form.delivery"></el-switch>
-                </el-form-item>
-                <el-form-item label="通知类型" prop="type">
-                    <el-checkbox-group v-model="form.type">
-                        <el-checkbox label="微信通知" name="type"></el-checkbox>
-                        <el-checkbox label="手机短信" name="type"></el-checkbox>
-                        <el-checkbox label="平台通知" name="type"></el-checkbox>
-                    </el-checkbox-group>
-                </el-form-item>
             </el-form>
-          <div><el-button type="primary">确定</el-button> </div>
+          <div><el-button type="primary">确定分配</el-button> </div>
         </div>
     </div>
 </template>

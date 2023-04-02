@@ -12,16 +12,13 @@
                 >
                     <el-button class="mr10" type="success">批量导入</el-button>
                 </el-upload>
-                <el-link href="/template.xlsx" target="_blank">数据备份</el-link>
             </div>
-<!--            <el-table :data="tableData" border class="table" header-cell-class-name="table-header">-->
-<!--                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>-->
-<!--                <el-table-column prop="name" label="姓名"></el-table-column>-->
-<!--                <el-table-column prop="sno" label="学号"></el-table-column>-->
-<!--                <el-table-column prop="class" label="班级"></el-table-column>-->
-<!--                <el-table-column prop="age" label="年龄"></el-table-column>-->
-<!--                <el-table-column prop="sex" label="性别"></el-table-column>-->
-<!--            </el-table>-->
+            <el-table :data="tableData" border class="table" header-cell-class-name="table-header">
+                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
+                <el-table-column prop="name" label="名称"></el-table-column>
+                <el-table-column prop="sno" label="价格"></el-table-column>
+                <el-table-column prop="class" label="类型"></el-table-column>
+            </el-table>
         </div>
     </div>
 </template>
@@ -36,8 +33,6 @@ interface TableItem {
     name: string;
     sno: string;
     class: string;
-    age: string;
-    sex: string;
 }
 
 const tableData = ref<TableItem[]>([]);
@@ -46,19 +41,15 @@ const getData = () => {
     tableData.value = [
         {
             id: 1,
-            name: '联系人1',
-            sno: 'S001',
-            class: '一班',
-            age: '10',
-            sex: '男',
+            name: '服务1',
+            sno: '12 RMB',
+            class: '理发'
         },
         {
             id: 2,
-            name: '联系人2',
-            sno: 'S002',
-            class: '一班',
-            age: '9',
-            sex: '女',
+            name: '服务2',
+            sno: '5 RMB',
+            class: '洗发'
         },
     ];
 };

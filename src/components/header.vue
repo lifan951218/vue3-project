@@ -5,7 +5,7 @@
 			<el-icon v-if="sidebar.collapse"><Expand /></el-icon>
 			<el-icon v-else><Fold /></el-icon>
 		</div>
-		<div class="logo">享开店门店产品质量在线监测系统</div>
+		<div class="logo">享开店门店预约管理系统</div>
 		<div class="header-right">
 			<div class="header-user-con">
 				<!-- 消息中心 -->
@@ -47,7 +47,7 @@
 import { onMounted } from 'vue';
 import { useSidebarStore } from '../store/sidebar';
 import { useRouter } from 'vue-router';
-import imgurl from '../assets/img/admin.jpg';
+import imgurl from '../assets/img/admin2.jpg';
 
 const username: string | null = localStorage.getItem('ms_username');
 const message: number = 2;

@@ -33,3 +33,10 @@ export const fetchData5 = () => {
         method: 'get'
     });
 };
+
+export const fetchData6 = () => {
+    return request({
+        url: './table6.json',
+        method: 'get'
+    });
+};

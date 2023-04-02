@@ -2,41 +2,32 @@
   <div class="container">
 
     <div class="add-appointment">
-      <el-button type="primary" :icon="Plus" @click="addAppointment">新增库存</el-button>
+      <el-button type="primary" :icon="Plus" @click="addAppointment">新增顾客</el-button>
     </div>
     <div class="add-appointment">
-      <h3>库存列表</h3>
+      <h3>顾客列表</h3>
     </div>
     <el-table :data="appointments">
 
-      <el-table-column prop="name" label="库存名称">
+      <el-table-column prop="name" label="姓名">
 
       </el-table-column>
 
-      <el-table-column prop="type" label="库存类型">
-
-      </el-table-column>
-
-      <el-table-column prop="date" label="入库日期">
-
-      </el-table-column>
-
-
-      <el-table-column prop="service" label="所属服务">
+      <el-table-column prop="date" label="手机号码">
 
       </el-table-column>
 
       <el-table-column label="操作">
 
         <template #default="{row}">
-          <!-- 编辑库存 -->
+          <!-- 编辑顾客 -->
 
-          <el-button type="text" @click="editAppointment(row)">编辑
+          <el-button type="primary" size="small" @click="editAppointment(row)">编辑
           </el-button>
 
-          <!-- 取消库存 -->
+          <!-- 取消顾客 -->
 
-          <el-button type="text" @click="cancelAppointment(row)">取消
+          <el-button type="danger" size="small" @click="cancelAppointment(row)">删除
           </el-button>
 
         </template>
@@ -44,21 +35,14 @@
       </el-table-column>
 
     </el-table>
-    <!-- 添加或编辑库存的表单 -->
-    <el-dialog v-model="dialogVisible" title="添加/编辑库存">
+    <!-- 添加或编辑顾客的表单 -->
+    <el-dialog v-model="dialogVisible" title="添加/编辑顾客">
       <el-form :model="formData" :rules="formRules">
-        <el-form-item label="库存名称" prop="name">
+        <el-form-item label="姓名" prop="name">
           <el-input v-model="formData.name"></el-input>
-        </el-form-item><el-form-item label="库存类型" prop="name">
-          <el-input v-model="formData.type"></el-input>
         </el-form-item>
-        <el-form-item label="入库日期" prop="date">
-          <el-date-picker v-model="formData.date"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="所属服务" prop="service">
-          <el-select v-model="formData.service">
-            <el-option v-for="service in services" :key="service" :label="service" :value="service"></el-option>
-          </el-select>
+        <el-form-item label="手机号码" prop="date">
+          <el-input v-model="formData.date"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer">
@@ -69,13 +53,13 @@
       </div>
     </el-dialog>
 
-    <!-- 确认取消库存的对话框 -->
-    <el-dialog v-model="cancelDialogVisible" title="删除库存">
-      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此库存吗？</div>
+    <!-- 确认取消顾客的对话框 -->
+    <el-dialog v-model="cancelDialogVisible" title="删除顾客">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此顾客吗？</div>
       <span slot="footer" class="dialog-footer">
-    <!-- 取消取消库存 -->
+    <!-- 取消删除顾客 -->
     <el-button @click="cancelDialogVisible = false">取 消</el-button>
-        <!-- 确认取消库存 -->
+        <!-- 确认删除顾客 -->
     <el-button type="primary" @click="">确 定</el-button>
   </span>
     </el-dialog>
@@ -86,46 +70,31 @@
 import {Plus} from "@element-plus/icons-vue";
 import {ref} from "vue";
 
-const appointments = ref([]); // 库存列表
-const services = ref([
-  '理发', '洗头','染发', '烫发'
-]); // 所属服务列表
-const types = ref([
-  '洗发液', '剪刀','椅子', '镜子'
-]); // 所属服务列表
-for (let i = 1; i <= 50; i++) {
-  const name = `库存${i}`;
+const appointments = ref([]); // 顾客列表
 
-  const date = new Date(2022, 0, Math.floor(Math.random() * 31) + 1);
-  const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-  const service = services.value[Math.floor(Math.random() * services.value.length)];
-  const type = types.value[Math.floor(Math.random() * types.value.length)];
+for (let i = 1; i <= 50; i++) {
   appointments.value.push({
-    "name": name,
-    "date": formattedDate,
-    "service": service,
-    "type": type
+    name: `顾客${i}`,
+    date: `1380013800${i.toString().padStart(2, '0')}`,
   });
 }
 
 
+
 const cancelDialogVisible = ref(false);
 
-const formData = ref({}); // 添加或编辑库存的表单数据
+const formData = ref({}); // 添加或编辑顾客的表单数据
 const formRules = ref({
   name: [
     { required: true, message: '姓名不能为空', trigger: 'blur' },
   ],
   date: [
-    { required: true, message: '日期不能为空', trigger: 'blur' },
-  ],
-  service: [
-    { required: true, message: '所属服务不能为空', trigger: 'blur' },
-  ],
-}); // 添加或编辑库存的表单验证规则
-const dialogVisible = ref(false); // 是否显示添加或编辑库存的对话框
+    { required: true, message: '手机号码不能为空', trigger: 'blur' },
+  ]
+}); // 添加或编辑顾客的表单验证规则
+const dialogVisible = ref(false); // 是否显示添加或编辑顾客的对话框
 
-// 编辑库存
+// 编辑顾客
 function editAppointment(appointment: any) {
   formData.value = { ...appointment };
   dialogVisible.value = true;
@@ -136,7 +105,7 @@ function addAppointment() {
   formData.value = {};
 }
 
-// 取消库存
+// 删除顾客
 function cancelAppointment(appointment: any) {
   cancelDialogVisible.value = true;
   formData.value = { ...appointment };

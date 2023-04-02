@@ -1,97 +1,127 @@
 <template>
-    <div>
-        <div class="container">
-            <div class="handle-box">
-                <el-button type="primary" @click="exportXlsx">导出Excel</el-button>
-            </div>
-          <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
-            <el-table-column prop="id" label="ID" width="155" align="center"></el-table-column>
-            <el-table-column prop="waiguan" label="外观检测"></el-table-column>
-            <el-table-column prop="wuli" label="物理性能检测"></el-table-column>
-            <el-table-column prop="anquan" label="安全性检测"></el-table-column>
-            <el-table-column label="检测结果" align="center">
-              <template #default="scope">
-                <el-tag
-                    :type="scope.row.state === '合格' ? 'success' : scope.row.state === '不合格' ? 'danger' : ''"
-                >
-                  {{ scope.row.state }}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column prop="date" label="检测时间"></el-table-column>
-          </el-table>
-        </div>
+  <div class="container">
+    <div class="schart-box">
+      			<div class="content-title">柱状图</div>
+      			<schart class="schart" canvasId="bar" :options="options1"></schart>
     </div>
+  </div>
 </template>
 
-<script setup lang="ts" name="export">
-import * as XLSX from 'xlsx';
-import { ref, reactive, onMounted, onBeforeUnmount } from 'vue';
-import {fetchData4} from "../api";
+<script setup lang="ts" name="basecharts">
+import Schart from 'vue-schart';
+import {reactive} from "_vue@3.2.47@vue";
 
-interface TableItem {
-  id: number;
-  waiguan: string;
-  wuli: string;
-  anquan: string;
-  state: string;
-  date: string;
-}
-
-const tableData = ref<TableItem[]>([]);
-const pageTotal = ref(0);
-const value2 = ref("");
-const value3 = ref("");
-// 获取表格数据
-const getData = () => {
-  fetchData4().then(res => {
-    tableData.value = res.data.list;
-    pageTotal.value = res.data.pageTotal || 50;
-  });
+const serviceData = {
+  labels: ['服务A', '服务B', '服务C', '服务D', '服务E'],
+  datasets: [
+    {
+      data: [200, 300, 400, 500, 600],
+      backgroundColor: ['#2196f3', '#4caf50', '#ff9800', '#9c27b0', '#e91e63'],
+    },
+  ],
 };
-getData();
 
+const options1 = {
+  type: 'bar',
+  title: {
+    text: '服务流行度对比统计'
+  },
+  xRorate: 25,
+  labels: ['理发', '洗头', '染发', '烫发'],
+  datasets: [
+    {
+      label: '',
+      data: [234, 278, 270, 190, 230]
+    }
+  ]
+};
 
-const list = [['序号', '姓名', '学号', '班级', '年龄', '性别']];
-const exportXlsx = () => {
-    tableData.value.map((item: any, i: number) => {
-        const arr: any[] = [i + 1];
-        arr.push(...[item.name, item.sno, item.class, item.age, item.sex]);
-        list.push(arr);
-    });
-    let WorkSheet = XLSX.utils.aoa_to_sheet(list);
-    let new_workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(new_workbook, WorkSheet, '第一页');
-    XLSX.writeFile(new_workbook, `产品检测报告.xlsx`);
+const options2 = {
+  title: {
+    text: '最近一周短信回复情况'
+  },
+  xRorate: 25,
+  labels: ['周一', '周二', '周三', '周四', '周五'],
+  data: serviceData
+};
+const todoList = reactive([
+  {
+    title: '今天要修复100个bug',
+    status: false
+  },
+  {
+    title: '今天要修复100个bug',
+    status: false
+  },
+  {
+    title: '今天要写100行代码加几个bug吧',
+    status: false
+  },
+  {
+    title: '今天要修复100个bug',
+    status: false
+  },
+  {
+    title: '今天要修复100个bug',
+    status: true
+  },
+  {
+    title: '今天要写100行代码加几个bug吧',
+    status: true
+  }
+]);
+
+const options3 = {
+  type: 'pie',
+  title: {
+    text: '已完成检测产品质量饼状图'
+  },
+  legend: {
+    position: 'left'
+  },
+  bgColor: '#fbfbfb',
+  labels: ['合格', '待定', '不合格'],
+  datasets: [
+    {
+      data: [364, 58, 12]
+    }
+  ]
+};
+const options4 = {
+  type: 'ring',
+  title: {
+    text: '质量检测进度'
+  },
+  showValue: false,
+  legend: {
+    position: 'bottom',
+    bottom: 40
+  },
+  bgColor: '#fbfbfb',
+  labels: ['未完成', '已完成'],
+  datasets: [
+    {
+      data: [500, 1546]
+    }
+  ]
 };
 </script>
 
 <style scoped>
-.handle-box {
-    margin-bottom: 20px;
+.schart-box {
+  display: inline-block;
+  margin: 20px;
 }
-
-.handle-select {
-    width: 120px;
+.schart {
+  width: 600px;
+  height: 400px;
 }
-
-.handle-input {
-    width: 300px;
-}
-.table {
-    width: 100%;
-    font-size: 14px;
-}
-.red {
-    color: #f56c6c;
-}
-.mr10 {
-    margin-right: 10px;
-}
-.table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
+.content-title {
+  clear: both;
+  font-weight: 400;
+  line-height: 50px;
+  margin: 10px 0;
+  font-size: 22px;
+  color: #1f2f3d;
 }
 </style>

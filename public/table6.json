@@ -1,0 +1,55 @@
+{
+    "list": [
+      {
+            "id": "worker-1232",
+            "type": "工作人员1",
+            "pro_type": "理发部",
+            "content": "普通员工",
+            "state": "在线"
+      },
+      {
+            "id": "worker-1233",
+            "type": "工作人员2",
+            "pro_type": "保洁部",
+            "content": "普通员工",
+            "state": "在线"
+      },
+      {
+            "id": "worker-1234",
+            "type": "工作人员3",
+            "pro_type": "理发部",
+            "content": "普通员工",
+            "state": "在线"
+      },
+      {
+            "id": "worker-1235",
+            "type": "工作人员4",
+            "pro_type": "理发部",
+            "content": "普通员工",
+            "state": "离线"
+      },
+      {
+            "id": "worker-1236",
+            "type": "工作人员5",
+            "pro_type": "保洁部",
+            "content": "普通员工",
+            "state": "在线"
+      },
+      {
+            "id": "worker-1237",
+            "type": "工作人员6",
+            "pro_type": "理发部",
+            "content": "普通员工",
+            "state": "在线"
+      },
+      {
+        "id": "worker-1238",
+        "type": "工作人员7",
+        "pro_type": "理发部",
+        "content": "普通员工",
+        "state": "在线"
+      }
+
+    ],
+    "pageTotal": 4
+}

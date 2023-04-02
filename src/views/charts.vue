@@ -1,14 +1,6 @@
 <template>
 	<div class="container">
 		<div class="schart-box">
-<!--			<div class="content-title">柱状图</div>-->
-<!--			<schart class="schart" canvasId="bar" :options="options1"></schart>-->
-		</div>
-		<div class="schart-box">
-<!--			<div class="content-title">折线图</div>-->
-			<schart class="schart" canvasId="line" :options="options2"></schart>
-		</div>
-		<div class="schart-box">
 <!--			<div class="content-title">饼状图</div>-->
 			<schart class="schart" canvasId="pie" :options="options3"></schart>
 		</div>
@@ -23,6 +15,28 @@
 import Schart from 'vue-schart';
 import {reactive} from "_vue@3.2.47@vue";
 
+const options1 = {
+  type: 'bar',
+  title: {
+    text: '最近一周短信回复情况'
+  },
+  xRorate: 25,
+  labels: ['周一', '周二', '周三', '周四', '周五'],
+  datasets: [
+    {
+      label: '已回复',
+      data: [234, 278, 270, 190, 230]
+    },
+    {
+      label: '已读未回复',
+      data: [164, 178, 190, 135, 160]
+    },
+    {
+      label: '未读',
+      data: [144, 198, 150, 235, 120]
+    }
+  ]
+};
 const options2 = {
   type: 'line',
   title: {
@@ -86,23 +100,23 @@ const todoList = reactive([
 const options3 = {
   type: 'pie',
   title: {
-    text: '已完成检测产品质量饼状图'
+    text: '服务预约饼状图'
   },
   legend: {
     position: 'left'
   },
   bgColor: '#fbfbfb',
-  labels: ['合格', '待定', '不合格'],
+  labels: ['理发', '洗头','染发', '烫发'],
   datasets: [
     {
-      data: [364, 58, 12]
+      data: [1340, 1546, 340, 490]
     }
   ]
 };
 const options4 = {
   type: 'ring',
   title: {
-    text: '质量检测进度'
+    text: '预约服务情况'
   },
   showValue: false,
   legend: {
@@ -110,10 +124,10 @@ const options4 = {
     bottom: 40
   },
   bgColor: '#fbfbfb',
-  labels: ['未完成', '已完成'],
+  labels: ['理发', '洗头','染发', '烫发'],
   datasets: [
     {
-      data: [500, 1546]
+      data: [1340, 1546, 340, 490]
     }
   ]
 };
