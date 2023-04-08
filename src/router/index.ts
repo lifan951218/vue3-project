@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
                     title: '管理首页',
                     permiss: '1',
                 },
-                component: () => import(/* webpackChunkName: "dashboard" */ '../templates/table2.vue'),
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
             },
             {
                 path: '/dashboard2',
@@ -255,7 +255,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `享开店门店拓客系统`;
+    document.title = `经营分析系统`;
     const role = localStorage.getItem('ms_username');
     const permiss = usePermissStore();
     if (!role && to.path !== '/login') {

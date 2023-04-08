@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <el-tabs v-model="message">
-      <el-tab-pane label="销售清单" name="first">
+    <el-tabs v-model="message" @tab-change="tabChange">
+      <el-tab-pane label="销售" name="first">
         <el-form :inline="true" :model="queryForm">
           <el-form-item label="产品名称">
             <el-input v-model.trim="queryForm.product" placeholder="请输入产品名称"></el-input>
@@ -33,10 +33,23 @@
         ></el-pagination>
       </el-tab-pane>
       <el-tab-pane label="销售统计" name="second">
-        <div>
-          <div ref="chart1" style="width: 1000px; height: 400px;"></div>
-          <div ref="chart2" style="width: 1000px; height: 400px;"></div>
-          <div ref="chart3" style="width: 1000px; height: 400px;"></div>
+        <div class="chart-container">
+          <div class="chart-item">
+            <h3>月活跃用户数</h3>
+            <div ref="lineChart" class="chart"></div>
+          </div>
+          <div class="chart-item">
+            <h3>用户地域分布</h3>
+            <div ref="barChart" class="chart"></div>
+          </div>
+          <div class="chart-item">
+            <h3>用户来源渠道</h3>
+            <div ref="pieChart" class="chart"></div>
+          </div>
+          <div class="chart-item">
+            <h3>用户留存率</h3>
+            <div ref="scatterChart" class="chart"></div>
+          </div>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -44,9 +57,8 @@
 
 </template>
 <script setup>
-import {computed, onMounted, ref} from 'vue';
+import {computed, ref} from 'vue';
 import * as echarts from 'echarts';
-import {tableV2Props} from "element-plus";
 
 const message = ref('first');
 
@@ -109,79 +121,111 @@ const handleExport = () => {
   });
 };
 
+const tabChange = (value) => {
+  if(value === 'second') {
+    setTimeout(() => {
+      initLineChart();
+      initBarChart();
+      initPieChart();
+      initScatterChart();
+    });
+  }
+}
 
+const lineChart = ref(null);
+const barChart = ref(null);
+const pieChart = ref(null);
+const scatterChart = ref(null);
 
-const chart1 = ref(null);
-const chart2 = ref(null);
-const chart3 = ref(null);
-
-
-
-const initChart1 = () => {
-  const myChart1 = echarts.init(chart1.value);
-  myChart1.setOption({
-    title: {
-      text: '月度销售额'
-    },
+const initLineChart = () => {
+  const chart = echarts.init(lineChart.value);
+  chart.setOption({
     xAxis: {
       type: 'category',
-      data: ['2021-01', '2021-02', '2021-03', '2021-04', '2021-05', '2021-06']
+      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
     },
     yAxis: {
       type: 'value'
     },
     series: [{
-      data: [10000, 20000, 15000, 18000, 25000, 30000],
-      type: 'bar'
-    }]
-  });
-};
-
-const initChart2 = () => {
-  const myChart2 = echarts.init(chart2.value);
-  myChart2.setOption({
-    title: {
-      text: '季度销售额'
-    },
-    xAxis: {
-      type: 'category',
-      data: ['Q1', 'Q2', 'Q3', 'Q4']
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [{
-      data: [50000, 80000, 75000, 90000],
+      data: [1200, 1500, 1800, 2000, 2200, 2400],
       type: 'line'
     }]
   });
 };
 
-const initChart3 = () => {
-  const myChart3 = echarts.init(chart3.value);
-  myChart3.setOption({
-    title: {
-      text: '年度销售额'
-    },
-    tooltip: {},
-    legend: {
-      data:['销售额']
-    },
+const initBarChart = () => {
+  const chart = echarts.init(barChart.value);
+  chart.setOption({
     xAxis: {
-      data: ["2020", "2021"]
+      type: 'category',
+      data: ['北京', '上海', '广州', '深圳', '杭州']
     },
-    yAxis: {},
+    yAxis: {
+      type: 'value'
+    },
     series: [{
-      name: '销售额',
-      type: 'bar',
-      data: [150000, 200000]
+      data: [1200, 800, 500, 300, 200],
+      type: 'bar'
     }]
   });
 };
 
-onMounted(() => {
-  initChart1();
-  initChart2();
-  initChart3();
-});
+const initPieChart = () => {
+  const chart = echarts.init(pieChart.value);
+  chart.setOption({
+    series: [{
+      type: 'pie',
+      data: [
+        { name: '搜索引擎', value: 335 },
+        { name: '直接访问', value: 310 },
+        { name: '邮件营销', value: 234 },
+        { name: '联盟广告', value: 135 },
+        { name: '视频广告', value: 1548 }
+      ]
+    }]
+  });
+};
+
+const initScatterChart = () => {
+  const chart = echarts.init(scatterChart.value);
+  chart.setOption({
+    xAxis: {
+      type: 'value'
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [{
+      type: 'scatter',
+      symbolSize: 10,
+      data: [
+        [10, 20],
+        [30, 40],
+        [50, 60],
+        [70, 80],
+        [90, 100]
+      ]
+    }]
+  });
+};
+
 </script>
+
+<style scoped>
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.chart-item {
+  width: 50%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.chart {
+  height: 300px;
+  border: 1px solid #ccc;
+}
+</style>

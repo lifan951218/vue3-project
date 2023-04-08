@@ -1,120 +1,293 @@
 <template>
-    <div class="container">
-        <div class="form-box">
-            <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
 
-              <el-form-item label="所属部门" prop="region">
-                <el-select v-model="form.region" placeholder="请选择社交媒体" multiple>
-                  <el-option key="联系人1" label="联系人1" value="联系人1"></el-option>
-                  <el-option key="联系人2" label="联系人2" value="联系人2"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="库存名称" prop="region">
-                <el-select v-model="form.region" placeholder="请选择商品" multiple>
-                  <el-option key="类别1" label="类别1" value="联系人1"></el-option>
-                  <el-option key="类别2" label="类别2" value="联系人2"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="推广类型" prop="region">
-                <el-input v-model="form.region"></el-input>
-              </el-form-item>
-              <el-form-item label="推广描述" prop="region">
-                <el-input v-model="form.region" type="textarea"></el-input>
-              </el-form-item>
-            </el-form>
-          <div><el-button type="primary">提交推广申请</el-button> </div>
+  <div class="container">
+
+    <div class="chart-row">
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          利润趋势
         </div>
+
+        <div class="chart-content" ref="profitTrendChart">
+
+        </div>
+
+      </div>
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          利润构成
+        </div>
+
+        <div class="chart-content" ref="profitCompositionChart">
+
+        </div>
+
+      </div>
+
     </div>
+
+    <div class="chart-row">
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          利润率趋势
+        </div>
+
+        <div class="chart-content" ref="profitRateTrendChart">
+
+        </div>
+
+      </div>
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          利润率比较
+        </div>
+
+        <div class="chart-content" ref="profitRateComparisonChart">
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </template>
 
-<script setup lang="ts" name="baseform">
-import { reactive, ref } from 'vue';
-import { ElMessage } from 'element-plus';
-import type { FormInstance, FormRules } from 'element-plus';
+<script setup>
+import { ref, onMounted } from 'vue';
+import * as echarts from 'echarts';
 
-const options = [
-    {
-        value: 'guangdong',
-        label: '广东省',
-        children: [
-            {
-                value: 'guangzhou',
-                label: '广州市',
-                children: [
-                    {
-                        value: 'tianhe',
-                        label: '天河区',
-                    },
-                    {
-                        value: 'haizhu',
-                        label: '海珠区',
-                    },
-                ],
-            },
-            {
-                value: 'dongguan',
-                label: '上海市',
-                children: [
-                    {
-                        value: 'changan',
-                        label: '长安镇',
-                    },
-                    {
-                        value: 'humen',
-                        label: '虎门镇',
-                    },
-                ],
-            },
-        ],
+const profitTrendChart = ref(null);
+const profitCompositionChart = ref(null);
+const profitRateTrendChart = ref(null);
+const profitRateComparisonChart = ref(null);
+
+onMounted(() => {
+  // 利润趋势
+  const profitTrendOption = {
+    tooltip: {
+      trigger: 'axis'
     },
-    {
-        value: 'hunan',
-        label: '湖南省',
-        children: [
-            {
-                value: 'changsha',
-                label: '长沙市',
-                children: [
-                    {
-                        value: 'yuelu',
-                        label: '岳麓区',
-                    },
-                ],
-            },
-        ],
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
     },
-];
-const rules: FormRules = {
-    name: [{ required: true, message: '请输入表单名称', trigger: 'blur' }],
-};
-const formRef = ref<FormInstance>();
-const form = reactive({
-    name: '',
-    region: '',
-    date1: '',
-    date2: '',
-    delivery: true,
-    type: ['联系人1'],
-    resource: '联系人2',
-    desc: '',
-    options: [],
-});
-// 提交
-const onSubmit = (formEl: FormInstance | undefined) => {
-    // 表单校验
-    if (!formEl) return;
-    formEl.validate((valid) => {
-        if (valid) {
-            console.log(form);
-            ElMessage.success('提交成功！');
-        } else {
-            return false;
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: ['2017', '2018', '2019', '2020', '2021']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        name: '利润',
+        type: 'line',
+        data: [100, 180, 230, 350, 500],
+        itemStyle: {
+          color: '#007aff'
         }
-    });
+      }
+    ]
+  };
+  const chart1 = echarts.init(profitTrendChart.value);
+  chart1.setOption(profitTrendOption);
+
+  // 利润构成
+  const profitCompositionOption = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    legend: {
+      orient: 'vertical',
+      left: 'left',
+      data: ['销售收入', '其他收益']
+    },
+    series: [
+      {
+        name: '利润构成',
+        type: 'pie',
+        radius: ['50%', '70%'],
+        avoidLabelOverlap: false,
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: '30',
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: 800, name: '销售收入' },
+          { value: 200, name: '其他收益' }
+        ],
+        itemStyle: {
+          emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          },
+          color: function(params) {
+            var colorList = [
+              '#007aff',
+              '#ffb900'
+            ];
+            return colorList[params.dataIndex];
+          }
+        }
+      }
+    ]
+  };
+  const chart2 = echarts.init(profitCompositionChart.value);
+  chart2.setOption(profitCompositionOption);
+
+  // 利润率趋势
+  const profitRateTrendOption = {
+    tooltip: {
+      trigger: 'axis'
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: ['2017', '2018', '2019', '2020', '2021']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        name: '利润率',
+  type: 'line',
+      data: [10, 15, 18, 20, 25],
+      itemStyle: {
+    color: '#007aff'
+  }
+}
+]
 };
-// 重置
-const onReset = (formEl: FormInstance | undefined) => {
-    if (!formEl) return;
-    formEl.resetFields();
-};
+  const chart3 = echarts.init(profitRateTrendChart.value);
+  chart3.setOption(profitRateTrendOption);
+
+  // 利润率比较
+  const profitRateComparisonOption = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b}: {c}%'
+    },
+    legend: {
+      orient: 'vertical',
+      left: 'left',
+      data: ['利润率1', '利润率2']
+    },
+    series: [
+      {
+        name: '利润率比较',
+        type: 'pie',
+        radius: ['50%', '70%'],
+        avoidLabelOverlap: false,
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: '30',
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: 60, name: '利润率1' },
+          { value: 40, name: '利润率2' }
+        ],
+        itemStyle: {
+          emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          },
+          color: function(params) {
+            var colorList = [
+              '#007aff',
+              '#ffb900'
+            ];
+            return colorList[params.dataIndex];
+          }
+        }
+      }
+    ]
+  };
+  const chart4 = echarts.init(profitRateComparisonChart.value);
+  chart4.setOption(profitRateComparisonOption);
+});
+
 </script>
+
+<style>
+.profit-analysis-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.chart-item {
+  width: 400px;
+  height: 400px;
+  margin-right: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-title {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.chart-content {
+  flex: 1;
+}
+</style>

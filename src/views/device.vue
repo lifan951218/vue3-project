@@ -1,231 +1,196 @@
 <template>
+
   <div class="container">
 
-    <div class="add-appointment">
-      <el-button type="primary" :icon="Plus" @click="addAppointment">新增设备</el-button>
-    </div>
-    <div class="add-appointment">
-      <h3>设备列表</h3>
-    </div>
-    <el-table :data="appointments">
+    <el-form ref="form" :model="formData" :rules="formRules" label-width="120px">
 
-      <el-table-column prop="id" label="设备编号"></el-table-column>
-      <el-table-column prop="name" label="设备名称"></el-table-column>
-      <el-table-column prop="phone" label="设备编码"></el-table-column>
+      <el-form-item label="市场容量">
 
-      <el-table-column prop="date" label="所属部门">
+        <el-select v-model="formData.marketCapacity" placeholder="请选择市场容量">
 
-      </el-table-column>
+          <el-option v-for="capacity in capacityOptions" :key="capacity" :label="capacity" :value="capacity" />
 
-      <el-table-column label="操作">
+        </el-select>
 
-        <template #default="{row}">
-          <!-- 编辑设备 -->
+      </el-form-item>
 
-          <el-button type="primary" size="small" @click="editAppointment(row)">编辑
-          </el-button>
+      <el-form-item label="年增长率">
 
-          <!-- 取消设备 -->
+        <el-select v-model="formData.growthRate" placeholder="请选择年增长率">
 
-          <el-button type="danger" size="small" @click="cancelAppointment(row)">删除
-          </el-button>
+          <el-option v-for="rate in growthRateOptions" :key="rate" :label="rate" :value="rate" />
 
-        </template>
+        </el-select>
 
-      </el-table-column>
+      </el-form-item>
 
-    </el-table>
-    <!-- 添加或编辑设备的表单 -->
-    <el-dialog v-model="dialogVisible" title="添加/编辑设备">
-      <el-form :model="formData" :rules="formRules">
-        <el-form-item label="设备" prop="name">
-          <el-input v-model="formData.name"></el-input>
-        </el-form-item>
-        <el-form-item label="设备编码" prop="date">
-          <el-input v-model="formData.phone"></el-input>
-        </el-form-item>
-        <el-form-item label="所属部门" prop="date">
-          <el-input v-model="formData.date"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer">
-        <!-- 取消添加或编辑 -->
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <!-- 确认添加或编辑 -->
-        <el-button type="primary" @click="">确认</el-button>
+      <el-form-item>
+
+        <el-button type="primary" @click="generateChart">生成图表</el-button>
+
+      </el-form-item>
+
+    </el-form>
+
+    <div class="chart-container">
+
+      <div ref="totalMarketChart" class="chart">
+
       </div>
-    </el-dialog>
 
-    <!-- 确认取消设备的对话框 -->
-    <el-dialog v-model="cancelDialogVisible" title="删除设备">
-      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此设备吗？</div>
-      <span slot="footer" class="dialog-footer">
-    <!-- 取消删除设备 -->
-    <el-button @click="cancelDialogVisible = false">取 消</el-button>
-        <!-- 确认删除设备 -->
-    <el-button type="primary" @click="">确 定</el-button>
-  </span>
-    </el-dialog>
+      <div ref="marketShareChart" class="chart">
+
+      </div>
+
+    </div>
+
   </div>
+
 </template>
 
-<script setup lang="ts" name="dashboard">
-import {Plus} from "@element-plus/icons-vue";
-import {ref} from "vue";
+<script>
+import { onMounted, ref } from 'vue';
+import * as echarts from 'echarts';
 
-const appointments = ref([]); // 设备列表
-const services = ref([
-  '部门1', '部门2', '部门3', '部门4', '部门5'
-]);
-for (let i = 1; i <= 50; i++) {
-  const service = services.value[Math.floor(Math.random() * services.value.length)];
-  appointments.value.push({
-    id: i,
-    name: `设备${i}`,
-    date: service,
-    phone: `device-34578${i.toString().padStart(2, '0')}`,
-  });
+export default {
+  setup() {
+    const formData = ref({
+      marketCapacity: null,
+      growthRate: null
+    });
+
+    const formRules = {
+      marketCapacity: [
+        { required: true, message: '请选择市场容量', trigger: 'change' }
+      ],
+      growthRate: [
+        { required: true, message: '请选择年增长率', trigger: 'change' }
+      ]
+    };
+
+    const capacityOptions = ['1000万', '5000万', '1亿', '5亿', '10亿'];
+    const growthRateOptions = ['5%', '10%', '15%', '20%', '25%'];
+
+    const totalMarketChart = ref(null);
+    const marketShareChart = ref(null);
+
+    let totalMarketChartInstance = null;
+    let marketShareChartInstance = null;
+
+    const generateChart = () => {
+      if (totalMarketChartInstance) {
+        totalMarketChartInstance.dispose();
+      }
+      if (marketShareChartInstance) {
+        marketShareChartInstance.dispose();
+      }
+
+      totalMarketChartInstance = echarts.init(totalMarketChart.value);
+      marketShareChartInstance = echarts.init(marketShareChart.value);
+
+      const marketCapacity = parseInt(formData.value.marketCapacity.replace(/[^0-9]/gi, ''));
+      const growthRate = parseInt(formData.value.growthRate.replace('%', '')) / 100;
+
+      const data = [];
+      const years = [];
+      let marketSize = marketCapacity;
+      for (let i = 0; i < 5; i++) {
+        years.push((new Date().getFullYear() + i).toString());
+        data.push(marketSize);
+        marketSize *= (1 + growthRate);
+      }
+
+      totalMarketChartInstance.setOption({
+        title: {
+          text: '总市场规模时间折线图'
+        },
+        xAxis: {
+          type: 'category',
+          data: years
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [{
+          data,
+          type: 'line'
+        }]
+      });
+
+      marketShareChartInstance.setOption({
+        title: {
+          text: '竞争对手市场份额和公司市场份额饼状图'
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
+        series: [
+          {
+            type: 'pie',
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: '30',
+                fontWeight: 'bold'
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: [
+              { value: marketCapacity * 0.2, name: '竞争对手市场份额' },
+              { value: marketCapacity * 0.8, name: '公司市场份额' }
+            ]
+          }
+        ]
+      });
+    };
+
+    // onMounted(() => {
+    //   generateChart();
+    // });
+
+    return {
+      formData,
+      formRules,
+      capacityOptions,
+      growthRateOptions,
+      totalMarketChart,
+      marketShareChart,
+      generateChart
+    };
+  }
 }
-
-
-
-const cancelDialogVisible = ref(false);
-
-const formData = ref({}); // 添加或编辑设备的表单数据
-const formRules = ref({
-  name: [
-    { required: true, message: '设备不能为空', trigger: 'blur' },
-  ],
-  date: [
-    { required: true, message: '手机号码不能为空', trigger: 'blur' },
-  ]
-}); // 添加或编辑设备的表单验证规则
-const dialogVisible = ref(false); // 是否显示添加或编辑设备的对话框
-
-// 编辑设备
-function editAppointment(appointment: any) {
-  formData.value = { ...appointment };
-  dialogVisible.value = true;
-}
-
-function addAppointment() {
-  dialogVisible.value = true;
-  formData.value = {};
-}
-
-// 删除设备
-function cancelAppointment(appointment: any) {
-  cancelDialogVisible.value = true;
-  formData.value = { ...appointment };
-}
-
 </script>
 
+
 <style scoped>
-.el-row {
-  margin-bottom: 20px;
+.market-size-analysis-container {
+display: flex;
+flex-direction: column;
+align-items: center;
 }
 
-.grid-content {
-  display: flex;
-  align-items: center;
-  height: 100px;
+.el-form-item__label {
+width: 120px;
 }
 
-.add-appointment {
-  margin-bottom: 20px;
+.chart-container {
+display: flex;
+justify-content: space-between;
+width: 100%;
+margin-top: 20px;
 }
 
-.grid-cont-right {
-  flex: 1;
-  text-align: center;
-  font-size: 14px;
-  color: #999;
-}
-
-.grid-num {
-  font-size: 30px;
-  font-weight: bold;
-}
-
-.grid-con-icon {
-  font-size: 50px;
-  width: 100px;
-  height: 100px;
-  text-align: center;
-  line-height: 100px;
-  color: #fff;
-}
-
-.grid-con-1 .grid-con-icon {
-  background: rgb(45, 140, 240);
-}
-
-.grid-con-1 .grid-num {
-  color: rgb(45, 140, 240);
-}
-
-.grid-con-2 .grid-con-icon {
-  background: rgb(100, 213, 114);
-}
-
-.grid-con-2 .grid-num {
-  color: rgb(100, 213, 114);
-}
-
-.grid-con-3 .grid-con-icon {
-  background: rgb(242, 94, 67);
-}
-
-.grid-con-3 .grid-num {
-  color: rgb(242, 94, 67);
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #ccc;
-  margin-bottom: 20px;
-}
-
-.user-info-cont {
-  padding-left: 50px;
-  flex: 1;
-  font-size: 14px;
-  color: #999;
-}
-
-.user-info-cont div:first-child {
-  font-size: 30px;
-  color: #222;
-}
-
-.user-info-list {
-  font-size: 14px;
-  color: #999;
-  line-height: 25px;
-}
-
-.user-info-list span {
-  margin-left: 70px;
-}
-
-.mgb20 {
-  margin-bottom: 40px;
-}
-
-.todo-item {
-  font-size: 14px;
-}
-
-.todo-item-del {
-  text-decoration: line-through;
-  color: #999;
-}
-
-.schart {
-  width: 100%;
-  height: 300px;
+.chart {
+height: 300px;
+width: 48%;
 }
 </style>

@@ -1,159 +1,293 @@
 <template>
-	<div class="container">
-		<div  id="main" style="height: 700px;width: 100%">
-		</div>
-	</div>
+
+  <div class="container">
+
+    <div class="chart-row">
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          利润趋势
+        </div>
+
+        <div class="chart-content" ref="profitTrendChart">
+
+        </div>
+
+      </div>
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          利润构成
+        </div>
+
+        <div class="chart-content" ref="profitCompositionChart">
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="chart-row">
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          利润率趋势
+        </div>
+
+        <div class="chart-content" ref="profitRateTrendChart">
+
+        </div>
+
+      </div>
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          利润率比较
+        </div>
+
+        <div class="chart-content" ref="profitRateComparisonChart">
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </template>
 
 <script setup>
-import * as echarts from 'echarts';
-import {onMounted} from "vue";
+import { ref, onMounted } from 'vue';
+import echarts from 'echarts';
 
+const profitTrendChart = ref(null);
+const profitCompositionChart = ref(null);
+const profitRateTrendChart = ref(null);
+const profitRateComparisonChart = ref(null);
 
 onMounted(() => {
-  var chartDom = document.getElementById('main');
-  var myChart = echarts.init(chartDom);
-  var option;
-  option = {
+  // 利润趋势
+  const profitTrendOption = {
     tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
-      }
+      trigger: 'axis'
     },
-    title: {
-      text: '最近一周商品盘点统计'
-    },
-    legend: {},
     grid: {
       left: '3%',
       right: '4%',
       bottom: '3%',
       containLabel: true
     },
-    xAxis: [
-      {
-        type: 'category',
-        data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
-      }
-    ],
-    yAxis: [
-      {
-        type: 'value'
-      }
-    ],
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: ['2017', '2018', '2019', '2020', '2021']
+    },
+    yAxis: {
+      type: 'value'
+    },
     series: [
       {
-        name: '商品1',
-        type: 'bar',
-        emphasis: {
-          focus: 'series'
-        },
-        data: [320, 332, 301, 334, 390, 330, 320]
-      },
-      {
-        name: '商品2',
-        type: 'bar',
-        stack: 'Ad',
-        emphasis: {
-          focus: 'series'
-        },
-        data: [120, 132, 101, 134, 90, 230, 210]
-      },
-      {
-        name: '商品3',
-        type: 'bar',
-        stack: 'Ad',
-        emphasis: {
-          focus: 'series'
-        },
-        data: [220, 182, 191, 234, 290, 330, 310]
-      },
-      {
-        name: '商品4',
-        type: 'bar',
-        stack: 'Ad',
-        emphasis: {
-          focus: 'series'
-        },
-        data: [150, 232, 201, 154, 190, 330, 410]
-      },
-      {
-        name: '商品5',
-        type: 'bar',
-        data: [862, 1018, 964, 1026, 1679, 1600, 1570],
-        emphasis: {
-          focus: 'series'
-        },
-        markLine: {
-          lineStyle: {
-            type: 'dashed'
-          },
-          data: [[{ type: 'min' }, { type: 'max' }]]
+        name: '利润',
+        type: 'line',
+        data: [100, 180, 230, 350, 500],
+        itemStyle: {
+          color: '#007aff'
         }
-      },
-      {
-        name: '商品6',
-        type: 'bar',
-        barWidth: 5,
-        stack: 'Search Engine',
-        emphasis: {
-          focus: 'series'
-        },
-        data: [620, 732, 701, 734, 1090, 1130, 1120]
-      },
-      {
-        name: '商品7',
-        type: 'bar',
-        stack: 'Search Engine',
-        emphasis: {
-          focus: 'series'
-        },
-        data: [120, 132, 101, 134, 290, 230, 220]
-      },
-      {
-        name: '商品8',
-        type: 'bar',
-        stack: 'Search Engine',
-        emphasis: {
-          focus: 'series'
-        },
-        data: [60, 72, 71, 74, 190, 130, 110]
-      },
-      {
-        name: '商品9',
-        type: 'bar',
-        stack: 'Search Engine',
-        emphasis: {
-          focus: 'series'
-        },
-        data: [62, 82, 91, 84, 109, 110, 120]
       }
     ]
   };
+  const chart1 = echarts.init(profitTrendChart.value);
+  chart1.setOption(profitTrendOption);
 
-  option && myChart.setOption(option);
+  // 利润构成
+  const profitCompositionOption = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    legend: {
+      orient: 'vertical',
+      left: 'left',
+      data: ['销售收入', '其他收益']
+    },
+    series: [
+      {
+        name: '利润构成',
+        type: 'pie',
+        radius: ['50%', '70%'],
+        avoidLabelOverlap: false,
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: '30',
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: 800, name: '销售收入' },
+          { value: 200, name: '其他收益' }
+        ],
+        itemStyle: {
+          emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          },
+          color: function(params) {
+            var colorList = [
+              '#007aff',
+              '#ffb900'
+            ];
+            return colorList[params.dataIndex];
+          }
+        }
+      }
+    ]
+  };
+  const chart2 = echarts.init(profitCompositionChart.value);
+  chart2.setOption(profitCompositionOption);
 
+  // 利润率趋势
+  const profitRateTrendOption = {
+    tooltip: {
+      trigger: 'axis'
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: ['2017', '2018', '2019', '2020', '2021']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        name: '利润率',
+        type: 'line',
+        data: [10, 15, 18, 20, 25],
+        itemStyle: {
+          color: '#007aff'
+        }
+      }
+    ]
+  };
+  const chart3 = echarts.init(profitRateTrendChart.value);
+  chart3.setOption(profitRateTrendOption);
+
+  // 利润率比较
+  const profitRateComparisonOption = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b}: {c}%'
+    },
+    legend: {
+      orient: 'vertical',
+      left: 'left',
+      data: ['利润率1', '利润率2']
+    },
+    series: [
+      {
+        name: '利润率比较',
+        type: 'pie',
+        radius: ['50%', '70%'],
+        avoidLabelOverlap: false,
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: '30',
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: 60, name: '利润率1' },
+          { value: 40, name: '利润率2' }
+        ],
+        itemStyle: {
+          emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          },
+          color: function(params) {
+            var colorList = [
+              '#007aff',
+              '#ffb900'
+            ];
+            return colorList[params.dataIndex];
+          }
+        }
+      }
+    ]
+  };
+  const chart4 = echarts.init(profitRateComparisonChart.value);
+  chart4.setOption(profitRateComparisonOption);
 });
-
 
 </script>
 
-<style scoped>
-.schart-box {
-	display: inline-block;
-	margin: 20px;
+<style>
+.profit-analysis-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.schart {
-	width: 600px;
-	height: 400px;
+
+.chart-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
-.content-title {
-	clear: both;
-	font-weight: 400;
-	line-height: 50px;
-	margin: 10px 0;
-	font-size: 22px;
-	color: #1f2f3d;
+
+.chart-item {
+  width: 400px;
+  height: 400px;
+  margin-right: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-title {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.chart-content {
+  flex: 1;
 }
 </style>

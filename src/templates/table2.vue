@@ -12,28 +12,17 @@
       <el-table-column prop="id" label="会员编号"></el-table-column>
       <el-table-column prop="name" label="会员名称"></el-table-column>
       <el-table-column prop="phone" label="手机号"></el-table-column>
-
-      <el-table-column prop="date" label="级别">
-
-      </el-table-column>
-
+      <el-table-column prop="date" label="级别"></el-table-column>
       <el-table-column label="操作">
-
         <template #default="{row}">
           <!-- 编辑会员 -->
-
           <el-button type="primary" size="small" @click="editAppointment(row)">编辑
           </el-button>
-
           <!-- 取消会员 -->
-
           <el-button type="danger" size="small" @click="cancelAppointment(row)">删除
           </el-button>
-
         </template>
-
       </el-table-column>
-
     </el-table>
     <!-- 添加或编辑会员的表单 -->
     <el-dialog v-model="dialogVisible" title="添加/编辑会员">

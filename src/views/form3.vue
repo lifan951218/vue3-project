@@ -1,120 +1,153 @@
 <template>
-    <div class="container">
-        <div class="form-box">
-            <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
-
-              <el-form-item label="会员" prop="region">
-                <el-select v-model="form.region" placeholder="请选择会员" multiple>
-                  <el-option key="联系人1" label="联系人1" value="联系人1"></el-option>
-                  <el-option key="联系人2" label="联系人2" value="联系人2"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="涉及商品" prop="region">
-                <el-select v-model="form.region" placeholder="请选择商品" multiple>
-                  <el-option key="类别1" label="类别1" value="联系人1"></el-option>
-                  <el-option key="类别2" label="类别2" value="联系人2"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="反馈类型" prop="region">
-                <el-input v-model="form.region"></el-input>
-              </el-form-item>
-              <el-form-item label="反馈内容" prop="region">
-                <el-input v-model="form.region" type="textarea"></el-input>
-              </el-form-item>
-            </el-form>
-          <div><el-button type="primary">提交反馈</el-button> </div>
-        </div>
+  <div class="cash-flow-analysis-container">
+    <div class="chart-row">
+      <div class="chart-item">
+        <div class="chart-title">经营活动现金流量</div>
+        <div class="chart-content" ref="operatingCashFlowChart"></div>
+      </div>
+      <div class="chart-item">
+        <div class="chart-title">投资和筹资现金流量</div>
+        <div class="chart-content" ref="investmentFinancingCashFlowChart"></div>
+      </div>
     </div>
+  </div>
 </template>
 
-<script setup lang="ts" name="baseform">
-import { reactive, ref } from 'vue';
-import { ElMessage } from 'element-plus';
-import type { FormInstance, FormRules } from 'element-plus';
+<script>
+import { ref, onMounted } from 'vue';
+import * as echarts from 'echarts';
 
-const options = [
-    {
-        value: 'guangdong',
-        label: '广东省',
-        children: [
-            {
-                value: 'guangzhou',
-                label: '广州市',
-                children: [
-                    {
-                        value: 'tianhe',
-                        label: '天河区',
-                    },
-                    {
-                        value: 'haizhu',
-                        label: '海珠区',
-                    },
-                ],
-            },
-            {
-                value: 'dongguan',
-                label: '上海市',
-                children: [
-                    {
-                        value: 'changan',
-                        label: '长安镇',
-                    },
-                    {
-                        value: 'humen',
-                        label: '虎门镇',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        value: 'hunan',
-        label: '湖南省',
-        children: [
-            {
-                value: 'changsha',
-                label: '长沙市',
-                children: [
-                    {
-                        value: 'yuelu',
-                        label: '岳麓区',
-                    },
-                ],
-            },
-        ],
-    },
-];
-const rules: FormRules = {
-    name: [{ required: true, message: '请输入表单名称', trigger: 'blur' }],
-};
-const formRef = ref<FormInstance>();
-const form = reactive({
-    name: '',
-    region: '',
-    date1: '',
-    date2: '',
-    delivery: true,
-    type: ['联系人1'],
-    resource: '联系人2',
-    desc: '',
-    options: [],
-});
-// 提交
-const onSubmit = (formEl: FormInstance | undefined) => {
-    // 表单校验
-    if (!formEl) return;
-    formEl.validate((valid) => {
-        if (valid) {
-            console.log(form);
-            ElMessage.success('提交成功！');
-        } else {
-            return false;
-        }
+export default {
+  setup() {
+    const operatingCashFlowChart = ref(null);
+    const investmentFinancingCashFlowChart = ref(null);
+
+    onMounted(() => {
+      // 经营活动现金流量
+      const operatingCashFlowOption = {
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data:['经营活动净现金流量']
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: ['2017', '2018', '2019', '2020', '2021']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            name: '经营活动净现金流量',
+            type: 'line',
+            stack: '总量',
+            data: [100, 180, -230, 350, 500],
+            itemStyle: {
+              color: '#007aff'
+            }
+          }
+        ]
+      };
+      const chart1 = echarts.init(operatingCashFlowChart.value);
+      chart1.setOption(operatingCashFlowOption);
+
+      // 投资和筹资现金流量
+      const investmentFinancingCashFlowOption = {
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data:['投资现金流量', '筹资现金流量']
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: ['2017', '2018', '2019', '2020', '2021']
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            name: '投资现金流量',
+            type: 'bar',
+            stack: '总量',
+            data: [-50, -80, -60, -90, -70],
+            itemStyle: {
+              color: '#ffb900'
+            }
+          },
+          {
+            name: '筹资现金流量',
+            type: 'bar',
+            stack: '总量',
+            data: [20, 30, 40, 50, 60],
+            itemStyle: {
+              color: '#007aff'
+            }
+          }
+        ]
+      };
+      const chart2 = echarts.init(investmentFinancingCashFlowChart.value);
+      chart2.setOption(investmentFinancingCashFlowOption);
     });
-};
-// 重置
-const onReset = (formEl: FormInstance | undefined) => {
-    if (!formEl) return;
-    formEl.resetFields();
-};
+
+    return {
+      operatingCashFlowChart,
+      investmentFinancingCashFlowChart
+    };
+  }
+}
 </script>
+
+<style>
+.cash-flow-analysis-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.chart-item {
+  width: 600px;
+  height: 400px;
+  margin-right: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-title {
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.chart-content {
+  flex: 1;
+}
+</style>

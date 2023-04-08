@@ -1,147 +1,122 @@
 <template>
-    <div class="container">
-        <div class="form-box">
-            <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
-
-              <el-form-item label="会员" prop="region">
-                <el-select v-model="form.region" placeholder="请选择会员" multiple>
-                  <el-option key="联系人1" label="会员1" value="联系人1"></el-option>
-                  <el-option key="联系人2" label="联系人2" value="联系人2"></el-option>
-                </el-select>
-              </el-form-item>
-          <div><el-button type="primary" @click="flag=!flag">生成客户画像</el-button> </div>
-            </el-form>
-        </div>
-    </div>
   <div class="container">
-    <div>
-      <el-table :data="appointments" v-if="flag">
+    <div class="toolbar">
+      <span>产品名称</span>
+      <el-input v-model="filterText" placeholder="请输入搜索关键词" style="width: 200px; margin-left: 10px;" prefix-icon="el-icon-search"></el-input>
+      <el-button style="margin-left: 15px" type="primary" @click="exportCsv">查询</el-button>
 
-        <el-table-column prop="name" label="会员名称">
+      <el-button type="primary" @click="exportCsv">导出CSV</el-button>
+    </div>
+    <el-table ref="table" :data="filteredData" style="width: 100%" :header-cell-style="{ backgroundColor: '#f5f5f5' }">
 
-        </el-table-column>
+      <el-table-column prop="item" label="项目">
 
-        <el-table-column prop="phone" label="手机号"></el-table-column>
-        <el-table-column prop="type" label="级别"></el-table-column>
-        <el-table-column prop="date" label="偏好产品"></el-table-column>
-        <el-table-column prop="service" label="未涉及产品"></el-table-column>
-        <el-table-column prop="service2" label="社交媒体偏好"></el-table-column>
-        <el-table-column prop="service3" label="已消费金额"></el-table-column>
-        <el-table-column prop="service4" label="喜好的消费渠道"></el-table-column>
-        <el-table-column prop="service5" label="购买频率"></el-table-column>
+      </el-table-column>
 
+      <el-table-column prop="currentYear" label="本年数">
 
-      </el-table>
+      </el-table-column>
+
+      <el-table-column prop="lastYear" label="上年数">
+
+      </el-table-column>
+
+      <el-table-column prop="increaseRate" label="增长率(%)">
+
+      </el-table-column>
+
+      <el-table-column prop="fiveYearAvg" label="五年平均增长率(%)">
+
+      </el-table-column>
+
+      <el-table-column prop="remark" label="备注">
+
+      </el-table-column>
+
+    </el-table>
+    <div class="pagination">
+      <el-pagination layout="prev, pager, next" :total="data.length" :current-page.sync="currentPage" :page-size="pageSize"></el-pagination>
     </div>
   </div>
 </template>
 
-<script setup lang="ts" name="baseform">
-import { reactive, ref } from 'vue';
-import { ElMessage } from 'element-plus';
-import type { FormInstance, FormRules } from 'element-plus';
+<script>
+import { ref, computed } from 'vue';
 
-const appointments = ref([
-  {
-    name: '会员1',
-    type: 'SVIP',
-    phone: '13000000000',
-    date: '商品1',
-    service: '商品10',
-    service2: '微信、微博',
-    service3: '3287 RMB',
-    service4: '京东',
-    service5: '高'
-  }
-]);
+export default {
+  setup() {
+    const data = ref([
+      { item: '流动资产', currentYear: 8000000, lastYear: 6000000, increaseRate: 33.3, fiveYearAvg: 22.5, remark: '' },
+      { item: '存货', currentYear: 3000000, lastYear: 2500000, increaseRate: 20, fiveYearAvg: 18.2, remark: '' },
+      { item: '应收账款', currentYear: 2000000, lastYear: 1800000, increaseRate: 11.1, fiveYearAvg: 13.6, remark: '' },
+      { item: '非流动资产', currentYear: 12000000, lastYear: 10000000, increaseRate: 20, fiveYearAvg: 18.2, remark: '' },
+      { item: '其他', currentYear: 12000000, lastYear: 10000000, increaseRate: 20, fiveYearAvg: 18.2, remark: '' },
+      { item: '股票账户', currentYear: 12000000, lastYear: 10000000, increaseRate: 20, fiveYearAvg: 18.2, remark: '' },
+      { item: '其他2', currentYear: 12000000, lastYear: 10000000, increaseRate: 20, fiveYearAvg: 18.2, remark: '' },
+      { item: '其他3', currentYear: 12000000, lastYear: 10000000, increaseRate: 20, fiveYearAvg: 18.2, remark: '' },
+    ]);
 
-const  flag = ref(false);
+    const currentPage = ref(1);
+    const pageSize = 10;
+    const filterText = ref('');
+    const selectAll = ref(false);
 
-
-
-const options = [
-    {
-        value: 'guangdong',
-        label: '广东省',
-        children: [
-            {
-                value: 'guangzhou',
-                label: '广州市',
-                children: [
-                    {
-                        value: 'tianhe',
-                        label: '天河区',
-                    },
-                    {
-                        value: 'haizhu',
-                        label: '海珠区',
-                    },
-                ],
-            },
-            {
-                value: 'dongguan',
-                label: '上海市',
-                children: [
-                    {
-                        value: 'changan',
-                        label: '长安镇',
-                    },
-                    {
-                        value: 'humen',
-                        label: '虎门镇',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        value: 'hunan',
-        label: '湖南省',
-        children: [
-            {
-                value: 'changsha',
-                label: '长沙市',
-                children: [
-                    {
-                        value: 'yuelu',
-                        label: '岳麓区',
-                    },
-                ],
-            },
-        ],
-    },
-];
-const rules: FormRules = {
-    name: [{ required: true, message: '请输入表单名称', trigger: 'blur' }],
-};
-const formRef = ref<FormInstance>();
-const form = reactive({
-    name: '',
-    region: '',
-    date1: '',
-    date2: '',
-    delivery: true,
-    type: ['联系人1'],
-    resource: '联系人2',
-    desc: '',
-    options: [],
-});
-// 提交
-const onSubmit = (formEl: FormInstance | undefined) => {
-    // 表单校验
-    if (!formEl) return;
-    formEl.validate((valid) => {
-        if (valid) {
-            console.log(form);
-            ElMessage.success('提交成功！');
-        } else {
-            return false;
-        }
+    const filteredData = computed(() => {
+      let filtered = data.value.filter((item) => item.item.includes(filterText.value));
+      if (selectAll.value) {
+        return filtered;
+      }
+      return filtered.slice((currentPage.value - 1) * pageSize, currentPage.value * pageSize);
     });
-};
-// 重置
-const onReset = (formEl: FormInstance | undefined) => {
-    if (!formEl) return;
-    formEl.resetFields();
-};
+
+    const exportCsv = () => {
+      // 获取表格数据
+      const tableData = JSON.parse(JSON.stringify(filteredData.value));
+      // 移除id字段
+      tableData.forEach(item => {
+        delete item.id;
+      });
+      // 导出xlsx文件
+      import('xlsx').then(xlsx => {
+        const worksheet = xlsx.utils.json_to_sheet(tableData);
+        const workbook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+        xlsx.writeFile(workbook, '资产负债.xlsx');
+      });
+    };
+
+    return {
+      data,
+      currentPage,
+      pageSize,
+      filterText,
+      selectAll,
+      filteredData,
+      exportCsv
+    };
+  }
+}
 </script>
+
+<style>
+.market-size-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.pagination {
+  margin-top: 10px;
+}
+
+.el-pagination {
+  display: flex;
+  justify-content: center;
+}
+</style>

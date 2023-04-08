@@ -4,7 +4,7 @@
             class="sidebar-el-menu"
             :default-active="onRoutes"
             :collapse="sidebar.collapse"
-            background-color="#5a3281"
+            background-color="#2a6b4a"
             text-color="#bfcbd9"
             active-text-color="#18debd"
             unique-opened
@@ -59,22 +59,22 @@ const items = [
   {
     icon: 'Odometer',
     index: '1',
-    title: '数据分析',
+    title: '销售分析',
     permiss: '1',
     subs: [
       {
         index: '/dashboard',
-        title: '客流数据',
+        title: '销售额分析',
         permiss: '2',
       },
       {
         index: '/export',
-        title: '销售数据',
+        title: '客户购买行为分析',
         permiss: '2',
       },
       {
         index: '/export2',
-        title: '库存数据',
+        title: '销售渠道效果分析',
         permiss: '2',
       }
     ],
@@ -82,81 +82,99 @@ const items = [
   {
     icon: 'Calendar',
     index: '2',
-    title: '营销策略',
+    title: '市场分析',
     permiss: '2',
     subs: [
       {
-        index: '/markdown',
-        title: '推荐活动',
-        permiss: '2',
-      },
-      {
         index: '/cuxiao',
-        title: '促销活动',
-        permiss: '2',
-      },
-      {
-        index: '/form2',
-        title: '社交媒体推广',
-        permiss: '2',
-      }
-    ]
-  },
-  {
-    icon: 'Warning',
-    index: '2',
-    title: '客户管理',
-    permiss: '13',
-    subs: [
-      {
-        index: '/editor',
-        title: '会员管理',
-        permiss: '2',
-      },
-      {
-        index: '/form',
-        title: '客户画像',
-        permiss: '2',
-      },
-      {
-        index: '/form3',
-        title: '反馈管理',
-        permiss: '2',
-      }
-    ]
-  },
-  {
-    icon: 'Warning',
-    index: '6',
-    title: '售后服务',
-    permiss: '13',
-    subs: [
-      {
-        index: '/donate',
-        title: '售后清单',
-        permiss: '2',
-      },
-      {
-        index: '/form4',
-        title: '售后反馈',
-        permiss: '2',
-      }
-    ],
-  },
-  {
-    icon: 'Calendar',
-    index: '7',
-    title: '店内运营',
-    permiss: '13',
-    subs: [
-      {
-        index: '/consumer2',
-        title: '员工管理',
+        title: '市场规模分析',
         permiss: '2',
       },
       {
         index: '/device',
-        title: '设备管理',
+        title: '市场份额分析',
+        permiss: '2',
+      }
+    ]
+  },
+  {
+    icon: 'DocumentCopy',
+    index: '3',
+    title: '财务分析',
+    permiss: '13',
+    subs: [
+      {
+        index: '/form',
+        title: '资产负债',
+        permiss: '2',
+      },
+      {
+        index: '/form2',
+        title: '利润与利润率',
+        permiss: '2',
+      },
+      {
+        index: '/form3',
+        title: '现金流量',
+        permiss: '2',
+      }
+    ]
+  },
+  {
+    icon: 'CoffeeCup',
+    index: '6',
+    title: '库存分析',
+    permiss: '13',
+    subs: [
+      {
+        index: '/donate',
+        title: '库存清单',
+        permiss: '2',
+      },
+      {
+        index: '/form4',
+        title: '采购需求分析',
+        permiss: '2',
+      }
+    ],
+  },
+  {
+    icon: 'PieChart',
+    index: '7',
+    title: '客户分析',
+    permiss: '13',
+    subs: [
+      {
+        index: '/consumer2',
+        title: '客户构成分析',
+        permiss: '2',
+      },
+      {
+        index: '/device',
+        title: '客户满意度调查',
+        permiss: '2',
+      }
+    ],
+  },
+  {
+    icon: 'Setting',
+    index: '8',
+    title: '人力资源分析',
+    permiss: '13',
+    subs: [
+      {
+        index: '/consumer2',
+        title: '人员构成分析',
+        permiss: '2',
+      },
+      {
+        index: '/device',
+        title: '绩效评估分析',
+        permiss: '2',
+      },
+      {
+        index: '/device',
+        title: '员工流失率分析',
         permiss: '2',
       }
     ],
@@ -187,7 +205,7 @@ const sidebar = useSidebarStore();
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
     width: 250px;
-  background-color: #5a3281;
+  background-color: #2a6b4a;
 }
 .sidebar > ul {
     height: 100%;
