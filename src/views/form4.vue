@@ -1,115 +1,237 @@
 <template>
-    <div class="container">
-        <div class="form-box">
-            <el-form ref="formRef" :rules="rules" :model="form" label-width="80px">
 
-              <el-form-item label="反馈单号" prop="region">
-                <el-select v-model="form.region" placeholder="请选择反馈单号" multiple>
-                  <el-option key="联系人1" label="联系人1" value="联系人1"></el-option>
-                  <el-option key="联系人2" label="联系人2" value="联系人2"></el-option>
-                </el-select>
-              </el-form-item>
+  <div class="purchase-demand-analysis-container">
+    <div class="analysis-form">
 
-              <el-form-item label="处理类型" prop="region">
-                <el-input v-model="form.region"></el-input>
-              </el-form-item>
-              <el-form-item label="售后评价" prop="region">
-                <el-input v-model="form.region" type="textarea"></el-input>
-              </el-form-item>
-            </el-form>
-          <div><el-button type="primary">提交</el-button> </div>
-        </div>
+      <el-form :model="form" inline>
+
+        <el-form-item label="采购部门">
+
+          <el-select v-model="form.department" placeholder="请选择采购部门">
+
+            <el-option label="部门1" value="1">
+
+            </el-option>
+
+            <el-option label="部门2" value="2">
+
+            </el-option>
+
+            <el-option label="部门3" value="3">
+
+            </el-option>
+
+          </el-select>
+
+        </el-form-item>
+
+        <el-form-item label="采购时间">
+
+          <el-date-picker v-model="form.purchaseTime" type="daterange">
+
+          </el-date-picker>
+
+        </el-form-item>
+
+        <el-form-item>
+
+          <el-button type="primary" @click="handleAnalysis">分析
+          </el-button>
+
+        </el-form-item>
+
+      </el-form>
+
     </div>
+
+    <div class="chart-row">
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          采购计划金额占比
+        </div>
+
+        <div class="chart-content" ref="purchasePlanAmountRatioChart">
+
+        </div>
+
+      </div>
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          采购品类金额统计
+        </div>
+
+        <div class="chart-content" ref="purchaseCategoryAmountChart">
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </template>
 
-<script setup lang="ts" name="baseform">
-import { reactive, ref } from 'vue';
-import { ElMessage } from 'element-plus';
-import type { FormInstance, FormRules } from 'element-plus';
+<script>
+import { ref, reactive, onMounted } from 'vue';
+import * as echarts from 'echarts';
+import { ElForm, ElFormItem, ElSelect, ElOption, ElDatePicker, ElButton } from 'element-plus';
 
-const options = [
-    {
-        value: 'guangdong',
-        label: '广东省',
-        children: [
-            {
-                value: 'guangzhou',
-                label: '广州市',
-                children: [
-                    {
-                        value: 'tianhe',
-                        label: '天河区',
-                    },
-                    {
-                        value: 'haizhu',
-                        label: '海珠区',
-                    },
-                ],
-            },
-            {
-                value: 'dongguan',
-                label: '上海市',
-                children: [
-                    {
-                        value: 'changan',
-                        label: '长安镇',
-                    },
-                    {
-                        value: 'humen',
-                        label: '虎门镇',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        value: 'hunan',
-        label: '湖南省',
-        children: [
-            {
-                value: 'changsha',
-                label: '长沙市',
-                children: [
-                    {
-                        value: 'yuelu',
-                        label: '岳麓区',
-                    },
-                ],
-            },
-        ],
-    },
-];
-const rules: FormRules = {
-    name: [{ required: true, message: '请输入表单名称', trigger: 'blur' }],
-};
-const formRef = ref<FormInstance>();
-const form = reactive({
-    name: '',
-    region: '',
-    date1: '',
-    date2: '',
-    delivery: true,
-    type: ['联系人1'],
-    resource: '联系人2',
-    desc: '',
-    options: [],
-});
-// 提交
-const onSubmit = (formEl: FormInstance | undefined) => {
-    // 表单校验
-    if (!formEl) return;
-    formEl.validate((valid) => {
-        if (valid) {
-            console.log(form);
-            ElMessage.success('提交成功！');
-        } else {
-            return false;
-        }
+export default {
+  components: {
+    ElForm,
+    ElFormItem,
+    ElSelect,
+    ElOption,
+    ElDatePicker,
+    ElButton
+  },
+  setup() {
+    const form = reactive({
+      department: '',
+      purchaseTime: []
     });
-};
-// 重置
-const onReset = (formEl: FormInstance | undefined) => {
-    if (!formEl) return;
-    formEl.resetFields();
-};
+
+    const purchasePlanAmountRatioChart = ref(null);
+    const purchaseCategoryAmountChart = ref(null);
+
+    const initCharts = () => {
+      // 采购计划金额占比
+      const purchasePlanAmountRatioOption = {
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+          data: ['品类1', '品类2', '品类3', '品类4', '品类5']
+        },
+        series: [
+          {
+            name: '采购计划金额占比',
+            type: 'pie',
+            radius: '50%',
+            center: ['50%', '60%'],
+            data: [
+              { value: 335, name: '品类1' },
+              { value: 310, name: '品类2' },
+              { value: 234, name: '品类3' },
+              { value: 135, name: '品类4' },
+              { value: 1548, name: '品类5' }
+            ],
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              },
+              color: function(params) {
+                var colorList = [
+                  '#007aff',
+                  '#ffb900',
+                  '#00c853',
+                  '#ff6a00',
+                  '#5c6bc0'
+                ];
+                return colorList[params.dataIndex];
+              }
+            }
+          }
+        ]
+      };
+      const chart1 = echarts.init(purchasePlanAmountRatioChart.value);
+      chart1.setOption(purchasePlanAmountRatioOption);
+
+      // 采购品类金额统计
+      const purchaseCategoryAmountOption = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        legend: {
+          data: ['品类金额']
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'value',
+          boundaryGap: [0, 0.01]
+        },
+        yAxis: {
+          type: 'category',
+          data: ['品类1', '品类2', '品类3', '品类4', '品类5']
+    },
+      series: [
+        {
+          name: '品类金额',
+          type: 'bar',
+          data: [320, 302, 301, 334, 390],
+          itemStyle: {
+            color: '#007aff'
+          }
+        }
+      ]
+    };
+      const chart2 = echarts.init(purchaseCategoryAmountChart.value);
+      chart2.setOption(purchaseCategoryAmountOption);
+    }
+
+    const handleAnalysis = () => {
+      // 进行分析操作
+      initCharts()
+    };
+
+    return {
+      form,
+      purchasePlanAmountRatioChart,
+      purchaseCategoryAmountChart,
+      handleAnalysis
+    };
+  }
+}
+
 </script>
+
+<style scoped>
+.purchase-demand-analysis-container {
+  padding: 20px;
+}
+
+.chart-row {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.chart-item {
+  width: 50%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.chart-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.chart-content {
+  height: 300px;
+}
+
+.analysis-form {
+  margin-bottom: 20px;
+}
+</style>

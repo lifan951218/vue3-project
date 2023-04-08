@@ -146,35 +146,17 @@ const items = [
     subs: [
       {
         index: '/consumer2',
+        title: '客户清单',
+        permiss: '2',
+      },
+      {
+        index: '/icon',
         title: '客户构成分析',
         permiss: '2',
       },
       {
-        index: '/device',
+        index: '/charts',
         title: '客户满意度调查',
-        permiss: '2',
-      }
-    ],
-  },
-  {
-    icon: 'Setting',
-    index: '8',
-    title: '人力资源分析',
-    permiss: '13',
-    subs: [
-      {
-        index: '/consumer2',
-        title: '人员构成分析',
-        permiss: '2',
-      },
-      {
-        index: '/device',
-        title: '绩效评估分析',
-        permiss: '2',
-      },
-      {
-        index: '/device',
-        title: '员工流失率分析',
         permiss: '2',
       }
     ],

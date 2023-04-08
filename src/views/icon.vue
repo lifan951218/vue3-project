@@ -1,212 +1,204 @@
 <template>
-	<div class="container">
-		<h2>使用方法</h2>
-		<p style="line-height: 50px">
-			直接通过设置类名为 el-icon-lx-iconName 来使用即可。例如：（共{{ iconList.length }}个图标）
-		</p>
-		<p class="example-p">
-			<i class="el-icon-lx-redpacket_fill" style="font-size: 30px; color: #ff5900"></i>
-			<span>&lt;i class=&quot;el-icon-lx-redpacket_fill&quot;&gt;&lt;/i&gt;</span>
-		</p>
-		<p class="example-p">
-			<i class="el-icon-lx-weibo" style="font-size: 30px; color: #fd5656"></i>
-			<span>&lt;i class=&quot;el-icon-lx-weibo&quot;&gt;&lt;/i&gt;</span>
-		</p>
-		<p class="example-p">
-			<i class="el-icon-lx-emojifill" style="font-size: 30px; color: #ffc300"></i>
-			<span>&lt;i class=&quot;el-icon-lx-emojifill&quot;&gt;&lt;/i&gt;</span>
-		</p>
-		<br />
-		<h2>图标</h2>
-		<div class="search-box">
-			<el-input class="search" size="large" v-model="keyword" clearable placeholder="请输入图标名称"></el-input>
-		</div>
-		<ul>
-			<li class="icon-li" v-for="(item, index) in list" :key="index">
-				<div class="icon-li-content">
-					<i :class="`el-icon-lx-${item}`"></i>
-					<span>{{ item }}</span>
-				</div>
-			</li>
-		</ul>
-	</div>
+
+  <div class="customer-analysis-container">
+
+    <div class="chart-row">
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          客户规模分布
+        </div>
+
+        <div class="chart-content" ref="customerSizeDistributionChart">
+
+        </div>
+
+      </div>
+
+      <div class="chart-item">
+
+        <div class="chart-title">
+
+          客户活跃度分析
+        </div>
+
+        <div class="chart-content" ref="customerActivityAnalysisChart">
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </template>
 
-<script setup lang="ts" name="icon">
-import { computed, ref } from 'vue';
+<script>
+import { ref, onMounted } from 'vue';
+import * as echarts from 'echarts';
 
-const iconList: Array<string> = [
-	'attentionforbid',
-	'attentionforbidfill',
-	'attention',
-	'attentionfill',
-	'tag',
-	'tagfill',
-	'people',
-	'peoplefill',
-	'notice',
-	'noticefill',
-	'mobile',
-	'mobilefill',
-	'voice',
-	'voicefill',
-	'unlock',
-	'lock',
-	'home',
-	'homefill',
-	'delete',
-	'deletefill',
-	'notification',
-	'notificationfill',
-	'notificationforbidfill',
-	'like',
-	'likefill',
-	'comment',
-	'commentfill',
-	'camera',
-	'camerafill',
-	'warn',
-	'warnfill',
-	'time',
-	'timefill',
-	'location',
-	'locationfill',
-	'favor',
-	'favorfill',
-	'skin',
-	'skinfill',
-	'news',
-	'newsfill',
-	'record',
-	'recordfill',
-	'emoji',
-	'emojifill',
-	'message',
-	'messagefill',
-	'goods',
-	'goodsfill',
-	'crown',
-	'crownfill',
-	'move',
-	'add',
-	'hot',
-	'hotfill',
-	'service',
-	'servicefill',
-	'present',
-	'presentfill',
-	'pic',
-	'picfill',
-	'rank',
-	'rankfill',
-	'male',
-	'female',
-	'down',
-	'top',
-	'recharge',
-	'rechargefill',
-	'forward',
-	'forwardfill',
-	'info',
-	'infofill',
-	'redpacket',
-	'redpacket_fill',
-	'roundadd',
-	'roundaddfill',
-	'friendadd',
-	'friendaddfill',
-	'cart',
-	'cartfill',
-	'more',
-	'moreandroid',
-	'back',
-	'right',
-	'shop',
-	'shopfill',
-	'question',
-	'questionfill',
-	'roundclose',
-	'roundclosefill',
-	'roundcheck',
-	'roundcheckfill',
-	'global',
-	'mail',
-	'punch',
-	'exit',
-	'upload',
-	'read',
-	'file',
-	'link',
-	'full',
-	'group',
-	'friend',
-	'profile',
-	'addressbook',
-	'calendar',
-	'text',
-	'copy',
-	'share',
-	'wifi',
-	'vipcard',
-	'weibo',
-	'remind',
-	'refresh',
-	'filter',
-	'settings',
-	'scan',
-	'qrcode',
-	'cascades',
-	'apps',
-	'sort',
-	'searchlist',
-	'search',
-	'edit'
-];
-const keyword = ref('');
-const list = computed(() => {
-	return iconList.filter(item => {
-		return item.indexOf(keyword.value) !== -1;
-	});
-});
+export default {
+  setup() {
+    const customerSizeDistributionChart = ref(null);
+    const customerActivityAnalysisChart = ref(null);
+
+    onMounted(() => {
+      // 客户规模分布
+      const customerSizeDistributionOption = {
+        tooltip: {
+          trigger: 'item',
+          formatter: '{b}<br/>{c} ({d}%)'
+        },
+        series: [
+          {
+            type: 'pie',
+            radius: ['40%', '60%'],
+            data: [
+              { name: '规模1', value: Math.round(Math.random() * 1000) },
+              { name: '规模2', value: Math.round(Math.random() * 1000) },
+              { name: '规模3', value: Math.round(Math.random() * 1000) },
+              { name: '规模4', value: Math.round(Math.random() * 1000) },
+              { name: '规模5', value: Math.round(Math.random() * 1000) }
+            ],
+            label: {
+              show: true,
+              position: 'outside',
+              formatter: '{b}: {c} ({d}%)'
+            },
+            labelLine: {
+              show: true
+            },
+            itemStyle: {
+              emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              },
+              color: function(params) {
+                var colorList = [
+                  '#007aff',
+                  '#ffb900',
+                  '#00c853',
+                  '#ff6a00',
+                  '#5c6bc0'
+                ];
+                return colorList[params.dataIndex];
+              }
+            }
+          }
+        ]
+      };
+      const chart1 = echarts.init(customerSizeDistributionChart.value);
+      chart1.setOption(customerSizeDistributionOption);
+
+      // 客户活跃度分析
+      const customerActivityAnalysisOption = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        legend: {
+          data: ['高活跃度客户', '低活跃度客户']
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: {
+          type: 'value'
+        },
+        yAxis: {
+          type: 'category',
+          data: ['客户1', '客户2', '客户3', '客户4', '客户5']
+        },
+        series: [
+          {
+            name: '高活跃度客户',
+            type: 'bar',
+            stack: '总量',
+            label: {
+              show: true
+            },
+            emphasis: {
+              focus: 'series'
+            },
+            data: [
+              Math.round(Math.random() * 100),
+              Math.round(Math.random() * 100),
+              Math.round(Math.random() * 100),
+              Math.round(Math.random() * 100),
+              Math.round(Math.random() * 100)
+            ],
+            itemStyle: {
+              color: '#007aff'
+            }
+          },
+          {
+            name: '低活跃度客户',
+            type: 'bar',
+            stack: '总量',
+            label: {
+              show: true
+            },
+            emphasis: {
+              focus: 'series'
+            },
+            data: [
+              Math.round(Math.random() * 100),
+              Math.round(Math.random() * 100),
+              Math.round(Math.random() * 100),
+              Math.round(Math.random() * 100),
+              Math.round(Math.random() * 100)
+            ],
+            itemStyle: {
+              color: '#ffb900'
+            }
+          }
+        ]
+      };
+      const chart2 = echarts.init(customerActivityAnalysisChart.value);
+      chart2.setOption(customerActivityAnalysisOption);
+    });
+
+    return {
+      customerSizeDistributionChart,
+      customerActivityAnalysisChart
+    };
+  }
+}
+
 </script>
 
 <style scoped>
-.example-p {
-	height: 45px;
-	display: flex;
-	align-items: center;
+.customer-analysis-container {
+  padding: 20px;
 }
-.search-box {
-	text-align: center;
-	margin-top: 10px;
+
+.chart-row {
+  display: flex;
+  margin-bottom: 20px;
 }
-.search {
-	width: 300px;
+
+.chart-item {
+  width: 50%;
+  padding: 10px;
+  box-sizing: border-box;
 }
-ul,
-li {
-	list-style: none;
+
+.chart-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
-.icon-li {
-	display: inline-block;
-	padding: 10px;
-	width: 120px;
-	height: 120px;
-}
-.icon-li-content {
-	display: flex;
-	height: 100%;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-}
-.icon-li-content i {
-	font-size: 36px;
-	color: #606266;
-}
-.icon-li-content span {
-	margin-top: 10px;
-	color: #787878;
+
+.chart-content {
+  height: 400px;
 }
 </style>
