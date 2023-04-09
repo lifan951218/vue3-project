@@ -4,9 +4,9 @@
             class="sidebar-el-menu"
             :default-active="onRoutes"
             :collapse="sidebar.collapse"
-            background-color="#14607a"
+            background-color="#966033"
             text-color="#bfcbd9"
-            active-text-color="#2caedc"
+            active-text-color="#141b1d"
             unique-opened
             router
         >
@@ -192,7 +192,7 @@ const sidebar = useSidebarStore();
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
     width: 250px;
-  background-color: #14607a;
+  background-color: #966033;
 }
 .sidebar > ul {
     height: 100%;

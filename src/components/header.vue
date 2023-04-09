@@ -5,7 +5,7 @@
 			<el-icon v-if="sidebar.collapse"><Expand /></el-icon>
 			<el-icon v-else><Fold /></el-icon>
 		</div>
-		<div class="logo">数据魔盒-经营绩效管理系统</div>
+		<div class="logo">众包服务中的社交网络分析研究软件</div>
 		<div class="header-right">
 			<div class="header-user-con">
 				<!-- 消息中心 -->
@@ -47,7 +47,7 @@
 import { onMounted } from 'vue';
 import { useSidebarStore } from '../store/sidebar';
 import { useRouter } from 'vue-router';
-import imgurl from '../assets/img/admin6.jpg';
+import imgurl from '../assets/img/admin7.jpg';
 
 const username: string | null = localStorage.getItem('ms_username');
 const message: number = 2;
@@ -95,7 +95,7 @@ const handleCommand = (command: string) => {
 }
 .header .logo {
 	float: left;
-	width: 350px;
+	width: 360px;
 	line-height: 70px;
 }
 .header-right {
