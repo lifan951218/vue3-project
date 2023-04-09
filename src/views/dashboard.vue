@@ -43,7 +43,7 @@
 
         <div class="card-title">
 
-          收入分析
+          销售额趋势
         </div>
 
         <div class="card-content">
@@ -60,7 +60,7 @@
 
         <div class="card-title">
 
-          成本分析
+          订单量趋势
         </div>
 
         <div class="card-content">
@@ -113,10 +113,10 @@ export default {
     renderIncomeChart() {
       const incomeChart = echarts.init(this.$refs.incomeChart);
       incomeChart.setOption({
-        title: {
-          text: '收入趋势',
-          left: 'center',
-        },
+        // title: {
+        //   text: '销售额趋势',
+        //   left: 'center',
+        // },
         tooltip: {
           trigger: 'axis',
         },
@@ -148,36 +148,22 @@ export default {
     renderCostChart() {
       const costChart = echarts.init(this.$refs.costChart);
       costChart.setOption({
-        title: {
-          text: '成本趋势',
-          left: 'center',
-        },
-        tooltip: {
-          trigger: 'axis',
-        },
-        legend: {
-          data: ['成本'],
-          bottom: 10,
-        },
+        // title: {
+        //   text: '订单量趋势',
+        //   textStyle: {
+        //     color: '#333'
+        //   }
+        // },
+        tooltip: {},
         xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05'],
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
         },
-        yAxis: [
-          {
-            name: '成本（元）',
-            type: 'value',
-            position:'left',
-    },
-    ],
-      series: [
-        {
-          name: '成本',
-          type: 'line',
-          data: [5000, 6000, 4000, 7500, 7000],
-        },
-      ],
+        yAxis: {},
+        series: [{
+          name: '订单量',
+          type: 'bar',
+          data: [120, 200, 150, 80, 70, 110, 130]
+        }]
     });
     },
   },

@@ -229,6 +229,132 @@ const routes: RouteRecordRaw[] = [
                 },
                 component: () => import(/* webpackChunkName: "import" */ '../views/import.vue'),
             },
+            {
+                path: '/1-2',
+                name: '1-2',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/1-2.vue'),
+            },
+            {
+                path: '/1-3',
+                name: '1-3',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/1-3.vue'),
+            },
+            {
+                path: '/2-1',
+                name: '2-1',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/2-1.vue'),
+            },
+            {
+                path: '/2-2',
+                name: '2-2',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/2-2.vue'),
+            },
+            {
+                path: '/2-3',
+                name: '2-3',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/2-3.vue'),
+            },
+            {
+                path: '/3-1',
+                name: '3-1',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/3-1.vue'),
+            },
+            {
+                path: '/3-2',
+                name: '3-2',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/3-2.vue'),
+            },
+            {
+                path: '/3-3',
+                name: '3-3',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/3-3.vue'),
+            },
+            {
+                path: '/4-1',
+                name: '4-1',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/4-1.vue'),
+            },
+            {
+                path: '/4-2',
+                name: '4-2',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/4-2.vue'),
+            },
+            {
+                path: '/4-3',
+                name: '4-3',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/4-3.vue'),
+            },
+            {
+                path: '/5-1',
+                name: '5-1',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/5-1.vue'),
+            },
+            {
+                path: '/5-2',
+                name: '5-2',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/5-2.vue'),
+            },
+            {
+                path: '/5-3',
+                name: '5-3',
+                meta: {
+                    title: '管理首页',
+                    permiss: '1',
+                },
+                component: () => import(/* webpackChunkName: "dashboard" */ '../views/5-3.vue'),
+            }
         ],
     },
     {
@@ -255,7 +381,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `经营分析系统`;
+    document.title = `数据魔盒-经营绩效管理系统`;
     const role = localStorage.getItem('ms_username');
     const permiss = usePermissStore();
     if (!role && to.path !== '/login') {
