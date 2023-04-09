@@ -1,187 +1,220 @@
 <template>
-  <div class="container">
-    <el-tabs v-model="message">
-      <el-tab-pane label="销售清单" name="first">
-        <el-form :inline="true" :model="queryForm">
-          <el-form-item label="产品名称">
-            <el-input v-model.trim="queryForm.product" placeholder="请输入产品名称"></el-input>
-          </el-form-item>
-          <el-form-item label="日期">
-            <el-date-picker format="YYYY/MM/DD" value-format="YYYY/MM/DD" v-model="queryForm.date" type="date" placeholder="选择日期"></el-date-picker>
-          </el-form-item>
-          <el-form-item label="">
-            <el-button type="primary" @click="handleQuery">查询</el-button>
-            <el-button type="primary" @click="handleExport">导出</el-button>
 
-          </el-form-item>
-        </el-form>
-        <el-table :data="filteredSalesData">
-          <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column prop="date" label="日期"></el-table-column>
-          <el-table-column prop="product" label="产品"></el-table-column>
-          <el-table-column prop="amount" label="销售额"></el-table-column>
-          <el-table-column prop="cost" label="成本"></el-table-column>
-          <el-table-column prop="profit" label="利润"></el-table-column>
-        </el-table>
-        <el-pagination
-            style="margin-top:15px"
-            background
-            layout="prev, pager, next"
-            :total="salesData.length"
-            :page-size="pageSize"
-            @current-change="handleCurrentChange"
-        ></el-pagination>
-      </el-tab-pane>
-      <el-tab-pane label="销售统计" name="second">
-        <div>
-          <div ref="chart1" style="width: 1000px; height: 400px;"></div>
-          <div ref="chart2" style="width: 1000px; height: 400px;"></div>
-          <div ref="chart3" style="width: 1000px; height: 400px;"></div>
+  <div class="overview">
+
+    <div class="card-row">
+
+      <el-card class="card-item" :body-style="{ padding: '20px' }">
+
+        <div class="card-title">
+
+          经营概况
         </div>
-      </el-tab-pane>
-    </el-tabs>
+
+        <div class="card-content">
+
+<span>
+
+近30天销售额：
+</span>
+
+          {{ sales }}元
+          <br />
+
+          <span>
+
+近30天成本：
+</span>
+
+          {{ cost }}元
+          <br />
+
+          <span>
+
+近30天净利润：
+</span>
+
+          {{ profit }}元
+        </div>
+
+      </el-card>
+
+      <el-card class="card-item" :body-style="{ padding: '20px' }">
+
+        <div class="card-title">
+
+          收入分析
+        </div>
+
+        <div class="card-content">
+
+          <div ref="incomeChart" class="chart">
+
+          </div>
+
+        </div>
+
+      </el-card>
+
+      <el-card class="card-item" :body-style="{ padding: '20px' }">
+
+        <div class="card-title">
+
+          成本分析
+        </div>
+
+        <div class="card-content">
+
+          <div ref="costChart" class="chart">
+
+          </div>
+
+        </div>
+
+      </el-card>
+
+    </div>
+
   </div>
 
 </template>
-<script setup>
-import {computed, onMounted, ref} from 'vue';
+
+<script>
 import * as echarts from 'echarts';
-import {tableV2Props} from "element-plus";
-
-const message = ref('first');
-
-const salesData = ref([]);
-
-for (let i = 0; i < 100; i++) {
-  salesData.value.push({
-    date: `2022/01/${i + 1}`,
-    product: `Product ${i + 1}`,
-    amount: Math.floor(Math.random() * 10000),
-    cost: Math.floor(Math.random() * 5000),
-    profit: null
-  });
-  // 计算利润
-  salesData.value[i].profit = salesData.value[i].amount - salesData.value[i].cost;
-}
-const pageSize = ref(10); // 每页显示的数据量
-const currentPage = ref(1); // 当前页码
-
-const queryForm = ref({
-  product: '',
-  date: ''
-});
-
-const filteredSalesData = computed(() => {
-  let data = JSON.parse(JSON.stringify(salesData.value));
-  console.log("date:", queryForm.value.date)
-  if (queryForm.value.product) {
-    data = data.filter(item => item.product.includes(queryForm.value.product));
-  }
-  if (queryForm.value.date) {
-    data = data.filter(item => item.date === queryForm.value.date);
-  }
-  const start = (currentPage.value - 1) * pageSize.value;
-  const end = start + pageSize.value;
-  return data.slice(start, end);
-});
-
-
-const handleCurrentChange = (page) => {
-  currentPage.value = page;
-};
-const handleQuery = () => {
-  currentPage.value = 1; // 切换查询条件后回到第一页
-}
-
-const handleExport = () => {
-  // 获取表格数据
-  const tableData = JSON.parse(JSON.stringify(filteredSalesData.value));
-  // 移除id字段
-  tableData.forEach(item => {
-    delete item.id;
-  });
-  // 导出xlsx文件
-  import('xlsx').then(xlsx => {
-    const worksheet = xlsx.utils.json_to_sheet(tableData);
-    const workbook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    xlsx.writeFile(workbook, 'sales_data.xlsx');
-  });
-};
-
-
-
-const chart1 = ref(null);
-const chart2 = ref(null);
-const chart3 = ref(null);
-
-
-
-const initChart1 = () => {
-  const myChart1 = echarts.init(chart1.value);
-  myChart1.setOption({
-    title: {
-      text: '月度销售额'
+export default {
+  name: 'Overview',
+  data() {
+    return {
+      sales: 0,
+      cost: 0,
+      profit: 0,
+    };
+  },
+  mounted() {
+    this.renderIncomeChart();
+    this.renderCostChart();
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      // 模拟获取数据
+      // 近30天销售额
+      const salesData = [120000, 150000, 100000, 180000, 140000];
+      this.sales = this.formatNumber(salesData.reduce((acc, cur) => acc + cur, 0));
+      // 近30天成本
+      const costData = [50000, 70000, 40000, 80000, 60000];
+      this.cost = this.formatNumber(costData.reduce((acc, cur) => acc + cur, 0));
+      // 近30天净利润
+      this.profit = this.formatNumber(salesData.reduce((acc, cur, index) => acc + (cur - costData[index]), 0));
     },
-    xAxis: {
-      type: 'category',
-      data: ['2021-01', '2021-02', '2021-03', '2021-04', '2021-05', '2021-06']
+    formatNumber(value) {
+      return value.toLocaleString('en-US');
     },
-    yAxis: {
-      type: 'value'
+    renderIncomeChart() {
+      const incomeChart = echarts.init(this.$refs.incomeChart);
+      incomeChart.setOption({
+        title: {
+          text: '收入趋势',
+          left: 'center',
+        },
+        tooltip: {
+          trigger: 'axis',
+        },
+        legend: {
+          data: ['销售额'],
+          bottom: 10,
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05'],
+        },
+        yAxis: [
+          {
+            name: '销售额（元）',
+            type: 'value',
+            position: 'left',
+          },
+        ],
+        series: [
+          {
+            name: '销售额',
+            type: 'line',
+            data: [10000, 12000, 8000, 15000, 14000],
+          },
+        ],
+      });
     },
-    series: [{
-      data: [10000, 20000, 15000, 18000, 25000, 30000],
-      type: 'bar'
-    }]
-  });
-};
-
-const initChart2 = () => {
-  const myChart2 = echarts.init(chart2.value);
-  myChart2.setOption({
-    title: {
-      text: '季度销售额'
+    renderCostChart() {
+      const costChart = echarts.init(this.$refs.costChart);
+      costChart.setOption({
+        title: {
+          text: '成本趋势',
+          left: 'center',
+        },
+        tooltip: {
+          trigger: 'axis',
+        },
+        legend: {
+          data: ['成本'],
+          bottom: 10,
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05'],
+        },
+        yAxis: [
+          {
+            name: '成本（元）',
+            type: 'value',
+            position:'left',
     },
-    xAxis: {
-      type: 'category',
-      data: ['Q1', 'Q2', 'Q3', 'Q4']
+    ],
+      series: [
+        {
+          name: '成本',
+          type: 'line',
+          data: [5000, 6000, 4000, 7500, 7000],
+        },
+      ],
+    });
     },
-    yAxis: {
-      type: 'value'
-    },
-    series: [{
-      data: [50000, 80000, 75000, 90000],
-      type: 'line'
-    }]
-  });
+  },
 };
 
-const initChart3 = () => {
-  const myChart3 = echarts.init(chart3.value);
-  myChart3.setOption({
-    title: {
-      text: '年度销售额'
-    },
-    tooltip: {},
-    legend: {
-      data:['销售额']
-    },
-    xAxis: {
-      data: ["2020", "2021"]
-    },
-    yAxis: {},
-    series: [{
-      name: '销售额',
-      type: 'bar',
-      data: [150000, 200000]
-    }]
-  });
-};
-
-onMounted(() => {
-  initChart1();
-  initChart2();
-  initChart3();
-});
 </script>
+
+<style scoped>
+.overview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 30px;
+}
+.card-item {
+  width: calc(33.33% - 10px);
+  border-radius: 4px;
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
+}
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 20px;
+  background-color: #f5f7fa;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.card-content {
+  padding: 20px;
+}
+.chart {
+  height: 300px;
+  width: 100%;
+}
+</style>
