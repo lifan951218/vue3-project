@@ -7,8 +7,8 @@
       <el-table :data="tableData" border class="table" header-cell-class-name="table-header">
         <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
         <el-table-column prop="name" label="姓名"></el-table-column>
-        <el-table-column prop="sno" label="学号"></el-table-column>
-        <el-table-column prop="class" label="班级"></el-table-column>
+        <el-table-column prop="sno" label="编号"></el-table-column>
+        <el-table-column prop="class" label="职业"></el-table-column>
         <el-table-column prop="age" label="年龄"></el-table-column>
         <el-table-column prop="sex" label="性别"></el-table-column>
       </el-table>
@@ -35,17 +35,17 @@ const getData = () => {
   tableData.value = [
     {
       id: 1,
-      name: '小明',
+      name: '用户1',
       sno: 'S001',
-      class: '一班',
+      class: '职业1',
       age: '10',
       sex: '男',
     },
     {
       id: 2,
-      name: '小红',
+      name: '用户2',
       sno: 'S002',
-      class: '一班',
+      class: '职业2',
       age: '9',
       sex: '女',
     },

@@ -1,292 +1,149 @@
 <template>
+  <div class="data-exploration">
+    <el-row>
 
-  <div class="monthly-page">
+      <el-col :span="6">
 
-    <!-- 目标与完成率 -->
+        <el-upload
+            ref="upload"
+            class="upload-demo"
+            action="#"
+            :auto-upload="false"
+            :on-change="handleUploadChange"
+        >
 
-    <el-card class="goal-card" shadow="hover">
+          <el-button slot="trigger" icon="el-icon-upload">
 
-      <h2 class="card-header">
+            选择文件
+          </el-button>
 
-        目标与完成率
-      </h2>
+          <div slot="tip" class="el-upload__tip">
 
-      <el-form :model="goalForm" label-width="100px" class="goal-form">
+            只能上传csv格式的文件
+          </div>
 
-        <el-form-item label="目标名称">
+        </el-upload>
 
-          <el-input v-model="goalForm.name" disabled>
+      </el-col>
 
-          </el-input>
+      <el-col :span="6">
 
-        </el-form-item>
+        <el-button type="primary" icon="el-icon-s-data" @click="">探索数据
+        </el-button>
 
-        <el-form-item label="目标描述">
+      </el-col>
 
-          <el-input type="textarea" v-model="goalForm.description" disabled rows="4">
+    </el-row>
+    <!-- 搜索框 -->
+    <el-input v-model="search" placeholder="搜索" class="search"></el-input>
 
-          </el-input>
+    <!-- 数据表格 -->
+    <el-table :data="filteredData" style="width: 100%">
+      <el-table-column prop="name" label="姓名"></el-table-column>
+      <el-table-column prop="age" label="年龄"></el-table-column>
+      <el-table-column prop="gender" label="性别"></el-table-column>
+      <el-table-column prop="score" label="社交分数"></el-table-column>
+    </el-table>
 
-        </el-form-item>
-
-        <el-row>
-
-          <el-col :span="12">
-
-            <div class="index-item">
-
-              <p>
-
-                完成率
-              </p>
-
-              <h3>
-
-                {{ goalForm.progress }}%
-              </h3>
-
-            </div>
-
-          </el-col>
-
-          <el-col :span="12">
-
-            <div class="index-item">
-
-              <p>
-
-                绩效得分
-              </p>
-
-              <h3>
-
-                {{ goalForm.score }}
-              </h3>
-
-            </div>
-
-          </el-col>
-
-        </el-row>
-
-      </el-form>
-
-      <el-progress :percentage="goalForm.progress" color="#67C23A" style="margin-top: 20px;">
-
-      </el-progress>
-
-    </el-card>
-
-    <!-- 完成情况 -->
-    <el-card class="progress-card" shadow="hover">
-      <h2 class="card-header">完成情况</h2>
-      <el-table :data="progressData" border>
-        <el-table-column prop="date" label="日期"></el-table-column>
-        <el-table-column prop="actualProgress" label="实际完成率" :min-width="120">
-          <template #default="scope">
-            {{scope.row.actualProgress}}%
-          </template>
-        </el-table-column>
-        <el-table-column prop="problem" label="存在问题" :min-width="120"></el-table-column>
-        <el-table-column prop="solution" label="解决方案" :min-width="120"></el-table-column>
-        <el-table-column prop="remark" label="备注"></el-table-column>
-      </el-table>
-    </el-card>
-
-    <!-- 绩效得分详情 -->
-    <el-card class="score-card" shadow="hover">
-      <h2 class="card-header">绩效得分详情</h2>
-      <div class="chart-container">
-        <div ref="chart1" class="echarts-chart"></div>
-        <div ref="chart2" class="echarts-chart"></div>
-      </div>
-    </el-card>
+    <!-- 数据可视化图表 -->
+    <div class="chart" ref="chart"></div>
   </div>
 </template>
 
-
 <script>
-import { ref, onMounted } from 'vue';
+import {reactive, onMounted, computed} from 'vue';
+import { ElInput, ElTable, ElTableColumn } from 'element-plus';
 import * as echarts from 'echarts';
 
 export default {
+  components: { ElInput, ElTable, ElTableColumn },
   setup() {
-    const goalForm = ref({
-      name: '开发新功能',
-      description: '为了提高用户体验，我们计划上线一个全新的XXX功能。',
-      progress: 80,
-      score: 85
+    // 响应式数据对象
+    const state = reactive({
+      data: [], // 原始数据
+      search: '', // 搜索关键词
+      chartType: 'bar', // 图表类型
+      chartData: [], // 图表数据
     });
 
-    const formatPercent = (val) => `${val}%`;
-
-    const progressData = ref([
-      {
-        date: '2022-01-01',
-        actualProgress: 20,
-        problem: '技术难点太多',
-        solution: '增强团队协作，加强学习和交流',
-        remark: ''
-      },
-      {
-        date: '2022-01-10',
-        actualProgress: 50,
-        problem: '需求变化频繁',
-        solution: '与业务部门沟通，及时调整开发计划',
-        remark: ''
-      },
-      {
-        date: '2022-01-20',
-        actualProgress: 80,
-        problem: '',
-        solution: '',
-        remark: ''
-      },
-      {
-        date: '2022-01-31',
-        actualProgress: 100,
-        problem: '',
-        solution: '',
-        remark: ''
+    // 计算属性：根据搜索关键词过滤数据
+    const filteredData = computed(() => {
+      if (state.search) {
+        return state.data.filter((item) =>
+            item.name.toLowerCase().includes(state.search.toLowerCase())
+        );
+      } else {
+        return state.data;
       }
-    ]);
-
-    const initChart = () => {
-      const chart1Dom = document.querySelector('.echarts-chart:nth-of-type(1)');
-      const chart2Dom = document.querySelector('.echarts-chart:nth-of-type(2)');
-      const chart1Instance = echarts.init(chart1Dom);
-      const chart2Instance = echarts.init(chart2Dom);
-
-      const option1 = {
-        tooltip: {
-          trigger: 'axis'
-        },
-      xAxis: {
-        type: 'category',
-            data: ['技术部', '市场部', '运营部']
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [
-        {
-          type: 'bar',
-          name: '自我评价',
-          data: [80, 75, 85]
-        },
-        {
-          type: 'bar',
-          name: '上级评价',
-          data: [85, 80, 90]
-        },
-        {
-          type: 'bar',
-          name: 'HR评价',
-          data: [90, 85, 90]
-        },
-        {
-          type: 'bar',
-          name: '委员会评价',
-          data: [95, 90, 95]
-        }
-      ]
-    };
-
-      const option2 = {
-        title: {
-          text: '部门得分占比',
-          left: 'center'
-        },
-        tooltip: {
-          trigger: 'item'
-        },
-        legend: {
-          orient: 'vertical',
-          left: 'left',
-          data: ['技术部', '市场部', '运营部']
-        },
-        series: [
-          {
-            name: '得分占比',
-            type: 'pie',
-            radius: '55%',
-            center: ['50%', '60%'],
-            data: [
-              { value: 335, name: '技术部' },
-              { value: 310, name: '市场部' },
-              { value: 234, name: '运营部' }
-            ],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            }
-          }
-        ]
-      };
-
-      chart1Instance.setOption(option1);
-      chart2Instance.setOption(option2);
-    };
-
-    onMounted(() => {
-      initChart();
     });
 
-    return {
-      goalForm,
-      progressData,
-      formatPercent
+    // 方法：获取模拟数据
+    const fetchData = () => {
+      const data = [];
+      for (let i = 0; i < 10; i++) {
+        data.push({
+          name: `用户${i + 1}`,
+          age: Math.floor(Math.random() * 10 + 15),
+          gender: Math.random() > 0.5 ? '男' : '女',
+          score: Math.floor(Math.random() * 30 + 70),
+        });
+      }
+      state.data = data;
     };
-  }
-};
 
+    // 方法：绘制图表
+    const drawChart = () => {
+      const chartDom = document.querySelector('.chart');
+      const myChart = echarts.init(chartDom);
+      myChart.setOption({
+        title: { text: '社交分数分布情况' },
+        tooltip: {},
+        xAxis: { type: 'category', data: state.chartData.map((item) => item.name) },
+        yAxis: { type: 'value' },
+        series: [{ data: state.chartData.map((item) => item.value), type: state.chartType }],
+      });
+    };
+
+    // 生命周期钩子：页面加载完成后获取数据并绘制图表
+    onMounted(() => {
+      fetchData();
+      state.chartData = [
+        { name: '60-69', value: 0 },
+        { name: '70-79', value: 0 },
+        { name: '80-89', value: 0 },
+        { name: '90-100', value: 0 },
+      ];
+      state.data.forEach((item) => {
+        if (item.score >= 60 && item.score < 70) {
+          state.chartData[0].value++;
+        } else if (item.score >= 70 && item.score < 80) {
+          state.chartData[1].value++;
+        } else if (item.score >= 80 && item.score < 90) {
+          state.chartData[2].value++;
+        } else if (item.score >= 90 && item.score <= 100) {
+          state.chartData[3].value++;
+        }
+      });
+      drawChart();
+    });
+
+    return { state, filteredData, fetchData, drawChart };
+  },
+};
 </script>
 
-<style scoped>
-.monthly-page {
+<style>
+.data-exploration {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  gap: 20px;
 }
-.goal-card,
-.progress-card,
-.score-card {
-  width: 80%;
-  margin-top: 20px;
+
+.search {
+  width: 200px;
 }
-.card-header {
-  padding: 15px;
-  font-size: 24px;
-  font-weight: bold;
-  background-color: #f5f7fa;
-}
-.goal-form {
-  margin-top: 20px;
-}
-.index-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  padding: 20px;
-}
-.index-item h3 {
-  margin-top: 10px;
-  font-size: 32px;
-  font-weight: bold;
-}
-.chart-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-.echarts-chart {
-  width: 48%;
+
+.chart {
   height: 400px;
 }
 </style>

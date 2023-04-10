@@ -1,206 +1,111 @@
 <template>
-
-  <div class="overview">
-
-    <div class="card-row">
-
-      <el-card class="card-item" :body-style="{ padding: '20px' }">
-
-        <div class="card-title">
-
-          经营概况
-        </div>
-
-        <div class="card-content">
-
-<span>
-
-近30天销售额：
-</span>
-
-          {{ sales }}元
-          <br />
-
-          <span>
-
-近30天成本：
-</span>
-
-          {{ cost }}元
-          <br />
-
-          <span>
-
-近30天净利润：
-</span>
-
-          {{ profit }}元
-        </div>
-
-      </el-card>
-
-      <el-card class="card-item" :body-style="{ padding: '20px' }">
-
-        <div class="card-title">
-
-          销售额趋势
-        </div>
-
-        <div class="card-content">
-
-          <div ref="incomeChart" class="chart">
-
-          </div>
-
-        </div>
-
-      </el-card>
-
-      <el-card class="card-item" :body-style="{ padding: '20px' }">
-
-        <div class="card-title">
-
-          订单量趋势
-        </div>
-
-        <div class="card-content">
-
-          <div ref="costChart" class="chart">
-
-          </div>
-
-        </div>
-
-      </el-card>
-
+  <div>
+    <h2>手动输入数据</h2>
+    <el-form ref="form" :model="formData" :rules="rules">
+      <el-form-item label="姓名" prop="name" style="width: 400px">
+        <el-input v-model="formData.name"></el-input>
+      </el-form-item>
+      <el-form-item label="年龄" prop="age">
+        <el-input-number v-model="formData.age"></el-input-number>
+      </el-form-item>
+      <el-form-item label="职业" prop="job"  style="width: 400px">
+        <el-input v-model="formData.job"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="submitForm">提交</el-button>
+      </el-form-item>
+    </el-form>
+    <div style="height: 400px;">
+      <div class="chart-content" ref="channelSatisfactionChart">
+      </div>
     </div>
-
   </div>
-
 </template>
 
-<script>
+<script setup>
+import {onMounted, reactive, ref} from 'vue';
+// import { ElForm, ElFormItem, ElInput, ElInputNumber, ElButton } from 'element-plus';
 import * as echarts from 'echarts';
-export default {
-  name: 'Overview',
-  data() {
-    return {
-      sales: 0,
-      cost: 0,
-      profit: 0,
-    };
-  },
-  mounted() {
-    this.renderIncomeChart();
-    this.renderCostChart();
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      // 模拟获取数据
-      // 近30天销售额
-      const salesData = [120000, 150000, 100000, 180000, 140000];
-      this.sales = this.formatNumber(salesData.reduce((acc, cur) => acc + cur, 0));
-      // 近30天成本
-      const costData = [50000, 70000, 40000, 80000, 60000];
-      this.cost = this.formatNumber(costData.reduce((acc, cur) => acc + cur, 0));
-      // 近30天净利润
-      this.profit = this.formatNumber(salesData.reduce((acc, cur, index) => acc + (cur - costData[index]), 0));
-    },
-    formatNumber(value) {
-      return value.toLocaleString('en-US');
-    },
-    renderIncomeChart() {
-      const incomeChart = echarts.init(this.$refs.incomeChart);
-      incomeChart.setOption({
-        // title: {
-        //   text: '销售额趋势',
-        //   left: 'center',
-        // },
-        tooltip: {
-          trigger: 'axis',
-        },
-        legend: {
-          data: ['销售额'],
-          bottom: 10,
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05'],
-        },
-        yAxis: [
-          {
-            name: '销售额（元）',
-            type: 'value',
-            position: 'left',
-          },
-        ],
-        series: [
-          {
-            name: '销售额',
-            type: 'line',
-            data: [10000, 12000, 8000, 15000, 14000],
-          },
-        ],
-      });
-    },
-    renderCostChart() {
-      const costChart = echarts.init(this.$refs.costChart);
-      costChart.setOption({
-        // title: {
-        //   text: '订单量趋势',
-        //   textStyle: {
-        //     color: '#333'
-        //   }
-        // },
-        tooltip: {},
-        xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {},
-        series: [{
-          name: '订单量',
-          type: 'bar',
-          data: [120, 200, 150, 80, 70, 110, 130]
-        }]
+
+const channelSatisfactionChart = ref(null);
+
+    const formData = reactive({
+      name: '',
+      age: 0,
+      job:  ''
     });
-    },
-  },
-};
+
+    const rules = {
+      name: [{ required: true, message: '请输入姓名' }],
+      age: [{ required: true, message: '请输入年龄' }]
+    };
+
+    const chartOptions = reactive({
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 10,
+        data: ['年龄']
+      },
+      series: [
+        {
+          name: '年龄',
+          type: 'pie',
+          radius: ['50%', '70%'],
+          avoidLabelOverlap: false,
+          label: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: '30',
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: false
+          },
+          data: []
+        }
+      ]
+    });
+
+    const submitForm = () => {
+      chartOptions.series[0].data.push({
+        value: formData.age,
+        name: formData.name
+      });
+      init()
+      // // 清空表单数据
+      // formData.name = '';
+      // formData.age = 0;
+      // // 表单验证通过
+      // this.$refs.form.validate((valid) => {
+      //   if (valid) {
+      //
+      //   } else {
+      //     return false;
+      //   }
+      // });
+    };
+const init = () => {
+  // 初始化echarts图表
+  const chart2 = echarts.init(channelSatisfactionChart.value);
+  chart2.setOption(chartOptions);
+}
+
+  onMounted(() => {
+    init()
+  })
 
 </script>
-
 <style scoped>
-.overview {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.card-row {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 30px;
-}
-.card-item {
-  width: calc(33.33% - 10px);
-  border-radius: 4px;
-  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
-}
-.card-title {
-  font-size: 18px;
-  font-weight: bold;
-  padding: 20px;
-  background-color: #f5f7fa;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-}
-.card-content {
-  padding: 20px;
-}
-.chart {
-  height: 300px;
-  width: 100%;
+.chart-content {
+  height: 400px;
 }
 </style>

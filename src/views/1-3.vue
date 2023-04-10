@@ -1,120 +1,57 @@
 <template>
-  <div class="cost-analysis">
-    <h1>成本分析</h1>
-    <el-row>
-      <el-col :span="12"><div ref="chart1" class="chart"></div></el-col>
-      <el-col :span="12"><div ref="chart2" class="chart"></div></el-col>
-    </el-row>
+  <div>
+    <el-form :model="form" ref="form" label-width="120px">
+      <el-form-item label="数据库类型">
+        <el-select v-model="form.dbType" placeholder="请选择数据库类型">
+          <el-option label="MySQL" value="mysql"></el-option>
+          <el-option label="PostgreSQL" value="postgresql"></el-option>
+          <el-option label="SQL Server" value="sqlserver"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="主机地址">
+        <el-input v-model="form.host"></el-input>
+      </el-form-item>
+      <el-form-item label="端口号">
+        <el-input v-model="form.port"></el-input>
+      </el-form-item>
+      <el-form-item label="数据库名称">
+        <el-input v-model="form.database"></el-input>
+      </el-form-item>
+      <el-form-item label="用户名">
+        <el-input v-model="form.username"></el-input>
+      </el-form-item>
+      <el-form-item label="密码">
+        <el-input type="password" v-model="form.password"></el-input>
+      </el-form-item>
+    </el-form>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <el-button type="primary" @click="testConnection">测试连接</el-button>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
 import * as echarts from 'echarts';
+import {ElMessage} from "element-plus";
 
 export default {
-  setup() {
-    const chart1 = ref(null);
-    const chart2 = ref(null);
-
-    // 假设有三项成本，分别为材料、工资和运输
-    const data1 = [
-      { name: '月份1', 材料成本: 1000, 工资成本: 2000, 运输成本: 500 },
-      { name: '月份2', 材料成本: 1500, 工资成本: 1200, 运输成本: 800 },
-      { name: '月份3', 材料成本: 2000, 工资成本: 3000, 运输成本: 600 }
-    ];
-
-    // 假设有三种产品，成本分别为1000、2000、3000
-    const data2 = [
-      { name: '产品A', 成本: 1000 },
-      { name: '产品B', 成本: 2000 },
-      { name: '产品C', 成本: 3000 }
-    ];
-
-    onMounted(() => {
-      const chartObj1 = echarts.init(chart1.value);
-      const chartObj2 = echarts.init(chart2.value);
-
-      const option1 = {
-        legend: {
-          data: ['材料成本', '工资成本', '运输成本']
-        },
-        xAxis: {
-          type: 'category',
-          data: data1.map(item => item.name)
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            name: '材料成本',
-            data: data1.map(item => item.材料成本),
-            type: 'bar',
-            stack: '总量'
-          },
-          {
-            name: '工资成本',
-            data: data1.map(item => item.工资成本),
-            type: 'bar',
-            stack: '总量'
-          },
-          {
-            name: '运输成本',
-            data: data1.map(item => item.运输成本),
-            type: 'bar',
-            stack: '总量'
-          }
-        ]
-      };
-
-      const option2 = {
-        xAxis: {
-          type: 'category',
-          data: data2.map(item => item.name)
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [{
-          data: data2.map(item => item.成本),
-          type: 'bar'
-        }]
-      };
-
-      chartObj1.setOption(option1);
-      chartObj2.setOption(option2);
-    });
-
+  data() {
     return {
-      chart1,
-      chart2
+      form: {
+        dbType: '',
+        host: '127.0.0.1',
+        port: '3306',
+        database: 'test',
+        username: 'admin',
+        password: '123456'
+      }
     };
+  },
+  methods: {
+    testConnection() {
+      ElMessage.success("连接成功！")
+    }
   }
-}
+};
 </script>
-
-<style scoped>
-.cost-analysis {
-  padding: 20px;
-}
-
-.el-row {
-  margin-bottom: 20px;
-}
-
-.el-col {
-  padding-right: 20px;
-}
-
-@media screen and (max-width: 768px) {
-  .el-col {
-    padding-right: 0;
-  }
-}
-
-.chart {
-  width: 100%;
-  height: 500px;
-}
-</style>

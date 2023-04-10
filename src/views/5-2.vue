@@ -1,11 +1,14 @@
 <template>
   <div class="container">
     <el-form :inline="true" :model="queryForm">
-      <el-form-item label="员工名称">
-        <el-input v-model.trim="queryForm.员工" placeholder="请输入员工名称"></el-input>
+      <el-form-item label="自定义报告类型">
+        <el-input v-model.trim="queryForm.用户" placeholder="请输入报告类型"></el-input>
       </el-form-item>
-      <el-form-item label="考核日期">
-        <el-date-picker format="YYYY/MM/DD" value-format="YYYY/MM/DD" v-model="queryForm.date" type="date" placeholder="选择考核日期"></el-date-picker>
+      <el-form-item label="用户名称">
+        <el-input v-model.trim="queryForm.用户" placeholder="请输入用户名称"></el-input>
+      </el-form-item>
+      <el-form-item label="最近登录日期">
+        <el-date-picker format="YYYY/MM/DD" value-format="YYYY/MM/DD" v-model="queryForm.date" type="date" placeholder="选择最近登录日期"></el-date-picker>
       </el-form-item>
       <el-form-item label="">
         <el-button type="primary" @click="handleQuery">查询</el-button>
@@ -15,9 +18,9 @@
     </el-form>
     <el-table :data="filteredSalesData">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="date" label="考核日期"></el-table-column>
-      <el-table-column prop="员工" label="员工"></el-table-column>
-      <el-table-column prop="amount" label="绩效得分"></el-table-column>
+      <el-table-column prop="date" label="最近登录日期"></el-table-column>
+      <el-table-column prop="用户" label="用户"></el-table-column>
+      <el-table-column prop="amount" label="社交得分"></el-table-column>
 <!--      <el-table-column prop="cost" label="成本"></el-table-column>-->
 <!--      <el-table-column prop="profit" label="利润"></el-table-column>-->
     </el-table>
@@ -43,7 +46,7 @@ const salesData = ref([]);
 for (let i = 0; i < 100; i++) {
   salesData.value.push({
     date: `2022/01/${i + 1}`,
-    员工: `员工 ${i + 1}`,
+    用户: `用户 ${i + 1}`,
     amount: Math.floor(Math.random() * 100),
     cost: Math.floor(Math.random() * 5000),
     profit: null
@@ -55,15 +58,15 @@ const pageSize = ref(10); // 每页显示的数据量
 const currentPage = ref(1); // 当前页码
 
 const queryForm = ref({
-  员工: '',
+  用户: '',
   date: ''
 });
 
 const filteredSalesData = computed(() => {
   let data = JSON.parse(JSON.stringify(salesData.value));
   console.log("date:", queryForm.value.date)
-  if (queryForm.value.员工) {
-    data = data.filter(item => item.员工.includes(queryForm.value.员工));
+  if (queryForm.value.用户) {
+    data = data.filter(item => item.用户.includes(queryForm.value.用户));
   }
   if (queryForm.value.date) {
     data = data.filter(item => item.date === queryForm.value.date);

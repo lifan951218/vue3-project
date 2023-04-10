@@ -1,5 +1,15 @@
 <template>
   <div class="chart-container">
+    <div>
+      <span style="margin-right: 15px">选择数据来源</span>
+      <el-select v-model="source" placeholder="请选择" style="margin-right: 15px">
+        <el-option key="小明" label="数据表1" value="小明"></el-option>
+        <el-option key="小红" label="数据表2" value="小红"></el-option>
+        <el-option key="小白" label="数据表3" value="小白"></el-option>
+      </el-select>
+      <el-button @click="" type="primary">生成</el-button>
+
+    </div>
     <div ref="chart" class="chart"></div>
   </div>
 </template>
@@ -9,6 +19,11 @@
 import * as echarts from 'echarts';
 
 export default {
+  data() {
+    return {
+      source: ''
+    }
+  },
   mounted() {
     this.initChart();
   },
@@ -147,9 +162,6 @@ export default {
 }
 
 .chart {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
 }

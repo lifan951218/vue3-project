@@ -1,142 +1,101 @@
-
 <template>
-  <div class="performance-page">
-    <div style="float: left;margin-bottom: 20px">
-      <el-button type="primary" :icon="Plus" @click="addAppointment">新增绩效考核标准</el-button>
-    </div>
-    <el-table :data="tableData" style="width: 100%">
-      <el-table-column prop="name" label="指标名称"></el-table-column>
-      <el-table-column prop="weight" label="权重"></el-table-column>
-<!--      <el-table-column prop="score" label="得分"></el-table-column>-->
-      <el-table-column prop="remark" label="备注"></el-table-column>
-      <el-table-column prop="" label="操作">
-        <template #default="{row}">
-        <el-button size="small" type="text" @click="editAppointment(row)">编辑</el-button>
-        <el-button size="small" type="text" @click="cancelAppointment(row)">删除</el-button>
-        </template>
-      </el-table-column>
+  <div>
+    <el-form :model="form" ref="form" label-width="120px">
+      <el-form-item label="输入文本">
+        <el-input v-model="form.text"></el-input>
+      </el-form-item>
+      <el-form-item label="">
+        <el-button @click="" type="primary">开始分析</el-button>
+      </el-form-item>
+    </el-form>
 
-    </el-table>
-    <el-dialog v-model="dialogVisible" title="添加/编辑考核标准">
-      <el-form :model="formData" :rules="formRules">
-        <el-form-item label="指标名称" prop="name">
-          <el-input v-model="formData.name"></el-input>
-        </el-form-item>
-        <el-form-item label="权重" prop="date">
-          <el-input v-model="formData.weight"></el-input>
-        </el-form-item>
-        <el-form-item label="备注" prop="date">
-          <el-input v-model="formData.remark"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer">
-        <!-- 取消添加或编辑 -->
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <!-- 确认添加或编辑 -->
-        <el-button type="primary" @click="">确认</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog v-model="cancelDialogVisible" title="删除考核标准">
-      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此考核标准吗？</div>
-      <span slot="footer" class="dialog-footer">
-    <!-- 取消删除考核标准 -->
-    <el-button @click="cancelDialogVisible = false">取 消</el-button>
-        <!-- 确认删除考核标准 -->
-    <el-button type="primary" @click="">确 定</el-button>
-  </span>
-    </el-dialog>
-    <div ref="chartContainer" class="chart-container"></div>
+    <div ref="chart" style="width: 100%; height: 600px;"></div>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+<script>
 import * as echarts from 'echarts';
-import 'echarts/extension/bmap/bmap';
 
-const dialogVisible = ref(false);
-const cancelDialogVisible = ref(false);
-const formData = ref({}); // 添加或编辑考核标准的表单数据
-const formRules = ref({
-  name: [
-    { required: true, message: '考核标准不能为空', trigger: 'blur' },
-  ],
-  date: [
-    { required: true, message: '得分码不能为空', trigger: 'blur' },
-  ]
-}); // 添加或编辑考核标准的表单验证规则
-
-function editAppointment(appointment) {
-  formData.value = { ...appointment };
-  dialogVisible.value = true;
-}
-
-function cancelAppointment(appointment) {
-  cancelDialogVisible.value = true;
-  formData.value = { ...appointment };
-}
-
-
-const addAppointment = () => {
-  dialogVisible.value = true;
-  formData.value = {};
-}
-    const tableData = [
-      { name: '工作量', weight: 0.3, score: 85, remark: '完成任务数' },
-      { name: '质量', weight: 0.4, score: 90, remark: '代码规范性等' },
-      { name: '沟通协作', weight: 0.2, score: 80, remark: '与团队成员沟通协作能力' },
-      { name: '创新能力', weight: 0.1, score: 70, remark: '提出创新想法和解决方案的能力' },
-      { name: '学习能力', weight: 0.1, score: 95, remark: '学习和掌握新技术的速度和能力' }
-    ];
-
-    const chartInstance = ref(null);
-
-    const initChart = () => {
-      const chartDom = document.querySelector('.chart-container');
-      chartInstance.value = echarts.init(chartDom);
-      const option = {
-        xAxis: {
-          type: 'category',
-          data: ['工作量', '质量', '沟通协作', '创新能力', '学习能力']
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [{
-          data: [0.3,0.4, 0.2, 0.1, 0.1],
-          type: 'bar'
-        }]
-      };
-      chartInstance.value.setOption(option);
-    };
-
-    const handleResize = () => {
-      if (chartInstance.value) {
-        chartInstance.value.resize();
+export default {
+  data() {
+    return {
+      form: {
+        text: '如果要给我们的电话做电话识别，我们必须满足以下条件：在给出前台应用程序的 URL 或在电子邮件中输入来源的主题。'
       }
     };
+  },
+  mounted() {
+    this.drawChart();
+  },
+  methods: {
+    drawChart() {
+      const chart = echarts.init(this.$refs.chart);
 
-    onMounted(() => {
-      initChart();
-      window.addEventListener('resize', handleResize);
-    });
+      // 分析文本情感并生成图表数据
+      const data = this.analyzeSentiment(this.form.text);
 
-    onUnmounted(() => {
-      window.removeEventListener('resize', handleResize);
-    });
+      // 使用Echarts库展示情感分析结果
+      chart.setOption({
+        title: {
+          text: '情感分析结果',
+          left: 'center'
+        },
+        tooltip: {},
+        series: [
+          {
+            type: 'pie',
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: '30',
+                fontWeight: 'bold'
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: data
+          }
+        ]
+      });
+    },
+    analyzeSentiment(text) {
+      const result = {
+        positive: 5,
+        neutral: 86,
+        negative: 9
+      };
+
+      return [
+        {
+          value: result.positive.toFixed(2),
+          name: '积极',
+          itemStyle: {
+            color: '#67C23A'
+          }
+        },
+        {
+          value: result.neutral.toFixed(2),
+          name: '中性',
+          itemStyle: {
+            color: '#E6A23C'
+          }
+        },
+        {
+          value: result.negative.toFixed(2),
+          name: '消极',
+          itemStyle: {
+            color: '#F56C6C'
+          }
+        }
+      ];
+    }
+  }
+};
 </script>
-
-<style scoped>
-.performance-page {
-  display: flex;
-  flex-direction: column;
-  /*align-items: center;*/
-  padding: 20px;
-}
-.chart-container {
-  width: 80%;
-  height: 400px;
-  margin-top: 20px;
-}
-</style>

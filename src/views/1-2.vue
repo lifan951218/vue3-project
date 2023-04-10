@@ -1,106 +1,118 @@
 <template>
-  <div class="income-analysis">
-    <h1>收入分析</h1>
-    <el-row>
-      <el-col :span="12"><div ref="chart1" class="chart"></div></el-col>
-      <el-col :span="12"><div ref="chart2" class="chart"></div></el-col>
-    </el-row>
+  <div>
+    <div class="container">
+      <div class="handle-box">
+        <el-upload
+            action="#"
+            :limit="1"
+            accept=".xlsx, .xls"
+            :show-file-list="false"
+            :before-upload="beforeUpload"
+            :http-request="handleMany"
+        >
+          <el-button class="mr10" type="success">批量导入</el-button>
+        </el-upload>
+        <el-link href="/template.xlsx" target="_blank">下载模板</el-link>
+      </div>
+      <el-table :data="tableData" border class="table" header-cell-class-name="table-header">
+        <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
+        <el-table-column prop="name" label="姓名"></el-table-column>
+        <el-table-column prop="sno" label="编号"></el-table-column>
+        <el-table-column prop="class" label="职业"></el-table-column>
+        <el-table-column prop="age" label="年龄"></el-table-column>
+        <el-table-column prop="sex" label="性别"></el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
-<script>
-import { ref, onMounted } from 'vue';
-import * as echarts from 'echarts';
+<script setup lang="ts" name="import">
+import { UploadProps } from 'element-plus';
+import { ref, reactive } from 'vue';
+import * as XLSX from 'xlsx';
 
-export default {
-  setup() {
-    const chart1 = ref(null);
-    const chart2 = ref(null);
-
-    // 假设有三个部门，收入来源分别为销售、租金、广告
-    const data1 = [
-      { name: '部门 A', sales: 1000, rent: 2000, ads: 500 },
-      { name: '部门 B', sales: 1500, rent: 1200, ads: 800 },
-      { name: '部门 C', sales: 2000, rent: 3000, ads: 600 }
-    ];
-
-    // 假设有三家店铺，收入分别为1000、2000、3000
-    const data2 = [
-      { name: '店铺 A', value: 1000 },
-      { name: '店铺 B', value: 2000 },
-      { name: '店铺 C', value: 3000 }
-    ];
-
-    onMounted(() => {
-      const chartObj1 = echarts.init(chart1.value);
-      const chartObj2 = echarts.init(chart2.value);
-
-      const option1 = {
-        legend: {
-          data: ['Sales', 'Rent', 'Ads']
-        },
-        xAxis: {
-          type: 'category',
-          data: data1.map(item => item.name)
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            name: 'Sales',
-            data: data1.map(item => item.sales),
-            type: 'bar',
-            stack: 'total'
-          },
-          {
-            name: 'Rent',
-            data: data1.map(item => item.rent),
-            type: 'bar',
-            stack: 'total'
-          },
-          {
-            name: 'Ads',
-            data: data1.map(item => item.ads),
-            type: 'bar',
-            stack: 'total'
-          }
-        ]
-      };
-
-      const option2 = {
-        xAxis: {
-          type: 'category',
-          data: data2.map(item => item.name)
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [{
-          data: data2.map(item => item.value),
-          type: 'bar'
-        }]
-      };
-
-      chartObj1.setOption(option1);
-      chartObj2.setOption(option2);
-    });
-
-    return {
-      chart1,
-      chart2
-    };
-  }
+interface TableItem {
+  id: number;
+  name: string;
+  sno: string;
+  class: string;
+  age: string;
+  sex: string;
 }
+
+const tableData = ref<TableItem[]>([]);
+// 获取表格数据
+const getData = () => {
+  tableData.value = [
+    {
+      id: 1,
+      name: '用户1',
+      sno: 'S001',
+      class: '职业1',
+      age: '10',
+      sex: '男',
+    },
+    {
+      id: 2,
+      name: '用户2',
+      sno: 'S002',
+      class: '职业2',
+      age: '9',
+      sex: '女',
+    },
+  ];
+};
+getData();
+
+const importList = ref<any>([]);
+const beforeUpload: UploadProps['beforeUpload'] = async (rawFile) => {
+  importList.value = await analysisExcel(rawFile);
+  return true;
+};
+const analysisExcel = (file: any) => {
+  return new Promise(function (resolve, reject) {
+    const reader = new FileReader();
+    reader.onload = function (e: any) {
+      const data = e.target.result;
+      let datajson = XLSX.read(data, {
+        type: 'binary',
+      });
+
+      const sheetName = datajson.SheetNames[0];
+      const result = XLSX.utils.sheet_to_json(datajson.Sheets[sheetName]);
+      resolve(result);
+    };
+    reader.readAsBinaryString(file);
+  });
+};
+
+const handleMany = async () => {
+  // 把数据传给服务器后获取最新列表，这里只是示例，不做请求
+  const list = importList.value.map((item: any, index: number) => {
+    return {
+      id: index,
+      name: item['姓名'],
+      sno: item['学号'],
+      class: item['班级'],
+      age: item['年龄'],
+      sex: item['性别'],
+    };
+  });
+  tableData.value.push(...list);
+};
 </script>
 
 <style scoped>
-.income-analysis {
-  padding: 20px;
+.handle-box {
+  display: flex;
+  margin-bottom: 20px;
 }
 
-.chart {
+.table {
   width: 100%;
-  height: 500px;
+  font-size: 14px;
+}
+.mr10 {
+  margin-right: 10px;
 }
 </style>

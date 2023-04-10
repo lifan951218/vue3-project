@@ -1,118 +1,151 @@
 <template>
-  <div>
-    <div class="container">
-      <div class="handle-box">
-        <el-upload
-            action="#"
-            :limit="1"
-            accept=".xlsx, .xls"
-            :show-file-list="false"
-            :before-upload="beforeUpload"
-            :http-request="handleMany"
-        >
-          <el-button class="mr10" type="success">批量导入</el-button>
-        </el-upload>
-        <el-link href="/template.xlsx" target="_blank">下载模板</el-link>
-      </div>
-      <el-table :data="tableData" border class="table" header-cell-class-name="table-header">
-        <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-        <el-table-column prop="name" label="员工名称"></el-table-column>
-        <el-table-column prop="sno" label="员工编号"></el-table-column>
-        <el-table-column prop="class" label="所属部门"></el-table-column>
-        <el-table-column prop="age" label="绩效得分"></el-table-column>
-        <el-table-column prop="sex" label="性别"></el-table-column>
-      </el-table>
-    </div>
+  <div class="social-network">
+    <!-- 社交网络密度图 -->
+    <el-card shadow="hover">
+      <div slot="header">社交网络密度图</div>
+      <div class="chart" id="densityChart"></div>
+    </el-card>
+
+    <!-- 社交网络节点关系图 -->
+    <el-card shadow="hover">
+      <div slot="header">社交网络节点关系图</div>
+      <div class="chart" id="relationshipChart"></div>
+    </el-card>
   </div>
 </template>
 
-<script setup lang="ts" name="import">
-import { UploadProps } from 'element-plus';
-import { ref, reactive } from 'vue';
-import * as XLSX from 'xlsx';
+<script>
+import { ref, onMounted } from 'vue';
+import { ElCard } from 'element-plus';
+import * as echarts from 'echarts';
 
-interface TableItem {
-  id: number;
-  name: string;
-  sno: string;
-  class: string;
-  age: string;
-  sex: string;
-}
+export default {
+  components: { ElCard },
+  setup() {
+    const densityChartInstance = ref(null); // 社交网络密度图 Echarts 实例
+    const relationshipChartInstance = ref(null); // 社交网络节点关系图 Echarts 实例
 
-const tableData = ref<TableItem[]>([]);
-// 获取表格数据
-const getData = () => {
-  tableData.value = [
-    {
-      id: 1,
-      name: '员工1',
-      sno: 'S001',
-      class: '部门1',
-      age: '10',
-      sex: '男',
-    },
-    {
-      id: 2,
-      name: '员工2',
-      sno: 'S002',
-      class: '部门2',
-      age: '9',
-      sex: '女',
-    },
-  ];
-};
-getData();
+    // 生命周期钩子：页面加载完成后绘制社交网络密度图和节点关系图
+    onMounted(() => {
+      drawDensityChart();
+      drawRelationshipChart();
+    });
 
-const importList = ref<any>([]);
-const beforeUpload: UploadProps['beforeUpload'] = async (rawFile) => {
-  importList.value = await analysisExcel(rawFile);
-  return true;
-};
-const analysisExcel = (file: any) => {
-  return new Promise(function (resolve, reject) {
-    const reader = new FileReader();
-    reader.onload = function (e: any) {
-      const data = e.target.result;
-      let datajson = XLSX.read(data, {
-        type: 'binary',
+    // 方法：绘制社交网络密度图
+    const drawDensityChart = () => {
+      densityChartInstance.value = echarts.init(document.getElementById('densityChart'));
+      densityChartInstance.value.setOption({
+        title: { text: '社交网络密度图' },
+        tooltip: {},
+        xAxis: {
+          type: 'value',
+        },
+        yAxis: {
+          type: 'value',
+        },
+        series: [
+          {
+            type: 'scatter',
+            symbolSize: 10,
+            data: [
+              [0.1, 0.2],
+              [0.3, 0.4],
+              [0.5, 0.6],
+              [0.7, 0.8],
+              [0.9, 1.0],
+            ],
+          },
+        ],
       });
-
-      const sheetName = datajson.SheetNames[0];
-      const result = XLSX.utils.sheet_to_json(datajson.Sheets[sheetName]);
-      resolve(result);
     };
-    reader.readAsBinaryString(file);
-  });
-};
 
-const handleMany = async () => {
-  // 把数据传给服务器后获取最新列表，这里只是示例，不做请求
-  const list = importList.value.map((item: any, index: number) => {
+    // 方法：绘制社交网络节点关系图
+    const drawRelationshipChart = () => {
+      relationshipChartInstance.value = echarts.init(document.getElementById('relationshipChart'));
+      relationshipChartInstance.value.setOption({
+        title: { text: '社交网络节点关系图' },
+        tooltip: {},
+        animationDurationUpdate: 1500,
+        animationEasingUpdate: 'quinticInOut',
+        series: [
+          {
+            type: 'graph',
+            layout: 'force',
+            roam: true,
+            label: {
+              show: true,
+            },
+            emphasis: {
+              focus: 'adjacency',
+              label: {
+                show: true,
+                position: 'right',
+                color: '#333',
+                fontSize: 14,
+              },
+            },
+            data: [
+              {
+                name: 'Alice',
+                draggable: true,
+                value: 100,
+                symbolSize: 50,
+                itemStyle: { color: '#d7504b' },
+              },
+              {
+                name: 'Bob',
+                draggable: true,
+                value: 80,
+                symbolSize: 40,
+                itemStyle: { color: '#339ca8' },
+              },
+              {
+                name: 'Cathy',
+                draggable: true,
+                value: 60,
+                symbolSize: 30,
+                itemStyle: { color: '#c4ccd3' },
+              },
+              {
+                name: 'David',
+                draggable: true,
+                value: 40,
+                symbolSize: 20,
+                itemStyle: { color: '#905a3d' },
+              },
+            ],
+            links: [
+              { source: 'Alice', target: 'Bob' },
+              { source: 'Alice', target: 'Cathy' },
+              { source: 'Bob', target: 'David' },
+              { source: 'Cathy', target: 'David' },
+            ],
+            force: {
+              edgeLength: 100,
+              repulsion: 200,
+              gravity: 0.2,
+            },
+          },
+        ],
+      });
+    };
+
     return {
-      id: index,
-      name: item['姓名'],
-      sno: item['学号'],
-      class: item['班级'],
-      age: item['年龄'],
-      sex: item['性别'],
+      densityChartInstance,
+      relationshipChartInstance,
     };
-  });
-  tableData.value.push(...list);
+  },
 };
 </script>
 
-<style scoped>
-.handle-box {
+<style>
+.social-network {
   display: flex;
-  margin-bottom: 20px;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.table {
-  width: 100%;
-  font-size: 14px;
-}
-.mr10 {
-  margin-right: 10px;
+.chart {
+  height: 400px;
 }
 </style>
