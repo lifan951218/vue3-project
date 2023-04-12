@@ -2,7 +2,7 @@
   <div class="container">
     <el-form :inline="true" :model="queryForm">
       <el-form-item label="自定义报告类型">
-        <el-input v-model.trim="queryForm.用户" placeholder="请输入报告类型"></el-input>
+        <el-input v-model.trim="queryForm.type" placeholder="请输入报告类型"></el-input>
       </el-form-item>
       <el-form-item label="用户名称">
         <el-input v-model.trim="queryForm.用户" placeholder="请输入用户名称"></el-input>
@@ -59,7 +59,8 @@ const currentPage = ref(1); // 当前页码
 
 const queryForm = ref({
   用户: '',
-  date: ''
+  date: '',
+  type: ''
 });
 
 const filteredSalesData = computed(() => {
