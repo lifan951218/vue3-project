@@ -1,206 +1,247 @@
 <template>
+  <div class="container">
 
-  <div class="overview">
-
-    <div class="card-row">
-
-      <el-card class="card-item" :body-style="{ padding: '20px' }">
-
-        <div class="card-title">
-
-          经营概况
-        </div>
-
-        <div class="card-content">
-
-<span>
-
-近30天销售额：
-</span>
-
-          {{ sales }}元
-          <br />
-
-          <span>
-
-近30天成本：
-</span>
-
-          {{ cost }}元
-          <br />
-
-          <span>
-
-近30天净利润：
-</span>
-
-          {{ profit }}元
-        </div>
-
-      </el-card>
-
-      <el-card class="card-item" :body-style="{ padding: '20px' }">
-
-        <div class="card-title">
-
-          销售额趋势
-        </div>
-
-        <div class="card-content">
-
-          <div ref="incomeChart" class="chart">
-
-          </div>
-
-        </div>
-
-      </el-card>
-
-      <el-card class="card-item" :body-style="{ padding: '20px' }">
-
-        <div class="card-title">
-
-          订单量趋势
-        </div>
-
-        <div class="card-content">
-
-          <div ref="costChart" class="chart">
-
-          </div>
-
-        </div>
-
-      </el-card>
-
+    <div class="add-appointment">
+      <el-button type="primary" :icon="Plus" @click="addAppointment">创建直播</el-button>
     </div>
+    <div class="add-appointment">
+      <h3>直播列表</h3>
+    </div>
+    <el-table :data="appointments">
 
+      <el-table-column prop="id" label="直播编号"></el-table-column>
+      <el-table-column prop="name" label="直播标题"></el-table-column>
+      <el-table-column prop="phone" label="观看人数"></el-table-column>
+      <el-table-column prop="date" label="类型"></el-table-column>
+      <el-table-column prop="status" label="状态">
+        <template #default="scope">
+          <el-tag type="success" v-if="scope.row.status === '直播中'">直播中</el-tag>
+          <el-tag type="info" v-else>已关闭</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="280">
+        <template #default="{row}">
+          <!-- 编辑直播 -->
+          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>
+          <el-button  v-if="row.status === '直播中'" type="primary" size="small" @click="editAppointment(row)">进入直播间</el-button>
+          <el-button  v-if="row.status === '已关闭'" type="primary" size="small" @click="startAppointment(row)">启动直播</el-button>
+          <!-- 取消直播 -->
+          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- 添加或编辑直播的表单 -->
+    <el-dialog v-model="dialogVisible" title="添加/编辑直播">
+      <el-form :model="formData" :rules="formRules">
+        <el-form-item label="直播标题" prop="name">
+          <el-input v-model="formData.name"></el-input>
+        </el-form-item>
+        <el-form-item label="直播编号" prop="date">
+          <el-input v-model="formData.id"></el-input>
+        </el-form-item>
+        <el-form-item label="类型" prop="date">
+          <el-input v-model="formData.date"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <!-- 取消添加或编辑 -->
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <!-- 确认添加或编辑 -->
+        <el-button type="primary" @click="">确认</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 确认取消直播的对话框 -->
+    <el-dialog v-model="cancelDialogVisible" title="关闭直播">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要关闭此直播吗？</div>
+      <span slot="footer" class="dialog-footer">
+    <!-- 取消关闭直播 -->
+    <el-button @click="cancelDialogVisible = false">取 消</el-button>
+        <!-- 确认关闭直播 -->
+    <el-button type="primary" @click="">确 定</el-button>
+  </span>
+    </el-dialog>
+
+    <el-dialog v-model="startDialogVisible" title="开启直播">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要开启此直播吗？</div>
+      <span slot="footer" class="dialog-footer">
+    <!-- 取消关闭直播 -->
+    <el-button @click="startDialogVisible = false">取 消</el-button>
+        <!-- 确认关闭直播 -->
+    <el-button type="primary" @click="">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
-
 </template>
 
-<script>
-import * as echarts from 'echarts';
-export default {
-  name: 'Overview',
-  data() {
-    return {
-      sales: 0,
-      cost: 0,
-      profit: 0,
-    };
-  },
-  mounted() {
-    this.renderIncomeChart();
-    this.renderCostChart();
-    this.fetchData();
-  },
-  methods: {
-    fetchData() {
-      // 模拟获取数据
-      // 近30天销售额
-      const salesData = [120000, 150000, 100000, 180000, 140000];
-      this.sales = this.formatNumber(salesData.reduce((acc, cur) => acc + cur, 0));
-      // 近30天成本
-      const costData = [50000, 70000, 40000, 80000, 60000];
-      this.cost = this.formatNumber(costData.reduce((acc, cur) => acc + cur, 0));
-      // 近30天净利润
-      this.profit = this.formatNumber(salesData.reduce((acc, cur, index) => acc + (cur - costData[index]), 0));
-    },
-    formatNumber(value) {
-      return value.toLocaleString('en-US');
-    },
-    renderIncomeChart() {
-      const incomeChart = echarts.init(this.$refs.incomeChart);
-      incomeChart.setOption({
-        // title: {
-        //   text: '销售额趋势',
-        //   left: 'center',
-        // },
-        tooltip: {
-          trigger: 'axis',
-        },
-        legend: {
-          data: ['销售额'],
-          bottom: 10,
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-          data: ['2022-01-01', '2022-01-02', '2022-01-03', '2022-01-04', '2022-01-05'],
-        },
-        yAxis: [
-          {
-            name: '销售额（元）',
-            type: 'value',
-            position: 'left',
-          },
-        ],
-        series: [
-          {
-            name: '销售额',
-            type: 'line',
-            data: [10000, 12000, 8000, 15000, 14000],
-          },
-        ],
-      });
-    },
-    renderCostChart() {
-      const costChart = echarts.init(this.$refs.costChart);
-      costChart.setOption({
-        // title: {
-        //   text: '订单量趋势',
-        //   textStyle: {
-        //     color: '#333'
-        //   }
-        // },
-        tooltip: {},
-        xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {},
-        series: [{
-          name: '订单量',
-          type: 'bar',
-          data: [120, 200, 150, 80, 70, 110, 130]
-        }]
-    });
-    },
-  },
-};
+<script setup lang="ts" name="dashboard">
+import {Plus} from "@element-plus/icons-vue";
+import {ref} from "vue";
+
+const appointments = ref([]); // 直播列表
+const services = ref([
+  '游戏', '科技', '才艺', '体育', '户外', '其他'
+]);
+const services2 = ref([
+  '直播中', '已关闭'
+]);
+for (let i = 1; i <= 50; i++) {
+  const service = services.value[Math.floor(Math.random() * services.value.length)];
+  const service2 = services2.value[Math.floor(Math.random() * services2.value.length)];
+  appointments.value.push({
+    id: i,
+    name: `直播标题${i}`,
+    date: service,
+    status: service2,
+    phone: Math.floor(Math.random() * 10000),
+  });
+}
+
+
+
+const cancelDialogVisible = ref(false);
+const startDialogVisible = ref(false);
+
+const formData = ref({}); // 添加或编辑直播的表单数据
+const formRules = ref({
+  name: [
+    { required: true, message: '直播不能为空', trigger: 'blur' },
+  ],
+  date: [
+    { required: true, message: '观看人数码不能为空', trigger: 'blur' },
+  ]
+}); // 添加或编辑直播的表单验证规则
+const dialogVisible = ref(false); // 是否显示添加或编辑直播的对话框
+
+// 编辑直播
+function editAppointment(appointment: any) {
+  formData.value = { ...appointment };
+  dialogVisible.value = true;
+}
+
+function startAppointment(appointment: any) {
+  formData.value = { ...appointment };
+  startDialogVisible.value = true;
+}
+
+function addAppointment() {
+  dialogVisible.value = true;
+  formData.value = {};
+}
+
+// 关闭直播
+function cancelAppointment(appointment: any) {
+  cancelDialogVisible.value = true;
+  formData.value = { ...appointment };
+}
 
 </script>
 
 <style scoped>
-.overview {
+.el-row {
+  margin-bottom: 20px;
+}
+
+.grid-content {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  height: 100px;
 }
-.card-row {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 30px;
+
+.add-appointment {
+  margin-bottom: 20px;
 }
-.card-item {
-  width: calc(33.33% - 10px);
-  border-radius: 4px;
-  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
+
+.grid-cont-right {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
 }
-.card-title {
-  font-size: 18px;
+
+.grid-num {
+  font-size: 30px;
   font-weight: bold;
-  padding: 20px;
-  background-color: #f5f7fa;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
 }
-.card-content {
-  padding: 20px;
+
+.grid-con-icon {
+  font-size: 50px;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+  color: #fff;
 }
-.chart {
-  height: 300px;
+
+.grid-con-1 .grid-con-icon {
+  background: rgb(45, 140, 240);
+}
+
+.grid-con-1 .grid-num {
+  color: rgb(45, 140, 240);
+}
+
+.grid-con-2 .grid-con-icon {
+  background: rgb(100, 213, 114);
+}
+
+.grid-con-2 .grid-num {
+  color: rgb(100, 213, 114);
+}
+
+.grid-con-3 .grid-con-icon {
+  background: rgb(242, 94, 67);
+}
+
+.grid-con-3 .grid-num {
+  color: rgb(242, 94, 67);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.user-info-cont {
+  padding-left: 50px;
+  flex: 1;
+  font-size: 14px;
+  color: #999;
+}
+
+.user-info-cont div:first-child {
+  font-size: 30px;
+  color: #222;
+}
+
+.user-info-list {
+  font-size: 14px;
+  color: #999;
+  line-height: 25px;
+}
+
+.user-info-list span {
+  margin-left: 70px;
+}
+
+.mgb20 {
+  margin-bottom: 40px;
+}
+
+.todo-item {
+  font-size: 14px;
+}
+
+.todo-item-del {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.schart {
   width: 100%;
+  height: 300px;
 }
 </style>

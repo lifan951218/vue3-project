@@ -381,7 +381,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = `数据魔盒-经营绩效管理系统`;
+    document.title = `炅光直播弹幕管理软件`;
     const role = localStorage.getItem('ms_username');
     const permiss = usePermissStore();
     if (!role && to.path !== '/login') {

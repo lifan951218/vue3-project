@@ -1,98 +1,103 @@
 <template>
-  <div>
-    <div class="container">
-      <div class="handle-box">
-        <el-button type="primary" @click="exportXlsx">导出Excel</el-button>
-      </div>
-      <el-table :data="tableData" border class="table" header-cell-class-name="table-header">
-        <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-        <el-table-column prop="name" label="姓名"></el-table-column>
-        <el-table-column prop="sno" label="学号"></el-table-column>
-        <el-table-column prop="class" label="班级"></el-table-column>
-        <el-table-column prop="age" label="年龄"></el-table-column>
-        <el-table-column prop="sex" label="性别"></el-table-column>
-      </el-table>
+  <div class="container">
+    <div  id="main" style="height: 700px;width: 100%">
+    </div>
+    <div  id="main2" style="height: 700px;width: 100%">
     </div>
   </div>
 </template>
 
-<script setup lang="ts" name="export">
-import { ref } from 'vue';
-import * as XLSX from 'xlsx';
+<script setup>
+import * as echarts from 'echarts';
+import {onMounted} from "vue";
 
-interface TableItem {
-  id: number;
-  name: string;
-  sno: string;
-  class: string;
-  age: string;
-  sex: string;
-}
 
-const tableData = ref<TableItem[]>([]);
-// 获取表格数据
-const getData = () => {
-  tableData.value = [
-    {
-      id: 1,
-      name: '小明',
-      sno: 'S001',
-      class: '一班',
-      age: '10',
-      sex: '男',
+onMounted(() => {
+  let chartDom = document.getElementById('main');
+  let myChart = echarts.init(chartDom);
+  const option1 = {
+    title: {
+      text: '礼物数量统计'
     },
-    {
-      id: 2,
-      name: '小红',
-      sno: 'S002',
-      class: '一班',
-      age: '9',
-      sex: '女',
+    tooltip: {},
+    xAxis: {
+      type: 'category',
+      data: ['火箭', '飞机', '汽车', '火车', '鲜花', '棒棒糖', '巧克力', '钻石']
     },
-  ];
-};
-getData();
+    yAxis: {
+      type: 'value'
+    },
+    series: [{
+      name: '礼物数量',
+      data: [120, 200, 150, 80, 70, 110, 130, 180],
+      type: 'bar'
+    }]
+  }
 
-const list = [['序号', '姓名', '学号', '班级', '年龄', '性别']];
-const exportXlsx = () => {
-  tableData.value.map((item: any, i: number) => {
-    const arr: any[] = [i + 1];
-    arr.push(...[item.name, item.sno, item.class, item.age, item.sex]);
-    list.push(arr);
-  });
-  let WorkSheet = XLSX.utils.aoa_to_sheet(list);
-  let new_workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(new_workbook, WorkSheet, '第一页');
-  XLSX.writeFile(new_workbook, `表格.xlsx`);
-};
+  option1 && myChart.setOption(option1);
+
+  let chartDom2 = document.getElementById('main2');
+  let myChart2 = echarts.init(chartDom2);
+  const option2 = {
+    title: {
+      text: '礼物占比统计'
+    },
+    tooltip: {},
+    legend: {
+      orient: 'vertical',
+      right: 10,
+      top: 50,
+      data: ['火箭', '飞机', '汽车', '火车', '鲜花', '棒棒糖', '巧克力', '钻石']
+    },
+    series: [{
+      name: '礼物占比',
+      type: 'pie',
+      radius: [20, 140],
+      center: ['45%', '50%'],
+      roseType: 'radius',
+      label: {
+        show: false
+      },
+      emphasis: {
+        label: {
+          show: true
+        }
+      },
+      data: [
+        { value: 120, name: '火箭' },
+        { value: 200, name: '飞机' },
+        { value: 150, name: '汽车' },
+        { value: 80, name: '火车' },
+        { value: 70, name: '鲜花' },
+        { value: 110, name: '棒棒糖' },
+        { value: 130, name: '巧克力' },
+        { value: 180, name: '钻石' }
+      ]
+    }]
+  }
+
+  option2 && myChart2.setOption(option2);
+
+});
+
+
 </script>
 
 <style scoped>
-.handle-box {
-  margin-bottom: 20px;
+.schart-box {
+  display: inline-block;
+  margin: 20px;
 }
-
-.handle-select {
-  width: 120px;
+.schart {
+  width: 600px;
+  height: 400px;
 }
-
-.handle-input {
-  width: 300px;
-}
-.table {
-  width: 100%;
-  font-size: 14px;
-}
-.red {
-  color: #f56c6c;
-}
-.mr10 {
-  margin-right: 10px;
-}
-.table-td-thumb {
-  display: block;
-  margin: auto;
-  width: 40px;
-  height: 40px;
+.content-title {
+  clear: both;
+  font-weight: 400;
+  line-height: 50px;
+  margin: 10px 0;
+  font-size: 22px;
+  color: #1f2f3d;
 }
 </style>

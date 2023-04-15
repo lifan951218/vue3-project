@@ -1,99 +1,54 @@
 <template>
-  <div>
-    <div ref="chart1" style="width: 50%; height: 500px;"></div>
-    <div ref="chart2" style="width: 50%; height: 500px;"></div>
+  <div class="income-analysis">
+    <h3 style="margin-bottom: 20px">封禁用户</h3>
+    <el-form :model="formData" :rules="formRules">
+      <el-form-item label="选择用户" prop="name">
+        <el-select v-model="formData.name" placeholder="请选择">
+          <el-option key="小明" label="小明" value="小明"></el-option>
+          <el-option key="小红" label="小红" value="小红"></el-option>
+          <el-option key="小白" label="小白" value="小白"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="封禁时长" prop="name">
+        <el-select v-model="formData.name" placeholder="请选择">
+          <el-option key="小明" label="小明" value="小明"></el-option>
+          <el-option key="小红" label="小红" value="小红"></el-option>
+          <el-option key="小白" label="小白" value="小白"></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <div slot="footer">
+      <!-- 取消添加或编辑 -->
+      <el-button @click="dialogVisible = false">取消</el-button>
+      <!-- 确认添加或编辑 -->
+      <el-button type="primary" @click="">封禁</el-button>
+    </div>
   </div>
 </template>
 
-<script>
-import * as echarts from 'echarts'
+<script setup>
+import { ref, onMounted } from 'vue';
+import * as echarts from 'echarts';
 
-export default {
-  mounted() {
-    this.drawChart1()
-    this.drawChart2()
-  },
-  methods: {
-    drawChart1() {
-      const chart = echarts.init(this.$refs.chart1)
-      chart.setOption({
-        title: {
-          text: '绩效分布情况',
-          left: 'center',
-        },
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b}: {c} ({d}%)',
-        },
-        legend: {
-          orient: 'vertical',
-          left: 'left',
-          data: ['优秀', '良好', '合格', '不合格'],
-        },
-        series: [
-          {
-            name: '绩效分布情况',
-            type: 'pie',
-            radius: ['50%', '70%'],
-            avoidLabelOverlap: false,
-            label: {
-              show: false,
-              position: 'center',
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: '30',
-                fontWeight: 'bold',
-              },
-            },
-            labelLine: {
-              show: false,
-            },
-            data: [
-              { value: 135, name: '优秀' },
-              { value: 235, name: '良好' },
-              { value: 410, name: '合格' },
-              { value: 24, name: '不合格' },
-            ],
-          },
-        ],
-      })
-    },
-    drawChart2() {
-      const chart = echarts.init(this.$refs.chart2)
-      chart.setOption({
-        title: {
-          text: '绩效得分情况',
-          left: 'center',
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'shadow',
-          },
-        },
-        grid: {
-          top: 40,
-          bottom: 20,
-          left: 10,
-          right: 10,
-        },
-        xAxis: {
-          type: 'category',
-          data: ['员工1', '员工2', '员工3', '员工4', '员工5']
-        },
-        yAxis: {
-          type: 'value',
-        },
-        series: [
-          {
-            data: [85, 90, 82, 75, 94],
-            type: 'bar',
-          },
-        ],
-      })
-    },
-  },
-}
+
+const formData = ref({}); // 添加或编辑礼物的表单数据
+const formRules = ref({
+  name: [
+    { required: true, message: '礼物不能为空', trigger: 'blur' },
+  ],
+  date: [
+    { required: true, message: '观看人数码不能为空', trigger: 'blur' },
+  ]
+});
 </script>
+
+<style scoped>
+.income-analysis {
+  padding: 20px;
+}
+
+.chart {
+  width: 100%;
+  height: 500px;
+}
+</style>

@@ -10,9 +10,9 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import { onMounted } from 'vue'
 
 onMounted(() => {
-  document.body.style.setProperty('--el-color-primary', '#1970a6');
+  document.body.style.setProperty('--el-color-primary', '#19a66e');
   document.body.style.setProperty('--el-color-primary-light-9', '#F5FBF0');
-  document.body.style.setProperty('--el-color-primary-light-3', '#12588a');
+  document.body.style.setProperty('--el-color-primary-light-3', '#2bab31');
 })
 
 </script>

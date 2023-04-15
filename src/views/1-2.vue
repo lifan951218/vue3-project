@@ -1,19 +1,40 @@
 <template>
   <div class="income-analysis">
-    <h1>收入分析</h1>
-    <el-row>
-      <el-col :span="12"><div ref="chart1" class="chart"></div></el-col>
-      <el-col :span="12"><div ref="chart2" class="chart"></div></el-col>
-    </el-row>
+    <h3 style="margin-bottom: 20px">创建直播</h3>
+    <el-form :model="formData" :rules="formRules">
+      <el-form-item label="直播标题" prop="name">
+        <el-input v-model="formData.name"></el-input>
+      </el-form-item>
+      <el-form-item label="直播编号" prop="date">
+        <el-input v-model="formData.id"></el-input>
+      </el-form-item>
+      <el-form-item label="类型" prop="date">
+        <el-input v-model="formData.date"></el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer">
+      <!-- 取消添加或编辑 -->
+      <el-button @click="dialogVisible = false">取消</el-button>
+      <!-- 确认添加或编辑 -->
+      <el-button type="primary" @click="">确认</el-button>
+    </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue';
 import * as echarts from 'echarts';
 
-export default {
-  setup() {
+
+    const formData = ref({}); // 添加或编辑直播的表单数据
+    const formRules = ref({
+      name: [
+        { required: true, message: '直播不能为空', trigger: 'blur' },
+      ],
+      date: [
+        { required: true, message: '观看人数码不能为空', trigger: 'blur' },
+      ]
+    });
     const chart1 = ref(null);
     const chart2 = ref(null);
 
@@ -30,68 +51,6 @@ export default {
       { name: '店铺 B', value: 2000 },
       { name: '店铺 C', value: 3000 }
     ];
-
-    onMounted(() => {
-      const chartObj1 = echarts.init(chart1.value);
-      const chartObj2 = echarts.init(chart2.value);
-
-      const option1 = {
-        legend: {
-          data: ['Sales', 'Rent', 'Ads']
-        },
-        xAxis: {
-          type: 'category',
-          data: data1.map(item => item.name)
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [
-          {
-            name: 'Sales',
-            data: data1.map(item => item.sales),
-            type: 'bar',
-            stack: 'total'
-          },
-          {
-            name: 'Rent',
-            data: data1.map(item => item.rent),
-            type: 'bar',
-            stack: 'total'
-          },
-          {
-            name: 'Ads',
-            data: data1.map(item => item.ads),
-            type: 'bar',
-            stack: 'total'
-          }
-        ]
-      };
-
-      const option2 = {
-        xAxis: {
-          type: 'category',
-          data: data2.map(item => item.name)
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [{
-          data: data2.map(item => item.value),
-          type: 'bar'
-        }]
-      };
-
-      chartObj1.setOption(option1);
-      chartObj2.setOption(option2);
-    });
-
-    return {
-      chart1,
-      chart2
-    };
-  }
-}
 </script>
 
 <style scoped>

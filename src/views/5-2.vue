@@ -1,207 +1,96 @@
 <template>
   <div class="container">
-    <el-form :inline="true" :model="queryForm">
-      <el-form-item label="员工名称">
-        <el-input v-model.trim="queryForm.员工" placeholder="请输入员工名称"></el-input>
-      </el-form-item>
-      <el-form-item label="考核日期">
-        <el-date-picker format="YYYY/MM/DD" value-format="YYYY/MM/DD" v-model="queryForm.date" type="date" placeholder="选择考核日期"></el-date-picker>
-      </el-form-item>
-      <el-form-item label="">
-        <el-button type="primary" @click="handleQuery">查询</el-button>
-        <el-button type="primary" @click="handleExport">导出</el-button>
-
-      </el-form-item>
-    </el-form>
-    <el-table :data="filteredSalesData">
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="date" label="考核日期"></el-table-column>
-      <el-table-column prop="员工" label="员工"></el-table-column>
-      <el-table-column prop="amount" label="绩效得分"></el-table-column>
-<!--      <el-table-column prop="cost" label="成本"></el-table-column>-->
-<!--      <el-table-column prop="profit" label="利润"></el-table-column>-->
-    </el-table>
-    <el-pagination
-        style="margin-top:15px"
-        background
-        layout="prev, pager, next"
-        :total="salesData.length"
-        :page-size="pageSize"
-        @current-change="handleCurrentChange"
-    ></el-pagination>
+    <div  id="main" style="height: 700px;width: 100%">
+    </div>
+    <div  id="main2" style="height: 700px;width: 100%">
+    </div>
   </div>
-
 </template>
+
 <script setup>
-import {computed, ref} from 'vue';
 import * as echarts from 'echarts';
-
-const message = ref('first');
-
-const salesData = ref([]);
-
-for (let i = 0; i < 100; i++) {
-  salesData.value.push({
-    date: `2022/01/${i + 1}`,
-    员工: `员工 ${i + 1}`,
-    amount: Math.floor(Math.random() * 100),
-    cost: Math.floor(Math.random() * 5000),
-    profit: null
-  });
-  // 计算利润
-  salesData.value[i].profit = salesData.value[i].amount - salesData.value[i].cost;
-}
-const pageSize = ref(10); // 每页显示的数据量
-const currentPage = ref(1); // 当前页码
-
-const queryForm = ref({
-  员工: '',
-  date: ''
-});
-
-const filteredSalesData = computed(() => {
-  let data = JSON.parse(JSON.stringify(salesData.value));
-  console.log("date:", queryForm.value.date)
-  if (queryForm.value.员工) {
-    data = data.filter(item => item.员工.includes(queryForm.value.员工));
-  }
-  if (queryForm.value.date) {
-    data = data.filter(item => item.date === queryForm.value.date);
-  }
-  const start = (currentPage.value - 1) * pageSize.value;
-  const end = start + pageSize.value;
-  return data.slice(start, end);
-});
+import {onMounted} from "vue";
 
 
-const handleCurrentChange = (page) => {
-  currentPage.value = page;
-};
-const handleQuery = () => {
-  currentPage.value = 1; // 切换查询条件后回到第一页
-}
-
-const handleExport = () => {
-  // 获取表格数据
-  const tableData = JSON.parse(JSON.stringify(filteredSalesData.value));
-  // 移除id字段
-  tableData.forEach(item => {
-    delete item.id;
-  });
-  // 导出xlsx文件
-  import('xlsx').then(xlsx => {
-    const worksheet = xlsx.utils.json_to_sheet(tableData);
-    const workbook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    xlsx.writeFile(workbook, 'sales_data.xlsx');
-  });
-};
-
-const tabChange = (value) => {
-  if(value === 'second') {
-    setTimeout(() => {
-      initLineChart();
-      initBarChart();
-      initPieChart();
-      initScatterChart();
-    });
-  }
-}
-
-const lineChart = ref(null);
-const barChart = ref(null);
-const pieChart = ref(null);
-const scatterChart = ref(null);
-
-const initLineChart = () => {
-  const chart = echarts.init(lineChart.value);
-  chart.setOption({
+onMounted(() => {
+  let chartDom = document.getElementById('main');
+  let myChart = echarts.init(chartDom);
+  const option1 = {
+    title: {
+      text: '弹幕数量统计'
+    },
+    tooltip: {},
     xAxis: {
       type: 'category',
-      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+      data: ['0分', '1分', '2分', '3分', '4分', '5分', '6分', '7分', '8分', '9分', '10分', '11分', '12分', '13分', '14分', '15分', '16分', '17分', '18分', '19分', '20分', '21分', '22分', '23分', '24分', '25分', '26分', '27分', '28分', '29分', '30分', '31分', '32分', '33分', '34分', '35分', '36分', '37分', '38分', '39分', '40分', '41分', '42分', '43分', '44分', '45分', '46分', '47分', '48分', '49分', '50分', '51分', '52分', '53分', '54分', '55分', '56分', '57分', '58分', '59分']
     },
     yAxis: {
       type: 'value'
     },
     series: [{
-      data: [1200, 1500, 1800, 2000, 2200, 2400],
-      type: 'line'
-    }]
-  });
-};
-
-const initBarChart = () => {
-  const chart = echarts.init(barChart.value);
-  chart.setOption({
-    xAxis: {
-      type: 'category',
-      data: ['北京', '上海', '广州', '深圳', '杭州']
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [{
-      data: [1200, 800, 500, 300, 200],
+      name: '弹幕数量',
+      data: [120, 200, 150, 80, 70, 110, 130, 180, 220, 300, 450, 500, 580, 700, 800, 900, 950, 920, 850, 750, 650, 600, 500, 400, 300, 200, 150, 80, 70, 110, 130, 180, 220, 300, 450, 500, 580, 700, 800, 900, 950, 920, 850, 750, 650, 600, 500, 400, 300, 200, 150, 80, 70, 110, 130, 180, 220, 300, 450, 500, 580, 700, 800],
       type: 'bar'
     }]
-  });
-};
+  }
 
-const initPieChart = () => {
-  const chart = echarts.init(pieChart.value);
-  chart.setOption({
-    series: [{
-      type: 'pie',
-      data: [
-        { name: '搜索引擎', value: 335 },
-        { name: '直接访问', value: 310 },
-        { name: '邮件营销', value: 234 },
-        { name: '联盟广告', value: 135 },
-        { name: '视频广告', value: 1548 }
-      ]
-    }]
-  });
-};
+  option1 && myChart.setOption(option1);
 
-const initScatterChart = () => {
-  const chart = echarts.init(scatterChart.value);
-  chart.setOption({
+  let chartDom2 = document.getElementById('main2');
+  let myChart2 = echarts.init(chartDom2);
+
+  const option2 = {
+    title: {
+      text: '弹幕关键词统计'
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
     xAxis: {
-      type: 'value'
+      type: 'value',
+      axisLabel: {
+        formatter: '{value} 次'
+      }
     },
     yAxis: {
-      type: 'value'
+      type: 'category',
+      data: ['弹幕', '直播', '小姐姐', '666', '打call', '礼物', '舰长', '爱你哟', '哈哈哈', '23333', '66666', 'woc', '牛逼']
     },
     series: [{
-      type: 'scatter',
-      symbolSize: 10,
-      data: [
-        [10, 20],
-        [30, 40],
-        [50, 60],
-        [70, 80],
-        [90, 100]
-      ]
+      name: '频次',
+      type: 'bar',
+      data: [10000, 6181, 4386, 4055, 2467, 2244, 1898, 1484, 1112, 965, 847, 582, 555],
+      label: {
+        show: true,
+        position: 'right'
+      }
     }]
-  });
-};
+  }
+  option2 && myChart2.setOption(option2);
+
+});
+
 
 </script>
 
 <style scoped>
-.chart-container {
-  display: flex;
-  flex-wrap: wrap;
+.schart-box {
+  display: inline-block;
+  margin: 20px;
 }
-
-.chart-item {
-  width: 50%;
-  padding: 20px;
-  box-sizing: border-box;
+.schart {
+  width: 600px;
+  height: 400px;
 }
-
-.chart {
-  height: 300px;
-  border: 1px solid #ccc;
+.content-title {
+  clear: both;
+  font-weight: 400;
+  line-height: 50px;
+  margin: 10px 0;
+  font-size: 22px;
+  color: #1f2f3d;
 }
 </style>
