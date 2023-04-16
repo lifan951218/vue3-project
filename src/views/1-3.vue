@@ -1,34 +1,149 @@
 <template>
-  <div class="income-analysis">
-    <h3 style="margin-bottom: 20px">分享直播</h3>
-    <el-form :model="formData" :rules="formRules">
-      <el-form-item label="选择直播" prop="name">
-        <el-select v-model="formData.name" placeholder="请选择">
-          <el-option key="小明" label="小明" value="小明"></el-option>
-          <el-option key="小红" label="小红" value="小红"></el-option>
-          <el-option key="小白" label="小白" value="小白"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="分享方式" prop="name">
-        <el-select v-model="formData.name" placeholder="请选择">
-          <el-option key="小明" label="小明" value="小明"></el-option>
-          <el-option key="小红" label="小红" value="小红"></el-option>
-          <el-option key="小白" label="小白" value="小白"></el-option>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <div slot="footer">
-      <!-- 取消添加或编辑 -->
-      <!-- 确认添加或编辑 -->
-      <el-button type="primary" @click="">分享</el-button>
+  <div class="container">
+    <div class="add-appointment">
+      <h3>热门推荐</h3>
     </div>
+    <el-tabs v-model="message">
+      <el-tab-pane label="热门" name="1">
+        <el-table :data="appointments">
+
+          <el-table-column prop="id" label="直播编号"></el-table-column>
+          <el-table-column prop="name" label="直播标题"></el-table-column>
+          <el-table-column prop="phone" label="观看人数" sortable></el-table-column>
+          <el-table-column prop="date" label="类型"></el-table-column>
+          <el-table-column prop="status" label="状态">
+            <template #default="scope">
+              <el-tag type="success" v-if="scope.row.status === '直播中'">直播中</el-tag>
+              <el-tag type="info" v-else>已关闭</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="280">
+            <template #default="{row}">
+              <!-- 编辑直播 -->
+              <!--          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>-->
+              <el-button  v-if="row.status === '直播中'" type="primary" size="small" @click="editAppointment(row)">进入直播间</el-button>
+              <el-button  v-if="row.status === '已关闭'" type="primary" size="small" @click="startAppointment(row)">启动直播</el-button>
+              <el-button type="primary" size="small" @click="startAppointment(row)">收藏</el-button>
+
+              <!-- 取消直播 -->
+              <!--          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>-->
+            </template>
+          </el-table-column>
+        </el-table>
+
+      </el-tab-pane>
+    </el-tabs>
+
+    <!--    <div class="add-appointment">-->
+    <!--      <el-button type="primary" :icon="Plus" @click="addAppointment">创建直播</el-button>-->
+    <!--    </div>-->
+
+    <!-- 添加或编辑直播的表单 -->
+    <el-dialog v-model="dialogVisible" title="直播间">
+      <!--      <el-form :model="formData" :rules="formRules">-->
+      <!--        <el-form-item label="直播标题" prop="name">-->
+      <!--          <el-input v-model="formData.name"></el-input>-->
+      <!--        </el-form-item>-->
+      <!--        <el-form-item label="直播编号" prop="date">-->
+      <!--          <el-input v-model="formData.id"></el-input>-->
+      <!--        </el-form-item>-->
+      <!--        <el-form-item label="类型" prop="date">-->
+      <!--          <el-input v-model="formData.date"></el-input>-->
+      <!--        </el-form-item>-->
+      <!--      </el-form>-->
+      <el-image v-model:src="imgurl"></el-image>
+      <div slot="footer">
+        <!-- 取消添加或编辑 -->
+        <!--        <el-button @click="dialogVisible = false">取消</el-button>-->
+        <!-- 确认添加或编辑 -->
+        <el-button type="primary" @click="">退出</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 确认取消直播的对话框 -->
+    <el-dialog v-model="cancelDialogVisible" title="关闭直播">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要关闭此直播吗？</div>
+      <span slot="footer" class="dialog-footer">
+    <!-- 取消关闭直播 -->
+    <el-button @click="cancelDialogVisible = false">取 消</el-button>
+        <!-- 确认关闭直播 -->
+    <el-button type="primary" @click="">确 定</el-button>
+  </span>
+    </el-dialog>
+
+    <el-dialog v-model="startDialogVisible" title="收藏直播">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要收藏此直播吗？</div>
+      <span slot="footer" class="dialog-footer">
+    <!-- 取消关闭直播 -->
+    <el-button @click="startDialogVisible = false">取 消</el-button>
+        <!-- 确认关闭直播 -->
+    <el-button type="primary" @click="">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import * as echarts from 'echarts';
+<script setup lang="ts" name="dashboard">
+import {Plus} from "@element-plus/icons-vue";
+import {ref} from "vue";
+import imgurl from '../assets/img/zhibo.jpeg';
+const message = ref("1");
+const appointments = ref([]); // 直播列表
+const appointments2 = ref([]); // 直播列表
+const appointments3 = ref([]); // 直播列表
+const appointments4 = ref([]); // 直播列表
+const appointments5 = ref([]); // 直播列表
+const services = ref([
+  '游戏',  '户外',  '体育', '才艺','科技', '其他'
+]);
+const services2 = ref([
+  '直播中'
+  // , '已关闭'
+]);
+for (let i = 1; i <= 50; i++) {
+  const service = services.value[Math.floor(Math.random() * services.value.length)];
+  const service2 = services2.value[Math.floor(Math.random() * services2.value.length)];
+  appointments.value.push({
+    id: i,
+    name: `直播标题${i}`,
+    date: service,
+    status: service2,
+    phone: Math.floor(Math.random() * 10000),
+  });
+  appointments2.value.push({
+    id: i,
+    name: `直播标题${i}`,
+    date: services.value[1],
+    status: service2,
+    phone: Math.floor(Math.random() * 10000),
+  });
+  appointments3.value.push({
+    id: i,
+    name: `直播标题${i}`,
+    date: services.value[2],
+    status: service2,
+    phone: Math.floor(Math.random() * 10000),
+  });
+  appointments4.value.push({
+    id: i,
+    name: `直播标题${i}`,
+    date: services.value[3],
+    status: service2,
+    phone: Math.floor(Math.random() * 10000),
+  });
+  appointments5.value.push({
+    id: i,
+    name: `直播标题${i}`,
+    date: services.value[4],
+    status: service2,
+    phone: Math.floor(Math.random() * 10000),
+  });
+}
 
+
+
+const cancelDialogVisible = ref(false);
+const startDialogVisible = ref(false);
 
 const formData = ref({}); // 添加或编辑直播的表单数据
 const formRules = ref({
@@ -38,32 +153,138 @@ const formRules = ref({
   date: [
     { required: true, message: '观看人数码不能为空', trigger: 'blur' },
   ]
-});
-const chart1 = ref(null);
-const chart2 = ref(null);
+}); // 添加或编辑直播的表单验证规则
+const dialogVisible = ref(false); // 是否显示添加或编辑直播的对话框
 
-// 假设有三个部门，收入来源分别为销售、租金、广告
-const data1 = [
-  { name: '部门 A', sales: 1000, rent: 2000, ads: 500 },
-  { name: '部门 B', sales: 1500, rent: 1200, ads: 800 },
-  { name: '部门 C', sales: 2000, rent: 3000, ads: 600 }
-];
+// 编辑直播
+function editAppointment(appointment: any) {
+  formData.value = { ...appointment };
+  dialogVisible.value = true;
+}
 
-// 假设有三家店铺，收入分别为1000、2000、3000
-const data2 = [
-  { name: '店铺 A', value: 1000 },
-  { name: '店铺 B', value: 2000 },
-  { name: '店铺 C', value: 3000 }
-];
+function startAppointment(appointment: any) {
+  formData.value = { ...appointment };
+  startDialogVisible.value = true;
+}
+
+function addAppointment() {
+  dialogVisible.value = true;
+  formData.value = {};
+}
+
+// 关闭直播
+function cancelAppointment(appointment: any) {
+  cancelDialogVisible.value = true;
+  formData.value = { ...appointment };
+}
+
 </script>
 
 <style scoped>
-.income-analysis {
-  padding: 20px;
+.el-row {
+  margin-bottom: 20px;
 }
 
-.chart {
+.grid-content {
+  display: flex;
+  align-items: center;
+  height: 100px;
+}
+
+.add-appointment {
+  margin-bottom: 20px;
+}
+
+.grid-cont-right {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+}
+
+.grid-num {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.grid-con-icon {
+  font-size: 50px;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+  color: #fff;
+}
+
+.grid-con-1 .grid-con-icon {
+  background: rgb(45, 140, 240);
+}
+
+.grid-con-1 .grid-num {
+  color: rgb(45, 140, 240);
+}
+
+.grid-con-2 .grid-con-icon {
+  background: rgb(100, 213, 114);
+}
+
+.grid-con-2 .grid-num {
+  color: rgb(100, 213, 114);
+}
+
+.grid-con-3 .grid-con-icon {
+  background: rgb(242, 94, 67);
+}
+
+.grid-con-3 .grid-num {
+  color: rgb(242, 94, 67);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.user-info-cont {
+  padding-left: 50px;
+  flex: 1;
+  font-size: 14px;
+  color: #999;
+}
+
+.user-info-cont div:first-child {
+  font-size: 30px;
+  color: #222;
+}
+
+.user-info-list {
+  font-size: 14px;
+  color: #999;
+  line-height: 25px;
+}
+
+.user-info-list span {
+  margin-left: 70px;
+}
+
+.mgb20 {
+  margin-bottom: 40px;
+}
+
+.todo-item {
+  font-size: 14px;
+}
+
+.todo-item-del {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.schart {
   width: 100%;
-  height: 500px;
+  height: 300px;
 }
 </style>

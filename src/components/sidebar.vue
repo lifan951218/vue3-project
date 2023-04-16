@@ -4,7 +4,7 @@
             class="sidebar-el-menu"
             :default-active="onRoutes"
             :collapse="sidebar.collapse"
-            background-color="#13754f"
+            background-color="#3d2467"
             text-color="#bfcbd9"
             active-text-color="#2caedc"
             unique-opened
@@ -59,7 +59,7 @@ const items = [
   {
     icon: 'Odometer',
     index: '1',
-    title: '直播管理',
+    title: '首页',
     permiss: '1',
     subs: [
       {
@@ -69,12 +69,12 @@ const items = [
       },
       {
         index: '/1-2',
-        title: '创建直播',
+        title: '精彩回放',
         permiss: '2',
       },
       {
         index: '/1-3',
-        title: '分享直播',
+        title: '热门推荐',
         permiss: '2',
       }
     ],
@@ -82,22 +82,22 @@ const items = [
   {
     icon: 'Calendar',
     index: '2',
-    title: '弹幕管理',
+    title: '直播间',
     permiss: '2',
     subs: [
       {
         index: '/2-1',
-        title: '弹幕列表',
+        title: '观看直播',
         permiss: '2',
       },
       {
         index: '/2-2',
-        title: '发送弹幕',
+        title: '互动功能',
         permiss: '2',
       },
       {
         index: '/2-3',
-        title: '删除弹幕',
+        title: '礼物商城',
         permiss: '2',
       }
     ]
@@ -105,22 +105,22 @@ const items = [
   {
     icon: 'DocumentCopy',
     index: '3',
-    title: '礼物管理',
+    title: '用户中心',
     permiss: '13',
     subs: [
       {
         index: '/3-1',
-        title: '礼物列表',
+        title: '注册',
         permiss: '2',
       },
       {
         index: '/3-2',
-        title: '发送礼物',
+        title: '个人信息管理',
         permiss: '2',
       },
       {
         index: '/3-3',
-        title: '兑换记录',
+        title: '我的关注和收藏',
         permiss: '2',
       }
     ]
@@ -128,22 +128,22 @@ const items = [
   {
     icon: 'CoffeeCup',
     index: '4',
-    title: '用户管理',
+    title: '后台管理',
     permiss: '13',
     subs: [
       {
         index: '/4-1',
-        title: '用户列表',
+        title: '直播管理',
         permiss: '2',
       },
       {
         index: '/4-2',
-        title: '禁言用户',
+        title: '礼物管理',
         permiss: '2',
       },
       {
         index: '/4-3',
-        title: '封禁用户',
+        title: '用户管理',
         permiss: '2',
       }
     ],
@@ -151,7 +151,7 @@ const items = [
   {
     icon: 'PieChart',
     index: '5',
-    title: '统计分析',
+    title: '数据统计',
     permiss: '13',
     subs: [
       {
@@ -161,12 +161,12 @@ const items = [
       },
       {
         index: '/5-2',
-        title: '弹幕数据分析',
+        title: '用户数据分析',
         permiss: '2',
       },
       {
         index: '/5-3',
-        title: '礼物数据分析',
+        title: '礼物使用情况',
         permiss: '2',
       }
     ],
@@ -197,7 +197,7 @@ const sidebar = useSidebarStore();
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
     width: 250px;
-  background-color: #13754f;
+  background-color: #3d2467;
 }
 .sidebar > ul {
     height: 100%;

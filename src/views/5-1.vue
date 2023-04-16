@@ -17,22 +17,24 @@ onMounted(() => {
   let myChart = echarts.init(chartDom);
   const option1 = {
     title: {
-      text: '观看人数统计'
+      text: '直播统计数据',
+      left: 'center'
     },
     tooltip: {},
-    xAxis: {
-      type: 'category',
-      data: ['0时', '1时', '2时', '3时', '4时', '5时', '6时', '7时', '8时', '9时', '10时', '11时', '12时', '13时', '14时', '15时', '16时', '17时', '18时', '19时', '20时', '21时', '22时', '23时']
-    },
-    yAxis: {
-      type: 'value'
-    },
     series: [{
-      name: '观看人数',
-      data: [120, 200, 150, 80, 70, 110, 130, 180, 220, 300, 450, 500, 580, 700, 800, 900, 950, 920, 850, 750, 650, 600, 500, 400],
-      type: 'bar'
+      name: '访问来源',
+      type: 'pie',
+      radius: '50%',
+      data: [
+        {value: 335, name: '观看人数'},
+        {value: 310, name: '弹幕数'},
+        {value: 234, name: '点赞数'},
+        {value: 135, name: '礼物数'},
+        {value: 1548, name: '其他'}
+      ]
     }]
-  }
+  };
+
 
   option1 && myChart.setOption(option1);
 
@@ -41,21 +43,34 @@ onMounted(() => {
 
   const option2 = {
     title: {
-      text: '设备访问占比'
+      text: '直播统计数据'
     },
-    tooltip: {},
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross'
+      }
+    },
+    legend: {
+      data:['观看人数', '弹幕数']
+    },
+    xAxis: {
+      type: 'category',
+      data: ["3月1日", "3月2日", "3月3日", "3月4日", "3月5日", "3月6日"]
+    },
+    yAxis: {
+      type: 'value'
+    },
     series: [{
-      name: '访问设备',
-      type: 'pie',
-      radius: '50%',
-      data: [
-        { value: 335, name: 'PC' },
-        { value: 310, name: '手机' },
-        { value: 234, name: '平板' },
-        { value: 135, name: '其他设备' }
-      ]
+      name: '观看人数',
+      type: 'line',
+      data: [100, 200, 300, 400, 500, 600]
+    }, {
+      name: '弹幕数',
+      type: 'line',
+      data: [50, 100, 150, 200, 250, 300]
     }]
-  }
+  };
   option2 && myChart2.setOption(option2);
 
 });

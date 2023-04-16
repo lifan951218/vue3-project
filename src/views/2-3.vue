@@ -1,69 +1,304 @@
 <template>
-  <div class="income-analysis">
-    <h3 style="margin-bottom: 20px">删除弹幕</h3>
-    <el-form :model="formData" :rules="formRules">
-      <el-form-item label="选择直播" prop="name">
-        <el-select v-model="formData.name" placeholder="请选择">
-          <el-option key="小明" label="小明" value="小明"></el-option>
-          <el-option key="小红" label="小红" value="小红"></el-option>
-          <el-option key="小白" label="小白" value="小白"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="选择弹幕" prop="name">
-        <el-select v-model="formData.name" placeholder="请选择">
-          <el-option key="小明" label="小明" value="小明"></el-option>
-          <el-option key="小红" label="小红" value="小红"></el-option>
-          <el-option key="小白" label="小白" value="小白"></el-option>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <div slot="footer">
-      <!-- 取消添加或编辑 -->
-      <!-- 确认添加或编辑 -->
-      <el-button type="primary" @click="">删除</el-button>
+  <div class="container">
+    <div class="handle-box">
+      <el-select v-model="query.address" placeholder="礼物类型" class="handle-select mr10">
+        <el-option key="1" label="类型1" value="类型1"></el-option>
+        <el-option key="2" label="类型2" value="类型2"></el-option>
+        <el-option key="3" label="类型3" value="类型3"></el-option>
+
+      </el-select>
+      <el-input v-model="query.name" placeholder="礼物名称" class="handle-input mr10"></el-input>
+      <el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
+<!--      <el-button type="primary" :icon="Plus"  @click="addAppointment">创建礼物</el-button>-->
     </div>
+    <div class="add-appointment">
+      <h3>礼物商城</h3>
+    </div>
+    <el-table :data="appointments">
+      <el-table-column prop="id" label="礼物编号"></el-table-column>
+      <el-table-column prop="name" label="礼物礼物名称"></el-table-column>
+      <!--      <el-table-column prop="phone" label="观看人数"></el-table-column>-->
+      <el-table-column prop="date" label="类型"></el-table-column>
+      <el-table-column prop="phone" label="价格"></el-table-column>
+      <!--      <el-table-column prop="status" label="状态">-->
+      <!--        <template #default="scope">-->
+      <!--          <el-tag type="success" v-if="scope.row.status === '正常'">正常</el-tag>-->
+      <!--          <el-tag type="info" v-else>已删除</el-tag>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
+      <el-table-column label="操作" width="280">
+        <template #default="{row}">
+          <!-- 编辑礼物 -->
+          <el-button type="primary" size="small" @click="editAppointment(row)">购买</el-button>
+          <!--          <el-button  v-if="row.status === '正常'" type="primary" size="small" @click="editAppointment(row)">进入礼物间</el-button>-->
+          <!-- 取消礼物 -->
+<!--          <el-button type="danger" size="small" @click="cancelAppointment(row)">删除</el-button>-->
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- 添加或编辑礼物的表单 -->
+    <el-dialog v-model="dialogVisible" title="购买礼物">
+      <el-form :model="formData" :rules="formRules">
+        <el-form-item label="礼物名称" prop="name">
+          <el-input v-model="formData.name"></el-input>
+        </el-form-item>
+        <el-form-item label="礼物价格" prop="date">
+          <el-input v-model="formData.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="数量" prop="date">
+          <el-input-number v-model="formData.num"></el-input-number>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <!-- 取消添加或编辑 -->
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <!-- 确认添加或编辑 -->
+        <el-button type="primary" @click="">确认购买</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 确认取消礼物的对话框 -->
+    <el-dialog v-model="cancelDialogVisible" title="删除礼物">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此礼物吗？</div>
+      <span slot="footer" class="dialog-footer">
+    <!-- 取消删除礼物 -->
+    <el-button @click="cancelDialogVisible = false">取 消</el-button>
+        <!-- 确认删除礼物 -->
+    <el-button type="primary" @click="">确 定</el-button>
+  </span>
+    </el-dialog>
+
+    <el-dialog v-model="startDialogVisible" title="开启礼物">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要开启此礼物吗？</div>
+      <span slot="footer" class="dialog-footer">
+    <!-- 取消删除礼物 -->
+    <el-button @click="startDialogVisible = false">取 消</el-button>
+        <!-- 确认删除礼物 -->
+    <el-button type="primary" @click="">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import * as echarts from 'echarts';
+<script setup lang="ts" name="dashboard">
+import {Plus, Search} from "@element-plus/icons-vue";
+import {reactive, ref} from "vue";
+
+const appointments = ref([]); // 礼物列表
+const services = ref([
+  '类型1', '类型2', '类型3', '类型4'
+]);
+const services2 = ref([
+  '正常', '已删除'
+]);
+for (let i = 1; i <= 50; i++) {
+  const service = services.value[Math.floor(Math.random() * services.value.length)];
+  const service2 = services2.value[Math.floor(Math.random() * services2.value.length)];
+  appointments.value.push({
+    id: i,
+    name: `礼物名称${i}`,
+    date: service,
+    status: service2,
+    phone: Math.floor(Math.random() * 100),
+  });
+}
 
 
-const formData = ref({}); // 添加或编辑直播的表单数据
+const handleSearch = () => {
+  if (query.address !== '') {
+    appointments.value = appointments.value.filter(a=>
+        a.date === query.address
+    )
+  }
+  if (query.name !== '') {
+    appointments.value = appointments.value.filter(a=> {
+          console.log(a.name.includes(query.name))
+          return a.name.includes(query.name)
+        }
+    )
+  }
+
+}
+
+
+const cancelDialogVisible = ref(false);
+const startDialogVisible = ref(false);
+
+const query = reactive({
+  address: '',
+  name: '',
+  pageIndex: 1,
+  pageSize: 10
+});
+
+const formData = ref({}); // 添加或编辑礼物的表单数据
 const formRules = ref({
   name: [
-    { required: true, message: '直播不能为空', trigger: 'blur' },
+    { required: true, message: '礼物不能为空', trigger: 'blur' },
   ],
   date: [
     { required: true, message: '观看人数码不能为空', trigger: 'blur' },
   ]
-});
-const chart1 = ref(null);
-const chart2 = ref(null);
+}); // 添加或编辑礼物的表单验证规则
+const dialogVisible = ref(false); // 是否显示添加或编辑礼物的对话框
 
-// 假设有三个部门，收入来源分别为销售、租金、广告
-const data1 = [
-  { name: '部门 A', sales: 1000, rent: 2000, ads: 500 },
-  { name: '部门 B', sales: 1500, rent: 1200, ads: 800 },
-  { name: '部门 C', sales: 2000, rent: 3000, ads: 600 }
-];
+// 编辑礼物
+function editAppointment(appointment: any) {
+  formData.value = { ...appointment };
+  dialogVisible.value = true;
+}
 
-// 假设有三家店铺，收入分别为1000、2000、3000
-const data2 = [
-  { name: '店铺 A', value: 1000 },
-  { name: '店铺 B', value: 2000 },
-  { name: '店铺 C', value: 3000 }
-];
+function startAppointment(appointment: any) {
+  formData.value = { ...appointment };
+  startDialogVisible.value = true;
+}
+
+function addAppointment() {
+  dialogVisible.value = true;
+  formData.value = {};
+}
+
+// 删除礼物
+function cancelAppointment(appointment: any) {
+  cancelDialogVisible.value = true;
+  formData.value = { ...appointment };
+}
+
 </script>
 
 <style scoped>
-.income-analysis {
-  padding: 20px;
+.el-row {
+  margin-bottom: 20px;
 }
 
-.chart {
+.grid-content {
+  display: flex;
+  align-items: center;
+  height: 100px;
+}
+
+.add-appointment {
+  margin-bottom: 20px;
+}
+
+.grid-cont-right {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  color: #999;
+}
+
+.grid-num {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.grid-con-icon {
+  font-size: 50px;
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+  color: #fff;
+}
+
+.grid-con-1 .grid-con-icon {
+  background: rgb(45, 140, 240);
+}
+
+.grid-con-1 .grid-num {
+  color: rgb(45, 140, 240);
+}
+
+.grid-con-2 .grid-con-icon {
+  background: rgb(100, 213, 114);
+}
+
+.grid-con-2 .grid-num {
+  color: rgb(100, 213, 114);
+}
+
+.grid-con-3 .grid-con-icon {
+  background: rgb(242, 94, 67);
+}
+
+.grid-con-3 .grid-num {
+  color: rgb(242, 94, 67);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.user-info-cont {
+  padding-left: 50px;
+  flex: 1;
+  font-size: 14px;
+  color: #999;
+}
+
+.user-info-cont div:first-child {
+  font-size: 30px;
+  color: #222;
+}
+
+.user-info-list {
+  font-size: 14px;
+  color: #999;
+  line-height: 25px;
+}
+
+.user-info-list span {
+  margin-left: 70px;
+}
+
+.mgb20 {
+  margin-bottom: 40px;
+}
+
+.todo-item {
+  font-size: 14px;
+}
+
+.todo-item-del {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.schart {
   width: 100%;
-  height: 500px;
+  height: 300px;
+}
+
+.handle-box {
+  margin-bottom: 20px;
+}
+
+.handle-select {
+  width: 120px;
+}
+
+.handle-input {
+  width: 300px;
+}
+.table {
+  width: 100%;
+  font-size: 14px;
+}
+.red {
+  color: #F56C6C;
+}
+.mr10 {
+  margin-right: 10px;
+}
+.table-td-thumb {
+  display: block;
+  margin: auto;
+  width: 40px;
+  height: 40px;
 }
 </style>

@@ -1,61 +1,174 @@
 <template>
-  <div class="income-analysis">
-    <h3 style="margin-bottom: 20px">发送礼物</h3>
-    <el-form :model="formData" :rules="formRules">
-      <el-form-item label="选择直播间" prop="name">
-        <el-select v-model="formData.name" placeholder="请选择">
-          <el-option key="小明" label="小明" value="小明"></el-option>
-          <el-option key="小红" label="小红" value="小红"></el-option>
-          <el-option key="小白" label="小白" value="小白"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="礼物名称" prop="name">
-        <el-select v-model="formData.name" placeholder="请选择">
-          <el-option key="小明" label="小明" value="小明"></el-option>
-          <el-option key="小红" label="小红" value="小红"></el-option>
-          <el-option key="小白" label="小白" value="小白"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="数量" prop="date">
-        <el-select v-model="formData.name" placeholder="请选择">
-          <el-option key="小明" label="小明" value="小明"></el-option>
-          <el-option key="小红" label="小红" value="小红"></el-option>
-          <el-option key="小白" label="小白" value="小白"></el-option>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <div slot="footer">
-      <!-- 取消添加或编辑 -->
-      <el-button @click="dialogVisible = false">取消</el-button>
-      <!-- 确认添加或编辑 -->
-      <el-button type="primary" @click="">发送礼物</el-button>
-    </div>
+  <div>
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <el-card shadow="hover">
+          <template #header>
+            <div class="clearfix">
+              <span>基础信息</span>
+            </div>
+          </template>
+          <div class="info">
+            <div class="info-image" @click="showDialog">
+              <el-avatar :size="100" :src="avatarImg" />
+              <span class="info-edit">
+								<i class="el-icon-lx-camerafill"></i>
+							</span>
+            </div>
+            <div class="info-name">{{ name }}</div>
+            <div class="info-desc">走自己的路，让别人说去吧！</div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card shadow="hover">
+          <template #header>
+            <div class="clearfix">
+              <span>账户编辑</span>
+            </div>
+          </template>
+          <el-form label-width="90px">
+            <el-form-item label="用户名："> {{ name }} </el-form-item>
+            <el-form-item label="旧密码：">
+              <el-input type="password" v-model="form.old"></el-input>
+            </el-form-item>
+            <el-form-item label="新密码：">
+              <el-input type="password" v-model="form.new"></el-input>
+            </el-form-item>
+            <el-form-item label="个人简介：">
+              <el-input v-model="form.desc"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit">保存</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-dialog title="裁剪图片" v-model="dialogVisible" width="600px">
+      <vue-cropper
+          ref="cropper"
+          :src="imgSrc"
+          :ready="cropImage"
+          :zoom="cropImage"
+          :cropmove="cropImage"
+          style="width: 100%; height: 400px"
+      ></vue-cropper>
+
+      <template #footer>
+				<span class="dialog-footer">
+					<el-button class="crop-demo-btn" type="primary"
+          >选择图片
+						<input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" />
+					</el-button>
+					<el-button type="primary" @click="saveAvatar">上传并保存</el-button>
+				</span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import * as echarts from 'echarts';
+<script setup lang="ts" name="user">
+import { reactive, ref } from 'vue';
+import VueCropper from 'vue-cropperjs';
+import 'cropperjs/dist/cropper.css';
+import avatar from '../assets/img/admin4.jpg';
 
-
-const formData = ref({}); // 添加或编辑礼物的表单数据
-const formRules = ref({
-  name: [
-    { required: true, message: '礼物不能为空', trigger: 'blur' },
-  ],
-  date: [
-    { required: true, message: '观看人数码不能为空', trigger: 'blur' },
-  ]
+const name = localStorage.getItem('ms_username');
+const form = reactive({
+  old: '',
+  new: '',
+  desc: '走自己的路，让别人说去吧！'
 });
+const onSubmit = () => {};
+
+const avatarImg = ref(avatar);
+const imgSrc = ref('');
+const cropImg = ref('');
+const dialogVisible = ref(false);
+const cropper: any = ref();
+
+const showDialog = () => {
+  dialogVisible.value = true;
+  imgSrc.value = avatarImg.value;
+};
+
+const setImage = (e: any) => {
+  const file = e.target.files[0];
+  if (!file.type.includes('image/')) {
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (event: any) => {
+    dialogVisible.value = true;
+    imgSrc.value = event.target.result;
+    cropper.value && cropper.value.replace(event.target.result);
+  };
+  reader.readAsDataURL(file);
+};
+
+const cropImage = () => {
+  cropImg.value = cropper.value.getCroppedCanvas().toDataURL();
+};
+
+const saveAvatar = () => {
+  avatarImg.value = cropImg.value;
+  dialogVisible.value = false;
+};
 </script>
 
 <style scoped>
-.income-analysis {
-  padding: 20px;
+.info {
+  text-align: center;
+  padding: 35px 0;
+}
+.info-image {
+  position: relative;
+  margin: auto;
+  width: 100px;
+  height: 100px;
+  background: #f8f8f8;
+  border: 1px solid #eee;
+  border-radius: 50px;
+  overflow: hidden;
 }
 
-.chart {
+.info-edit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 100%;
-  height: 500px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.info-edit i {
+  color: #eee;
+  font-size: 25px;
+}
+.info-image:hover .info-edit {
+  opacity: 1;
+}
+.info-name {
+  margin: 15px 0 10px;
+  font-size: 24px;
+  font-weight: 500;
+  color: #262626;
+}
+.crop-demo-btn {
+  position: relative;
+}
+.crop-input {
+  position: absolute;
+  width: 100px;
+  height: 40px;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
 }
 </style>

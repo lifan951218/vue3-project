@@ -1,78 +1,111 @@
 <template>
   <div class="container">
-    <div class="handle-box">
-      <el-select v-model="query.address" placeholder="礼物类型" class="handle-select mr10">
-        <el-option key="1" label="类型1" value="类型1"></el-option>
-        <el-option key="2" label="类型2" value="类型2"></el-option>
-        <el-option key="3" label="类型3" value="类型3"></el-option>
-
-      </el-select>
-      <el-input v-model="query.name" placeholder="礼物名称" class="handle-input mr10"></el-input>
-      <el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
-    </div>
     <div class="add-appointment">
-      <h3>礼物兑换记录</h3>
+      <h3>收藏与关注</h3>
     </div>
-    <el-table :data="appointments">
-      <el-table-column prop="id" label="礼物编号"></el-table-column>
-      <el-table-column prop="name" label="礼物礼物名称"></el-table-column>
-      <!--      <el-table-column prop="phone" label="观看人数"></el-table-column>-->
-      <el-table-column prop="date" label="类型"></el-table-column>
-      <el-table-column prop="phone" label="兑换时间"></el-table-column>
-      <!--      <el-table-column prop="status" label="状态">-->
-      <!--        <template #default="scope">-->
-      <!--          <el-tag type="success" v-if="scope.row.status === '正常'">正常</el-tag>-->
-      <!--          <el-tag type="info" v-else>已删除</el-tag>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
-<!--      <el-table-column label="操作" width="280">-->
-<!--        <template #default="{row}">-->
-<!--          &lt;!&ndash; 编辑礼物 &ndash;&gt;-->
-<!--          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>-->
-<!--          &lt;!&ndash;          <el-button  v-if="row.status === '正常'" type="primary" size="small" @click="editAppointment(row)">进入礼物间</el-button>&ndash;&gt;-->
-<!--          &lt;!&ndash; 取消礼物 &ndash;&gt;-->
-<!--          <el-button type="danger" size="small" @click="cancelAppointment(row)">删除</el-button>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-    </el-table>
-    <!-- 添加或编辑礼物的表单 -->
-    <el-dialog v-model="dialogVisible" title="添加/编辑礼物">
-      <el-form :model="formData" :rules="formRules">
-        <el-form-item label="礼物名称" prop="name">
-          <el-input v-model="formData.name"></el-input>
-        </el-form-item>
-        <el-form-item label="礼物兑换时间" prop="date">
-          <el-input v-model="formData.phone"></el-input>
-        </el-form-item>
-        <el-form-item label="类型" prop="date">
-          <el-input v-model="formData.date"></el-input>
-        </el-form-item>
-      </el-form>
+    <el-tabs v-model="message">
+      <el-tab-pane label="我的收藏" name="1">
+        <el-table :data="appointments">
+
+          <el-table-column prop="id" label="直播编号"></el-table-column>
+          <el-table-column prop="name" label="直播标题"></el-table-column>
+          <el-table-column prop="phone" label="观看人数"></el-table-column>
+          <el-table-column prop="date" label="类型"></el-table-column>
+          <el-table-column prop="status" label="状态">
+            <template #default="scope">
+              <el-tag type="success" v-if="scope.row.status === '直播中'">直播中</el-tag>
+              <el-tag type="info" v-else>已关闭</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="280">
+            <template #default="{row}">
+              <!-- 编辑直播 -->
+              <!--          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>-->
+              <el-button  v-if="row.status === '直播中'" type="primary" size="small" @click="editAppointment(row)">进入直播间</el-button>
+              <el-button  type="danger" size="small" @click="startAppointment(row)">取消收藏</el-button>
+<!--              <el-button type="primary" size="small" @click="startAppointment(row)">收藏</el-button>-->
+
+              <!-- 取消直播 -->
+              <!--          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>-->
+            </template>
+          </el-table-column>
+        </el-table>
+
+      </el-tab-pane>
+      <el-tab-pane label="我的关注" name="2">
+        <el-table :data="appointments2">
+
+          <el-table-column prop="id" label="直播编号"></el-table-column>
+          <el-table-column prop="name" label="直播标题"></el-table-column>
+          <el-table-column prop="phone" label="观看人数"></el-table-column>
+          <el-table-column prop="date" label="类型"></el-table-column>
+          <el-table-column prop="status" label="状态">
+            <template #default="scope">
+              <el-tag type="success" v-if="scope.row.status === '直播中'">直播中</el-tag>
+              <el-tag type="info" v-else>已关闭</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="280">
+            <template #default="{row}">
+              <!-- 编辑直播 -->
+              <!--          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>-->
+              <el-button  v-if="row.status === '直播中'" type="primary" size="small" @click="editAppointment(row)">进入直播间</el-button>
+<!--              <el-button  v-if="row.status === '已关闭'" type="primary" size="small" @click="startAppointment(row)">启动直播</el-button>-->
+<!--              <el-button type="primary" size="small" @click="startAppointment(row)">收藏</el-button>-->
+              <el-button  type="danger" size="small" @click="startAppointment(row)">取消关注</el-button>
+
+
+              <!-- 取消直播 -->
+              <!--          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>-->
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+    </el-tabs>
+
+    <!--    <div class="add-appointment">-->
+    <!--      <el-button type="primary" :icon="Plus" @click="addAppointment">创建直播</el-button>-->
+    <!--    </div>-->
+
+    <!-- 添加或编辑直播的表单 -->
+    <el-dialog v-model="dialogVisible" title="直播间">
+      <!--      <el-form :model="formData" :rules="formRules">-->
+      <!--        <el-form-item label="直播标题" prop="name">-->
+      <!--          <el-input v-model="formData.name"></el-input>-->
+      <!--        </el-form-item>-->
+      <!--        <el-form-item label="直播编号" prop="date">-->
+      <!--          <el-input v-model="formData.id"></el-input>-->
+      <!--        </el-form-item>-->
+      <!--        <el-form-item label="类型" prop="date">-->
+      <!--          <el-input v-model="formData.date"></el-input>-->
+      <!--        </el-form-item>-->
+      <!--      </el-form>-->
+      <el-image v-model:src="imgurl"></el-image>
       <div slot="footer">
         <!-- 取消添加或编辑 -->
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <!--        <el-button @click="dialogVisible = false">取消</el-button>-->
         <!-- 确认添加或编辑 -->
-        <el-button type="primary" @click="">确认</el-button>
+        <el-button type="primary" @click="">退出</el-button>
       </div>
     </el-dialog>
 
-    <!-- 确认取消礼物的对话框 -->
-    <el-dialog v-model="cancelDialogVisible" title="删除礼物">
-      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此礼物吗？</div>
+    <!-- 确认取消直播的对话框 -->
+    <el-dialog v-model="cancelDialogVisible" title="关闭直播">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要关闭此直播吗？</div>
       <span slot="footer" class="dialog-footer">
-    <!-- 取消删除礼物 -->
+    <!-- 取消关闭直播 -->
     <el-button @click="cancelDialogVisible = false">取 消</el-button>
-        <!-- 确认删除礼物 -->
+        <!-- 确认关闭直播 -->
     <el-button type="primary" @click="">确 定</el-button>
   </span>
     </el-dialog>
 
-    <el-dialog v-model="startDialogVisible" title="开启礼物">
-      <div style="margin-bottom: 20px;font-size: 18px">确定要开启此礼物吗？</div>
+    <el-dialog v-model="startDialogVisible" title="取消收藏/关注">
+      <div style="margin-bottom: 20px;font-size: 18px">确定要取消收藏/关注此直播吗？</div>
       <span slot="footer" class="dialog-footer">
-    <!-- 取消删除礼物 -->
+    <!-- 取消关闭直播 -->
     <el-button @click="startDialogVisible = false">取 消</el-button>
-        <!-- 确认删除礼物 -->
+        <!-- 确认关闭直播 -->
     <el-button type="primary" @click="">确 定</el-button>
   </span>
     </el-dialog>
@@ -80,80 +113,80 @@
 </template>
 
 <script setup lang="ts" name="dashboard">
-import {Plus, Search} from "@element-plus/icons-vue";
-import {reactive, ref} from "vue";
-
-const appointments = ref([]); // 礼物列表
+import {Plus} from "@element-plus/icons-vue";
+import {ref} from "vue";
+import imgurl from '../assets/img/zhibo.jpeg';
+const message = ref("1");
+const appointments = ref([]); // 直播列表
+const appointments2 = ref([]); // 直播列表
+const appointments3 = ref([]); // 直播列表
+const appointments4 = ref([]); // 直播列表
+const appointments5 = ref([]); // 直播列表
 const services = ref([
-  '类型1', '类型2', '类型3', '类型4'
+  '游戏',  '户外',  '体育', '才艺','科技', '其他'
 ]);
 const services2 = ref([
-  '正常', '已删除'
+  '直播中'
+  , '已关闭'
 ]);
 for (let i = 1; i <= 50; i++) {
   const service = services.value[Math.floor(Math.random() * services.value.length)];
+  const service3= services.value[Math.floor(Math.random() * services.value.length)];
   const service2 = services2.value[Math.floor(Math.random() * services2.value.length)];
-// 获取当前时间戳
-  const now = new Date().getTime();
-
-// 获取过去一年的时间戳
-  const oneYearAgo = new Date(now - 365 * 24 * 60 * 60 * 1000).getTime();
-
-// 生成介于当前时间和过去一年之间的随机时间戳
-  const randomTime = Math.floor(Math.random() * (now - oneYearAgo)) + oneYearAgo;
-
-// 将时间戳转换为日期对象
-  const randomDate = new Date(randomTime);
-
   appointments.value.push({
     id: i,
-    name: `礼物名称${i}`,
+    name: `直播标题${i}`,
     date: service,
     status: service2,
-    phone: randomDate.toLocaleString(),
+    phone: Math.floor(Math.random() * 10000),
+  });
+  appointments2.value.push({
+    id: i,
+    name: `直播标题${i}`,
+    date: service3,
+    status: service2,
+    phone: Math.floor(Math.random() * 10000),
+  });
+  appointments3.value.push({
+    id: i,
+    name: `直播标题${i}`,
+    date: services.value[2],
+    status: service2,
+    phone: Math.floor(Math.random() * 10000),
+  });
+  appointments4.value.push({
+    id: i,
+    name: `直播标题${i}`,
+    date: services.value[3],
+    status: service2,
+    phone: Math.floor(Math.random() * 10000),
+  });
+  appointments5.value.push({
+    id: i,
+    name: `直播标题${i}`,
+    date: services.value[4],
+    status: service2,
+    phone: Math.floor(Math.random() * 10000),
   });
 }
 
-
-const handleSearch = () => {
-  if (query.address !== '') {
-    appointments.value = appointments.value.filter(a=>
-        a.date === query.address
-    )
-  }
-  if (query.name !== '') {
-    appointments.value = appointments.value.filter(a=> {
-          console.log(a.name.includes(query.name))
-          return a.name.includes(query.name)
-        }
-    )
-  }
-
-}
 
 
 const cancelDialogVisible = ref(false);
 const startDialogVisible = ref(false);
 
-const query = reactive({
-  address: '',
-  name: '',
-  pageIndex: 1,
-  pageSize: 10
-});
-
-const formData = ref({}); // 添加或编辑礼物的表单数据
+const formData = ref({}); // 添加或编辑直播的表单数据
 const formRules = ref({
   name: [
-    { required: true, message: '礼物不能为空', trigger: 'blur' },
+    { required: true, message: '直播不能为空', trigger: 'blur' },
   ],
   date: [
     { required: true, message: '观看人数码不能为空', trigger: 'blur' },
   ]
-}); // 添加或编辑礼物的表单验证规则
-const dialogVisible = ref(false); // 是否显示添加或编辑礼物的对话框
+}); // 添加或编辑直播的表单验证规则
+const dialogVisible = ref(false); // 是否显示添加或编辑直播的对话框
 
-// 编辑礼物
+// 编辑直播
 function editAppointment(appointment: any) {
   formData.value = { ...appointment };
   dialogVisible.value = true;
@@ -169,7 +202,7 @@ function addAppointment() {
   formData.value = {};
 }
 
-// 删除礼物
+// 关闭直播
 function cancelAppointment(appointment: any) {
   cancelDialogVisible.value = true;
   formData.value = { ...appointment };
@@ -283,33 +316,5 @@ function cancelAppointment(appointment: any) {
 .schart {
   width: 100%;
   height: 300px;
-}
-
-.handle-box {
-  margin-bottom: 20px;
-}
-
-.handle-select {
-  width: 120px;
-}
-
-.handle-input {
-  width: 300px;
-}
-.table {
-  width: 100%;
-  font-size: 14px;
-}
-.red {
-  color: #F56C6C;
-}
-.mr10 {
-  margin-right: 10px;
-}
-.table-td-thumb {
-  display: block;
-  margin: auto;
-  width: 40px;
-  height: 40px;
 }
 </style>

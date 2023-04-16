@@ -1,37 +1,54 @@
 <template>
   <div class="income-analysis">
-    <h3 style="margin-bottom: 20px">发送弹幕</h3>
-    <el-form :model="formData" :rules="formRules">
-      <el-form-item label="选择直播" prop="name">
-        <el-select v-model="formData.name" placeholder="请选择">
-          <el-option key="小明" label="小明" value="小明"></el-option>
-          <el-option key="小红" label="小红" value="小红"></el-option>
-          <el-option key="小白" label="小白" value="小白"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="弹幕内容" prop="name">
-        <el-input v-model="formData.name"></el-input>
-      </el-form-item>
-      <el-form-item label="弹幕编号" prop="date">
-        <el-input v-model="formData.id"></el-input>
-      </el-form-item>
-      <el-form-item label="类型" prop="date">
-        <el-input v-model="formData.date"></el-input>
-      </el-form-item>
-    </el-form>
-    <div slot="footer">
-      <!-- 取消添加或编辑 -->
-      <el-button @click="dialogVisible = false">取消</el-button>
-      <!-- 确认添加或编辑 -->
-      <el-button type="primary" @click="">确认</el-button>
+    <div>
+      <el-image style="width: 600px; height: 400px" v-model:src="imgurl"></el-image>
     </div>
+    <el-tabs v-model="message">
+      <el-tab-pane label="发送弹幕" name="1">
+
+        <el-form :model="formData" :rules="formRules">
+          <el-form-item label="弹幕内容" prop="name">
+            <el-input type="textarea" :rows="3" v-model="formData.name"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer">
+          <!-- 取消添加或编辑 -->
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <!-- 确认添加或编辑 -->
+          <el-button type="primary" @click="">发送</el-button>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="发送礼物" name="2">
+
+        <el-form :model="formData" :rules="formRules">
+          <el-form-item label="礼物" prop="region">
+            <el-select v-model="formData.region" placeholder="请选择">
+              <el-option key="小明" label="小明" value="小明"></el-option>
+              <el-option key="小红" label="小红" value="小红"></el-option>
+              <el-option key="小白" label="小白" value="小白"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="数量" prop="name">
+            <el-input-number v-model="formData.num"></el-input-number>
+          </el-form-item>
+        </el-form>
+        <div slot="footer">
+          <!-- 取消添加或编辑 -->
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <!-- 确认添加或编辑 -->
+          <el-button type="primary" @click="">赠送</el-button>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import * as echarts from 'echarts';
+import imgurl from '../assets/img/zhibo2.jpeg';
 
+const message = ref("1");
 
 const formData = ref({}); // 添加或编辑弹幕的表单数据
 const formRules = ref({

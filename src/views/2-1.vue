@@ -1,87 +1,21 @@
 <template>
   <div class="container">
-    <div class="handle-box">
-      <el-select v-model="query.address" placeholder="直播间" class="handle-select mr10">
-        <el-option key="1" label="直播间1" value="直播间1"></el-option>
-        <el-option key="2" label="直播间2" value="直播间2"></el-option>
-        <el-option key="3" label="直播间3" value="直播间3"></el-option>
-
-      </el-select>
-      <el-input v-model="query.name" placeholder="弹幕内容" class="handle-input mr10"></el-input>
-      <el-button type="primary" :icon="Search" @click="handleSearch">搜索</el-button>
-      <el-button type="primary" :icon="Plus"  @click="addAppointment">发送弹幕</el-button>
+    <div>
+      <el-image style="width: 800px; height: 500px" v-model:src="imgurl" ></el-image>
     </div>
-    <div class="add-appointment">
-      <h3>弹幕列表</h3>
+    <div>
+      <el-button type="primary">暂停</el-button>
+      <el-button type="primary" style="margin-left: 30px">收藏</el-button>
+      <el-button type="primary" style="margin-left: 30px">关注</el-button>
     </div>
-    <el-table :data="appointments">
-      <el-table-column prop="id" label="弹幕编号"></el-table-column>
-      <el-table-column prop="name" label="弹幕内容"></el-table-column>
-<!--      <el-table-column prop="phone" label="观看人数"></el-table-column>-->
-      <el-table-column prop="date" label="所属直播间"></el-table-column>
-      <el-table-column prop="status" label="状态">
-        <template #default="scope">
-          <el-tag type="success" v-if="scope.row.status === '正常'">正常</el-tag>
-          <el-tag type="info" v-else>已删除</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" width="280">
-        <template #default="{row}">
-          <!-- 编辑弹幕 -->
-          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>
-<!--          <el-button  v-if="row.status === '正常'" type="primary" size="small" @click="editAppointment(row)">进入弹幕间</el-button>-->
-          <!-- 取消弹幕 -->
-          <el-button v-if="row.status === '正常'" type="danger" size="small" @click="cancelAppointment(row)">删除弹幕</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <!-- 添加或编辑弹幕的表单 -->
-    <el-dialog v-model="dialogVisible" title="添加/编辑弹幕">
-      <el-form :model="formData" :rules="formRules">
-        <el-form-item label="弹幕内容" prop="name">
-          <el-input v-model="formData.name"></el-input>
-        </el-form-item>
-        <el-form-item label="弹幕编号" prop="date">
-          <el-input v-model="formData.id"></el-input>
-        </el-form-item>
-        <el-form-item label="所属直播间" prop="date">
-          <el-input v-model="formData.date"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer">
-        <!-- 取消添加或编辑 -->
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <!-- 确认添加或编辑 -->
-        <el-button type="primary" @click="">确认</el-button>
-      </div>
-    </el-dialog>
-
-    <!-- 确认取消弹幕的对话框 -->
-    <el-dialog v-model="cancelDialogVisible" title="删除弹幕">
-      <div style="margin-bottom: 20px;font-size: 18px">确定要删除此弹幕吗？</div>
-      <span slot="footer" class="dialog-footer">
-    <!-- 取消删除弹幕 -->
-    <el-button @click="cancelDialogVisible = false">取 消</el-button>
-        <!-- 确认删除弹幕 -->
-    <el-button type="primary" @click="">确 定</el-button>
-  </span>
-    </el-dialog>
-
-    <el-dialog v-model="startDialogVisible" title="开启弹幕">
-      <div style="margin-bottom: 20px;font-size: 18px">确定要开启此弹幕吗？</div>
-      <span slot="footer" class="dialog-footer">
-    <!-- 取消删除弹幕 -->
-    <el-button @click="startDialogVisible = false">取 消</el-button>
-        <!-- 确认删除弹幕 -->
-    <el-button type="primary" @click="">确 定</el-button>
-  </span>
-    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts" name="dashboard">
 import {Plus, Search} from "@element-plus/icons-vue";
 import {reactive, ref} from "vue";
+import imgurl from '../assets/img/zhibo2.jpeg';
+
 
 const appointments = ref([]); // 弹幕列表
 const services = ref([
