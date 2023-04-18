@@ -47,7 +47,7 @@
 import { onMounted } from 'vue';
 import { useSidebarStore } from '../store/sidebar';
 import { useRouter } from 'vue-router';
-import imgurl from '../assets/img/login-bg9.png';
+import imgurl from '../assets/img/login-bg5.png';
 
 const username: string | null = localStorage.getItem('ms_username');
 const message: number = 2;
