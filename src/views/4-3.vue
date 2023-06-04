@@ -2,7 +2,7 @@
   <div class="container">
     <div class="handle-box">
       <el-select v-model="query.address" placeholder="用户级别" class="handle-select mr10">
-        <el-option key="1" label="用户级别1" value="用户级别1"></el-option>
+        <el-option key="1" label="普通用户" value="普通用户"></el-option>
         <el-option key="2" label="用户级别2" value="用户级别2"></el-option>
         <el-option key="3" label="用户级别3" value="用户级别3"></el-option>
 
