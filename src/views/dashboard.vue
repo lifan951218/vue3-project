@@ -2,20 +2,8 @@
   <div class="container">
     <div class="add-appointment">
       <h3>直播列表</h3>
-<!--      <MyCheckBox v-model="mytype" @update-value="updateParentValue">-->
-      <MyCheckBox v-model="mytype" @change="change">
-        <el-checkbox label="小明" name="小明"></el-checkbox>
-        <el-checkbox label="小红" name="小红"></el-checkbox>
-        <el-checkbox label="小白" name="小白"></el-checkbox>
-      </MyCheckBox>
-      <el-button @click="changeType">xiugai</el-button>
-<!--      <el-checkbox-group v-model="mytype" @change="change">
-        <el-checkbox label="小明" name="小明"></el-checkbox>
-        <el-checkbox label="小红" name="小红"></el-checkbox>
-        <el-checkbox label="小白" name="小白"></el-checkbox>
-      </el-checkbox-group>-->
     </div>
-<!--    <el-tabs v-model="message">
+    <el-tabs v-model="message">
       <el-tab-pane label="游戏" name="1">
         <el-table :data="appointments">
 
@@ -31,14 +19,14 @@
           </el-table-column>
           <el-table-column label="操作" width="280">
             <template #default="{row}">
-              &lt;!&ndash; 编辑直播 &ndash;&gt;
-              &lt;!&ndash;          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>&ndash;&gt;
+              <!-- 编辑直播 -->
+              <!--          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>-->
               <el-button  v-if="row.status === '直播中'" type="primary" size="small" @click="editAppointment(row)">进入直播间</el-button>
               <el-button  v-if="row.status === '已关闭'" type="primary" size="small" @click="startAppointment(row)">启动直播</el-button>
               <el-button type="primary" size="small" @click="startAppointment(row)">收藏</el-button>
 
-              &lt;!&ndash; 取消直播 &ndash;&gt;
-              &lt;!&ndash;          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>&ndash;&gt;
+              <!-- 取消直播 -->
+              <!--          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>-->
             </template>
           </el-table-column>
         </el-table>
@@ -59,14 +47,14 @@
           </el-table-column>
           <el-table-column label="操作" width="280">
             <template #default="{row}">
-              &lt;!&ndash; 编辑直播 &ndash;&gt;
-              &lt;!&ndash;          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>&ndash;&gt;
+              <!-- 编辑直播 -->
+              <!--          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>-->
               <el-button  v-if="row.status === '直播中'" type="primary" size="small" @click="editAppointment(row)">进入直播间</el-button>
               <el-button  v-if="row.status === '已关闭'" type="primary" size="small" @click="startAppointment(row)">启动直播</el-button>
               <el-button type="primary" size="small" @click="startAppointment(row)">收藏</el-button>
 
-              &lt;!&ndash; 取消直播 &ndash;&gt;
-              &lt;!&ndash;          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>&ndash;&gt;
+              <!-- 取消直播 -->
+              <!--          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>-->
             </template>
           </el-table-column>
         </el-table>
@@ -86,14 +74,14 @@
           </el-table-column>
           <el-table-column label="操作" width="280">
             <template #default="{row}">
-              &lt;!&ndash; 编辑直播 &ndash;&gt;
-              &lt;!&ndash;          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>&ndash;&gt;
+              <!-- 编辑直播 -->
+              <!--          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>-->
               <el-button  v-if="row.status === '直播中'" type="primary" size="small" @click="editAppointment(row)">进入直播间</el-button>
               <el-button  v-if="row.status === '已关闭'" type="primary" size="small" @click="startAppointment(row)">启动直播</el-button>
               <el-button type="primary" size="small" @click="startAppointment(row)">收藏</el-button>
 
-              &lt;!&ndash; 取消直播 &ndash;&gt;
-              &lt;!&ndash;          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>&ndash;&gt;
+              <!-- 取消直播 -->
+              <!--          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>-->
             </template>
           </el-table-column>
         </el-table>
@@ -113,14 +101,14 @@
           </el-table-column>
           <el-table-column label="操作" width="280">
             <template #default="{row}">
-              &lt;!&ndash; 编辑直播 &ndash;&gt;
-              &lt;!&ndash;          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>&ndash;&gt;
+              <!-- 编辑直播 -->
+              <!--          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>-->
               <el-button  v-if="row.status === '直播中'" type="primary" size="small" @click="editAppointment(row)">进入直播间</el-button>
               <el-button  v-if="row.status === '已关闭'" type="primary" size="small" @click="startAppointment(row)">启动直播</el-button>
               <el-button type="primary" size="small" @click="startAppointment(row)">收藏</el-button>
 
-              &lt;!&ndash; 取消直播 &ndash;&gt;
-              &lt;!&ndash;          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>&ndash;&gt;
+              <!-- 取消直播 -->
+              <!--          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>-->
             </template>
           </el-table-column>
         </el-table>
@@ -140,18 +128,18 @@
           </el-table-column>
           <el-table-column label="操作" width="280">
             <template #default="{row}">
-              &lt;!&ndash; 编辑直播 &ndash;&gt;
-              &lt;!&ndash;          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>&ndash;&gt;
+              <!-- 编辑直播 -->
+              <!--          <el-button type="primary" size="small" @click="editAppointment(row)">编辑</el-button>-->
               <el-button  v-if="row.status === '直播中'" type="primary" size="small" @click="editAppointment(row)">进入直播间</el-button>
               <el-button type="primary" size="small" @click="startAppointment(row)">收藏</el-button>
-&lt;!&ndash;              <el-button  v-if="row.status === '已关闭'" type="primary" size="small" @click="startAppointment(row)">启动直播</el-button>&ndash;&gt;
-              &lt;!&ndash; 取消直播 &ndash;&gt;
-              &lt;!&ndash;          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>&ndash;&gt;
+<!--              <el-button  v-if="row.status === '已关闭'" type="primary" size="small" @click="startAppointment(row)">启动直播</el-button>-->
+              <!-- 取消直播 -->
+              <!--          <el-button v-if="row.status === '直播中'" type="danger" size="small" @click="cancelAppointment(row)">关闭直播</el-button>-->
             </template>
           </el-table-column>
         </el-table>
       </el-tab-pane>
-    </el-tabs>-->
+    </el-tabs>
 
 <!--    <div class="add-appointment">-->
 <!--      <el-button type="primary" :icon="Plus" @click="addAppointment">创建直播</el-button>-->
@@ -203,27 +191,10 @@
 </template>
 
 <script setup lang="ts" name="dashboard">
-import MyCheckBox from '../components/myCheckBox.vue';
 import {Plus} from "@element-plus/icons-vue";
 import {ref} from "vue";
 import imgurl from '../assets/img/zhibo.jpeg';
 const message = ref("1");
-const mytype = ref(["小白"]);
-const change = (value: any) => {
-  console.log("huoqudao:"+value);
-  setTimeout(()=>{
-    console.log("MyType:"+mytype.value);
-  })
-}
-const changeType = () => {
-  mytype.value = []
-  console.log('fuzujian:'+mytype.value)
-}
-const updateParentValue = (newValue: any) => {
-  console.log("updaetParentValue: "+newValue)
-  mytype.value = newValue;
-  console.log("uodated:MyType:"+mytype.value);
-}
 const appointments = ref([]); // 直播列表
 const appointments2 = ref([]); // 直播列表
 const appointments3 = ref([]); // 直播列表
